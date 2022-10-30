@@ -6,7 +6,7 @@ A file-based .env change notifier for your slack team.
 
 ![owlly-intro](https://user-images.githubusercontent.com/83855174/198875029-f20bba16-66e6-48d2-9d06-9feaea8fe175.gif)
 
-![owlly-result-example](https://user-images.githubusercontent.com/83855174/198875060-3a938189-1b5f-4ee1-b960-d430919c3780.png)
+![owlly-result](https://user-images.githubusercontent.com/83855174/198875580-ba52d111-907a-43bf-8937-23b5558378a4.png)
 
 ## Contents
 
@@ -21,7 +21,8 @@ A file-based .env change notifier for your slack team.
 ## Features
 
 - Update synchronization for .env file changes
-- Post the updated .env as text to slack channel with metadata(date and directory path)
+- Auto-post the updated .env as attachment to slack channel
+- Basic metadata supported: timestamp, .env directory
 
 ## Install
 
@@ -71,6 +72,10 @@ OWLLY_DONE="true"
 ```
 
 Check your slack channel if the message is sent.
+
+**Note**
+
+Owlly ver 0.1.0 does not support hot-reload yet. It means that you have to re-start Owlly where 1) you sent DM already 2) but updated it again 3) and want to send it again.
 
 ## Contributor
 
