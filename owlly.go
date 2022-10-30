@@ -6,8 +6,10 @@ import (
 	"log"
 	"os"
 	"strings"
+	"sync"
 	"time"
 
+	"github.com/asunlabs/owlly/config"
 	"github.com/fatih/color"
 	"github.com/fsnotify/fsnotify"
 	"github.com/joho/godotenv"
@@ -16,6 +18,7 @@ import (
 
 var (
 	api *slack.Client
+	onlyOnce sync.Once
 )
 
 func nilChecker(err error) {
@@ -43,7 +46,7 @@ func initSlack() {
 	api = _api
 }
 
-func overwriteEnv() {
+func updateAndNotify() {
 	bytes, readErr := os.ReadFile("./.env")
 	nilChecker(readErr)
 
@@ -60,71 +63,85 @@ func overwriteEnv() {
 	filePermission := 0644
 	writeErr := os.WriteFile(fullpath, bytes, fs.FileMode(filePermission))
 	nilChecker(writeErr)
+
+	// if done send a DM to slack channel
+	if isDone := isUpdateFinished(); isDone {
+		envString := convertEnvMapToString(fullpath)
+		onlyOnce.Do(func() {
+			notifyEnvChange(envString)
+		})
+	}
 }
 
 func isUpdateFinished() bool {
-	isDone := os.Getenv("DONE")
-	empty := 0
+	_data, _readErr := os.ReadFile("./.env")
+	nilChecker(_readErr)
 
-	if len(isDone) != empty {
-		return true
-	} else { 
-		return false
-	}
+	data := string(_data)
+	isDone := strings.Contains(data, config.RESERVED)
+
+	log.Printf(".env in root DONE value: %v", isDone)
+
+	return isDone
 }
 
 func convertEnvMapToString(envPath string) string {
 	dotenvMap, readErr := godotenv.Read(envPath)
 	nilChecker(readErr)
 
-	toString, marshalErr := godotenv.Marshal(dotenvMap)
+	// marshaling map: ascending sort
+	marshalMsg, marshalErr := godotenv.Marshal(dotenvMap)
 	nilChecker(marshalErr)
 
-	// ascending  sort
-	marshalMsg := fmt.Sprintf("CHANGED DOTENV: %s", toString)
 	color.Green(marshalMsg)
 
 	return marshalMsg
 }
 
-func getCurrenTimestamp() string  {
+func getUpdateMetadata() (string, string) {
 	now := time.Now().String()
 	log.Print(now)
 	date := now[0:16]
 
-	return date // yyyy-mm-dd hh-mm
+	dirPath, dirErr := os.Getwd()
+	nilChecker(dirErr)
+
+	return date, dirPath // yyyy-mm-dd hh-mm
 }
 
 func notifyEnvChange(envString string) {
+	date, dirPath := getUpdateMetadata()
+	dateMsg := fmt.Sprintf(".env updated at: %v", date)
+	pathMsg := fmt.Sprintf(".env directory is: %v", dirPath)
 
-	date := getCurrenTimestamp()
-	dateMsg := fmt.Sprintf(".env updated at: %s", date)
+	attachedEnv := slack.AttachmentField {
+		Title: "Copy and paste below texts to update",
+		Value: envString,
+		Short: false,
+	}
 
 	attachment := slack.Attachment{
+		Title:   "ENV update",
+		Fields: []slack.AttachmentField{attachedEnv},
 		Pretext: dateMsg,
+		Footer:  pathMsg,
 	}
 
 	slack.MsgOptionAttachments()
-		channelID, timestamp, msgErr := api.PostMessage(
-			os.Getenv("SLACK_TEST_CHANNEL_ID"),
-			slack.MsgOptionText(envString, false),
-			slack.MsgOptionAttachments(attachment),
-			slack.MsgOptionAsUser(true),
-		)
+	channelID, _, msgErr := api.PostMessage(
+		os.Getenv("SLACK_CHANNEL_ID"),
+		slack.MsgOptionAttachments(attachment),
+		slack.MsgOptionAsUser(true),
+	)
 
-		nilChecker(msgErr)
+	nilChecker(msgErr)
 
-		resultMessage := fmt.Sprintf("message posted to %s at %s", channelID, timestamp)
-		color.Green(resultMessage)
+	resultMessage := fmt.Sprintf("message posted to channel %v at %v", channelID, date)
+	color.Green(resultMessage)
 }
 
 func main() {
 	envErr := godotenv.Load(".env")
-
-	beforeBytes, _ := os.ReadFile(".env")
-	beforeBytesMsg := fmt.Sprintf("env length before: %d", len(beforeBytes))
-	color.Magenta(beforeBytesMsg)
-	color.Red(os.Getenv("DONE"))
 
 	nilChecker(envErr)
 
@@ -140,7 +157,7 @@ func main() {
 				}
 				if event.Has(fsnotify.Write) {
 					log.Println("modified file: ", event.Name)
-					overwriteEnv()
+					updateAndNotify()
 				}
 			case err, ok := <-watcher.Errors:
 				nilChecker(err)
@@ -151,23 +168,9 @@ func main() {
 		}
 	}()
 
-	go func () {
-		for {
-			if isFinished := isUpdateFinished(); isFinished {
-				envString := convertEnvMapToString("./config/.env.config")
-				notifyEnvChange(envString)
-				break
-			}
-		}
-	}()
-
 	/// @dev starts monitoring the path for changes.
 	watcherErr := watcher.Add(".env")
 	nilChecker(watcherErr)
-
-	afterBytes, _ := os.ReadFile("./config/.env.config")
-	afterBytesMsg := fmt.Sprintf("env length after: %d", len(afterBytes))
-	color.Magenta(afterBytesMsg)
 
 	// Block main goroutine forever.
 	<-make(chan struct{})
