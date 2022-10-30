@@ -1,4 +1,4 @@
-package owlly
+package main
 
 import (
 	"fmt"
@@ -143,8 +143,7 @@ func notifyEnvChange(envString string) {
 	color.Green(resultMessage)
 }
 
-// @dev start owlly to watch .env
-func InitOwlly() {
+func main() {
 	envErr := godotenv.Load(".env")
 
 	nilChecker(envErr)
