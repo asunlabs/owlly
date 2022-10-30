@@ -56,7 +56,7 @@ func updateAndNotify() {
 	_, statErr := os.Stat(fullpath)
 
 	if os.IsNotExist(statErr) {
-		dirErr := os.Mkdir("config", 0644)
+		dirErr := os.Mkdir("/config", 0644)
 		nilChecker(dirErr)
 	}
 
