@@ -17,7 +17,7 @@ import (
 )
 
 var (
-	api *slack.Client
+	api      *slack.Client
 	onlyOnce sync.Once
 )
 
@@ -114,7 +114,7 @@ func notifyEnvChange(envString string) {
 	dateMsg := fmt.Sprintf(".env updated at: %v", date)
 	pathMsg := fmt.Sprintf(".env directory is: %v", dirPath)
 
-	attachedEnv := slack.AttachmentField {
+	attachedEnv := slack.AttachmentField{
 		Title: "Copy and paste below texts to update",
 		Value: envString,
 		Short: false,
@@ -122,18 +122,21 @@ func notifyEnvChange(envString string) {
 
 	attachment := slack.Attachment{
 		Title:   "ENV update",
-		Fields: []slack.AttachmentField{attachedEnv},
+		Fields:  []slack.AttachmentField{attachedEnv},
 		Pretext: dateMsg,
 		Footer:  pathMsg,
 	}
 
-	slack.MsgOptionAttachments()
-	channelID, _, msgErr := api.PostMessage(
-		os.Getenv("SLACK_CHANNEL_ID"),
-		slack.MsgOptionAttachments(attachment),
-		slack.MsgOptionAsUser(true),
-	)
+	postTo := os.Getenv("SLACK_CHANNEL_ID")
+	postWhat := slack.MsgOptionAttachments(attachment)
+	postAs := slack.MsgOptionAsUser(true)
 
+	channelID, _, msgErr := api.PostMessage(
+		postTo,
+		postWhat,
+		postAs,
+	)
+	
 	nilChecker(msgErr)
 
 	resultMessage := fmt.Sprintf("message posted to channel %v at %v", channelID, date)
