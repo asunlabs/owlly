@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
+	"io/fs"
 	"log"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/fatih/color"
 	"github.com/fsnotify/fsnotify"
@@ -46,7 +48,7 @@ func overwriteEnv() {
 	nilChecker(readErr)
 
 	path, _ := os.Getwd()
-	fullpath := strings.Join([]string{path, "/config/.env"}, "")
+	fullpath := strings.Join([]string{path, "/config/.env.config"}, "")
 
 	_, statErr := os.Stat(fullpath)
 
@@ -55,18 +57,58 @@ func overwriteEnv() {
 		nilChecker(dirErr)
 	}
 
-	writeErr := os.WriteFile(fullpath, bytes, 0644)
+	filePermission := 0644
+	writeErr := os.WriteFile(fullpath, bytes, fs.FileMode(filePermission))
 	nilChecker(writeErr)
 }
 
-func notifyEnvChange() {
+func isUpdateFinished() bool {
 	isDone := os.Getenv("DONE")
 	empty := 0
 
 	if len(isDone) != empty {
+		return true
+	} else { 
+		return false
+	}
+}
+
+func convertEnvMapToString(envPath string) string {
+	dotenvMap, readErr := godotenv.Read(envPath)
+	nilChecker(readErr)
+
+	toString, marshalErr := godotenv.Marshal(dotenvMap)
+	nilChecker(marshalErr)
+
+	// ascending  sort
+	marshalMsg := fmt.Sprintf("CHANGED DOTENV: %s", toString)
+	color.Green(marshalMsg)
+
+	return marshalMsg
+}
+
+func getCurrenTimestamp() string  {
+	now := time.Now().String()
+	log.Print(now)
+	date := now[0:16]
+
+	return date // yyyy-mm-dd hh-mm
+}
+
+func notifyEnvChange(envString string) {
+
+	date := getCurrenTimestamp()
+	dateMsg := fmt.Sprintf(".env updated at: %s", date)
+
+	attachment := slack.Attachment{
+		Pretext: dateMsg,
+	}
+
+	slack.MsgOptionAttachments()
 		channelID, timestamp, msgErr := api.PostMessage(
 			os.Getenv("SLACK_TEST_CHANNEL_ID"),
-			slack.MsgOptionText(".env updated", false),
+			slack.MsgOptionText(envString, false),
+			slack.MsgOptionAttachments(attachment),
 			slack.MsgOptionAsUser(true),
 		)
 
@@ -74,7 +116,6 @@ func notifyEnvChange() {
 
 		resultMessage := fmt.Sprintf("message posted to %s at %s", channelID, timestamp)
 		color.Green(resultMessage)
-	}
 }
 
 func main() {
@@ -83,6 +124,7 @@ func main() {
 	beforeBytes, _ := os.ReadFile(".env")
 	beforeBytesMsg := fmt.Sprintf("env length before: %d", len(beforeBytes))
 	color.Magenta(beforeBytesMsg)
+	color.Red(os.Getenv("DONE"))
 
 	nilChecker(envErr)
 
@@ -96,10 +138,9 @@ func main() {
 				if !ok {
 					log.Println("event failing")
 				}
-				if event.Has(fsnotify.Write) && event.Name == ".env" {
+				if event.Has(fsnotify.Write) {
 					log.Println("modified file: ", event.Name)
 					overwriteEnv()
-					notifyEnvChange()
 				}
 			case err, ok := <-watcher.Errors:
 				nilChecker(err)
@@ -110,11 +151,21 @@ func main() {
 		}
 	}()
 
+	go func () {
+		for {
+			if isFinished := isUpdateFinished(); isFinished {
+				envString := convertEnvMapToString("./config/.env.config")
+				notifyEnvChange(envString)
+				break
+			}
+		}
+	}()
+
 	/// @dev starts monitoring the path for changes.
 	watcherErr := watcher.Add(".env")
 	nilChecker(watcherErr)
 
-	afterBytes, _ := os.ReadFile("./config/.env")
+	afterBytes, _ := os.ReadFile("./config/.env.config")
 	afterBytesMsg := fmt.Sprintf("env length after: %d", len(afterBytes))
 	color.Magenta(afterBytesMsg)
 
