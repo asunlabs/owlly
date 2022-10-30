@@ -1,11 +1,13 @@
 package config
 
-type Keycode uint;
+type Keycode uint
 
 // custom enum type for channel keycode
 const (
-	Team Keycode = iota +1 
+	Team Keycode = iota + 1
 	Developer
-	Designer 
-	Welfare 
+	Designer
+	Welfare
+
+	RESERVED = "OWLLY_DONE"
 )
