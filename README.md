@@ -26,11 +26,20 @@ A file-based .env change notifier for your slack team.
 
 ## Install
 
-Run
+Clone this repo and compile it.
 
-```go
-go get github.com/asunlabs/owlly
+```sh
+git clone https://github.com/asunlabs/owlly.git
+go build owlly.go
 ```
+
+And execute owlly.exe.
+
+```sh
+./owlly.exe
+```
+
+Or, simply download executable from [release](https://github.com/asunlabs/owlly/releases/tag/ver0.1.0) and execute it.
 
 ## Prerequisite
 
@@ -55,7 +64,11 @@ SLACK_CHANNEL_ID="channel-id-here"
 1. Run Owlly to watch .env changes.
 
 ```sh
+# if you cloned a repo,
 go run owlly.go
+
+# if you executes .exe file,
+./owlly.exe
 ```
 
 1. Update .env as you wish.
@@ -75,15 +88,11 @@ Check your slack channel if the message is sent.
 
 **Note**
 
-Owlly ver 0.1.0 does not support hot-reload yet. It means that you have to re-start Owlly where 1) you sent DM already 2) but updated it again 3) and want to send it again.
+Owlly ver 0.1.0 does not support hot-reload yet. It means that you have to re-start Owlly in the situation where 1) you sent DM already 2) but updated it again 3) and want to send it again. Log will be printed but Slack API would not invoke in the case.
 
 ## Contributor
 
 Project Created by [developerasun](https://github.com/developerasun)
-
-And is being maintained with the help of
-
-- a list of contributors here
 
 ## Reference
 
