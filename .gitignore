@@ -1,6 +1,6 @@
 # Configs
 .env
-config/.env
+config/.env.config
 
 # Binaries for programs and plugins
 *.exe
