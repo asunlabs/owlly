@@ -21,25 +21,29 @@ A file-based .env change notifier for your slack team.
 ## Features
 
 - Update synchronization for .env file changes
-- Auto-post the updated .env as attachment to slack channel
+- Auto-post the update to slack channel as attachment
 - Basic metadata supported: timestamp, .env directory
+- Cross platform supported: Windows, Mac OS
 
 ## Install
 
-Clone this repo and compile it.
+Clone this repo and compile it. Go supports cross-compile.
 
 ```sh
 git clone https://github.com/asunlabs/owlly.git
-go build owlly.go
+
+# from Windows(Powershell) to Mac OS
+$env:GOOS = "darwin"
+$env:GOARCH = "amd64"
+go build -o ./bin/owlly-for-mac owlly.go
+
+# for Windows
+go build -o ./bin/owlly-for-window.exe owlly.go
 ```
 
-And execute owlly.exe.
+And execute the compiled file per platform.
 
-```sh
-./owlly.exe
-```
-
-Or, simply download executable from [release](https://github.com/asunlabs/owlly/releases/tag/ver0.1.0) and execute it.
+Or, simply download binaries from [release](https://github.com/asunlabs/owlly/releases/tag/ver0.1.0) and execute it.
 
 ## Prerequisite
 
