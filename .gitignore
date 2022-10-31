@@ -1,6 +1,13 @@
 # Configs
 .env
-config/.env.config
+.env.production
+.env.development
+.env.test
+
+config/*
+!config/database.go
+!config/keycode.go
+bin/*
 
 # Binaries for programs and plugins
 *.exe
