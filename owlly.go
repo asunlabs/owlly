@@ -19,6 +19,7 @@ import (
 var (
 	api      *slack.Client
 	onlyOnce sync.Once
+	envLists = []string{".env", ".env.test", ".env.development", ".env.production"}
 )
 
 func nilChecker(err error) {
@@ -47,26 +48,23 @@ func initSlack() {
 }
 
 func updateAndNotify() {
-	bytes, readErr := os.ReadFile("./.env")
-	nilChecker(readErr)
+	var fullPath string
 
-	path, _ := os.Getwd()
-	fullpath := strings.Join([]string{path, "/config/.env.config"}, "")
+	for _, v := range envLists {
+		path, _ := os.Getwd()
+		fullPath = strings.Join([]string{path, "\\config\\", v, ".config"}, "")
+		log.Println("path is: ",fullPath)
+		bytes, readErr := os.ReadFile(fullPath)
+		nilChecker(readErr)	
 
-	_, statErr := os.Stat(fullpath)
-
-	if os.IsNotExist(statErr) {
-		dirErr := os.Mkdir("/config", 0644)
-		nilChecker(dirErr)
+		// TODO fix not writing file bug
+		filePermission := 0644
+		writeErr := os.WriteFile(fullPath, bytes, fs.FileMode(filePermission))
+		nilChecker(writeErr)
 	}
-
-	filePermission := 0644
-	writeErr := os.WriteFile(fullpath, bytes, fs.FileMode(filePermission))
-	nilChecker(writeErr)
-
 	// if done send a DM to slack channel
 	if isDone := isUpdateFinished(); isDone {
-		envString := convertEnvMapToString(fullpath)
+		envString := convertEnvMapToString(fullPath)
 		onlyOnce.Do(func() {
 			notifyEnvChange(envString)
 		})
@@ -74,13 +72,20 @@ func updateAndNotify() {
 }
 
 func isUpdateFinished() bool {
-	_data, _readErr := os.ReadFile("./.env")
-	nilChecker(_readErr)
+	var isDone bool
 
-	data := string(_data)
-	isDone := strings.Contains(data, config.RESERVED)
+	for _, v := range envLists {
+		dir, _ := os.Getwd()
+		fullPath := strings.Join([]string{dir, "\\", v}, "")
+		_data, _readErr := os.ReadFile(fullPath)
 
-	log.Printf(".env in root DONE value: %v", isDone)
+		nilChecker(_readErr)
+		
+		data := string(_data)
+		isDone = strings.Contains(data, config.RESERVED)
+	
+		log.Printf(".env in root DONE value: %v", isDone)
+	}
 
 	return isDone
 }
@@ -172,8 +177,19 @@ func main() {
 	}()
 
 	/// @dev starts monitoring the path for changes.
-	watcherErr := watcher.Add(".env")
-	nilChecker(watcherErr)
+	for _, v := range envLists {
+		dir, _ := os.Getwd()
+		fullPath := strings.Join([]string{dir, "\\", v}, "")
+		log.Println(fullPath)
+		_, readErr := os.ReadFile(fullPath)
+
+		nilChecker(readErr)
+
+		watcherErr := watcher.Add(v)
+		color.Blue(fmt.Sprintf("watching: %v", v))
+		nilChecker(watcherErr)
+
+	}
 
 	// Block main goroutine forever.
 	<-make(chan struct{})
