@@ -17,8 +17,10 @@ import (
 )
 
 var (
+	watcher  *fsnotify.Watcher
 	api      *slack.Client
 	onlyOnce sync.Once
+	envList  = []string{".env", ".env.test", ".env.development", ".env.production"}
 )
 
 func nilChecker(err error) {
@@ -28,14 +30,36 @@ func nilChecker(err error) {
 	}
 }
 
-func initWatcher() *fsnotify.Watcher {
-	watcher, err := fsnotify.NewWatcher()
+func initWatcher() {
+	_watcher, err := fsnotify.NewWatcher()
 	nilChecker(err)
 
-	return watcher
+	watcher = _watcher
 }
 
+func getEnvList() []string {
+	return envList
+}
+
+// @dev start watching multiple envs
+func registerEnvs() {
+	for _, v := range getEnvList() {
+		wd, _ := os.Getwd()
+		filePath := strings.Join([]string{wd, "\\", v}, "")
+		
+		wErr := watcher.Add(filePath)
+		nilChecker(wErr)
+		color.Blue(fmt.Sprintf("watching: %v", v))
+	}
+}
+
+// @dev load multiple envs and init slack instance
 func initSlack() {
+	for _, v := range envList {
+		lErr := godotenv.Load(v)
+		nilChecker(lErr)
+	}
+
 	_api := slack.New(os.Getenv("SLACK_BOT_USER_OAUTH_TOKEN"))
 	res, err := _api.AuthTest()
 	nilChecker(err)
@@ -46,46 +70,87 @@ func initSlack() {
 	api = _api
 }
 
-func updateAndNotify() {
-	bytes, readErr := os.ReadFile("./.env")
-	nilChecker(readErr)
+func updateEnvs() {
+	wd, _ := os.Getwd()
 
-	path, _ := os.Getwd()
-	fullpath := strings.Join([]string{path, "/config/.env.config"}, "")
+	for _, v := range getEnvList() {
+		data, rErr := os.ReadFile(v)
+		nilChecker(rErr)
 
-	_, statErr := os.Stat(fullpath)
+		wrapDirName := "config"
+		wrapDirPath := strings.Join([]string{wd, "\\", wrapDirName, "\\"}, "")
+		wrapEnvName := strings.Join([]string{v, ".", wrapDirName}, "")
+		wrapEnvFile := strings.Join([]string{wrapDirPath, wrapEnvName}, "")
 
-	if os.IsNotExist(statErr) {
-		dirErr := os.Mkdir("/config", 0644)
-		nilChecker(dirErr)
-	}
-
-	filePermission := 0644
-	writeErr := os.WriteFile(fullpath, bytes, fs.FileMode(filePermission))
-	nilChecker(writeErr)
-
-	// if done send a DM to slack channel
-	if isDone := isUpdateFinished(); isDone {
-		envString := convertEnvMapToString(fullpath)
-		onlyOnce.Do(func() {
-			notifyEnvChange(envString)
-		})
+		// @dev owning user has a read and write permission: 0644
+		os.WriteFile(wrapEnvFile, data, fs.FileMode(config.OWNER_PERM))
 	}
 }
 
-func isUpdateFinished() bool {
-	_data, _readErr := os.ReadFile("./.env")
-	nilChecker(_readErr)
+func cleanupEnvs() {
+	wd, _ := os.Getwd()
+	for _, v := range getEnvList() {
+		fullPathForWrapEnv := strings.Join([]string{wd, "\\", "config", "\\", v, ".config"}, "")
+		_, sErr := os.Stat(fullPathForWrapEnv)
 
-	data := string(_data)
-	isDone := strings.Contains(data, config.RESERVED)
+		if ok := os.IsExist(sErr); ok {
+			rErr := os.Remove(fullPathForWrapEnv)
+			nilChecker(rErr)
+		}
 
-	log.Printf(".env in root DONE value: %v", isDone)
+		_, cErr := os.Create(fullPathForWrapEnv)
+		nilChecker(cErr)
+
+		_data, rErr := os.ReadFile(v)
+		nilChecker(rErr)
+
+		wErr := os.WriteFile(fullPathForWrapEnv, _data, fs.FileMode(config.OWNER_PERM))
+		nilChecker(wErr)
+	}
+
+	color.Red("envs config setup done")
+}
+
+func sendSlackDM() {
+	wd, _ := os.Getwd()
+
+	// has
+	envStringMapForWrapEnv := make(map[string]string)
+	envStringForWrapEnv := "DEFAULT_VALUE"
+	
+	for _, v := range getEnvList() {
+		if isDone := isUpdateFinished(); isDone[v] {
+			fullPathForWrapEnv := strings.Join([]string{wd, "\\", "config", "\\", v, ".config"}, "")
+			wrapEnvName := strings.Join([]string{v, ".config"}, "")
+
+			envStringForWrapEnv = convertEnvMapToString(fullPathForWrapEnv, wrapEnvName)
+			envStringMapForWrapEnv[wrapEnvName] = envStringForWrapEnv
+
+			notifyEnvChange(envStringMapForWrapEnv[wrapEnvName], v)
+		}
+	}
+}
+
+func isUpdateFinished() map[string]bool {
+	// @dev initialze a map with make
+	isDone := make(map[string]bool)
+
+	for _, v := range getEnvList() {
+		wd, _ := os.Getwd()
+		fullPath := strings.Join([]string{wd, "\\", v}, "")
+
+		_data, _rErr := os.ReadFile(fullPath)
+		nilChecker(_rErr)
+		data := string(_data)
+
+		hasOwllyTrigger := strings.Contains(data, config.RESERVED)
+		isDone[v] = hasOwllyTrigger
+	}
 
 	return isDone
 }
 
-func convertEnvMapToString(envPath string) string {
+func convertEnvMapToString(envPath string, wrapEnvName string) string {
 	dotenvMap, readErr := godotenv.Read(envPath)
 	nilChecker(readErr)
 
@@ -93,7 +158,8 @@ func convertEnvMapToString(envPath string) string {
 	marshalMsg, marshalErr := godotenv.Marshal(dotenvMap)
 	nilChecker(marshalErr)
 
-	color.Green(marshalMsg)
+	parsedMsg := fmt.Sprintf("file parsed: %v", wrapEnvName)
+	color.Green(parsedMsg)
 
 	return marshalMsg
 }
@@ -109,11 +175,12 @@ func getUpdateMetadata() (string, string) {
 	return date, dirPath // yyyy-mm-dd hh-mm
 }
 
-func notifyEnvChange(envString string) {
+func notifyEnvChange(envString string, envFileName string) {
 	date, dirPath := getUpdateMetadata()
-	dateMsg := fmt.Sprintf(".env updated at: %v", date)
-	pathMsg := fmt.Sprintf(".env directory is: %v", dirPath)
+	dateMsg := fmt.Sprintf("%v updated at: %v", envFileName, date)
+	pathMsg := fmt.Sprintf("directory is: %v", dirPath)
 
+	// @dev assert a parsed env value is thread-safe
 	attachedEnv := slack.AttachmentField{
 		Title: "Copy and paste below texts to update",
 		Value: envString,
@@ -136,7 +203,7 @@ func notifyEnvChange(envString string) {
 		postWhat,
 		postAs,
 	)
-	
+
 	nilChecker(msgErr)
 
 	resultMessage := fmt.Sprintf("message posted to channel %v at %v", channelID, date)
@@ -144,12 +211,15 @@ func notifyEnvChange(envString string) {
 }
 
 func main() {
-	envErr := godotenv.Load(".env")
+	cleanupEnvs()
 
-	nilChecker(envErr)
+	onlyOnce.Do(func() {
+		initSlack()
+		initWatcher()
+	})
 
-	initSlack()
-	watcher := initWatcher()
+	/// @dev starts monitoring the path for changes.
+	registerEnvs()
 
 	go func() {
 		for {
@@ -160,7 +230,7 @@ func main() {
 				}
 				if event.Has(fsnotify.Write) {
 					log.Println("modified file: ", event.Name)
-					updateAndNotify()
+					updateEnvs()
 				}
 			case err, ok := <-watcher.Errors:
 				nilChecker(err)
@@ -171,10 +241,7 @@ func main() {
 		}
 	}()
 
-	/// @dev starts monitoring the path for changes.
-	watcherErr := watcher.Add(".env")
-	nilChecker(watcherErr)
-
-	// Block main goroutine forever.
-	<-make(chan struct{})
+	sendSlackDM()
+	color.Blue("WORK DONE! Exit Owlly 👋")
+	os.Exit(1)
 }

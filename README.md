@@ -20,26 +20,29 @@ A file-based .env change notifier for your slack team.
 
 ## Features
 
-- Update synchronization for .env file changes
-- Auto-post the updated .env as attachment to slack channel
+- Auto-sync .env file changes
+- Watch multiple .env files: .env, .env.test, .env.development, .env.production
+- Auto-post the update to slack channel as attachment
 - Basic metadata supported: timestamp, .env directory
+- Cross platform supported: Windows, Mac OS(intel, m1 chip)
 
 ## Install
 
-Clone this repo and compile it.
+Clone this repo and compile it. Go supports cross-compile.
 
 ```sh
 git clone https://github.com/asunlabs/owlly.git
-go build owlly.go
+
+# from Windows(Powershell) to Mac OS
+$env:GOOS = "darwin"
+$env:GOARCH = "amd64"
+go build -o ./bin/owlly-for-mac owlly.go
+
+# for Windows
+go build -o ./bin/owlly-for-window.exe owlly.go
 ```
 
-And execute owlly.exe.
-
-```sh
-./owlly.exe
-```
-
-Or, simply download executable from [release](https://github.com/asunlabs/owlly/releases/tag/ver0.1.0) and execute it.
+Or, simply download binaries from [release](https://github.com/asunlabs/owlly/releases) and execute it.
 
 ## Prerequisite
 
@@ -56,20 +59,10 @@ AUTHOR="developerasun"
 FOO="bar"
 SLACK_BOT_USER_OAUTH_TOKEN="xoxb-some-value-here"
 SLACK_CHANNEL_ID="channel-id-here"
-# OWLLY_DONE="true" # when update is done
+# OWLLY_DONE="true" // add this line when update is done
 ```
 
 ## Usage
-
-1. Run Owlly to watch .env changes.
-
-```sh
-# if you cloned a repo,
-go run owlly.go
-
-# if you executes .exe file,
-./owlly.exe
-```
 
 1. Update .env as you wish.
 
@@ -77,20 +70,32 @@ go run owlly.go
 FOO="bar"
 ```
 
-1. Once done, set OWLLY_DONE variable in your .env. This variable will be a key for Owlly to know if your update is done.
+2. Once done, set OWLLY_DONE variable in your .env. This variable will be a key for Owlly to know if your update is done.
 
 ```sh
 # length of OWLLY_DONE > 0 ? send a DM : do nothing
 OWLLY_DONE="true"
 ```
 
+3. Run Owlly to watch .env changes.
+
+```sh
+# if you cloned a repo,
+go run owlly.go
+
+# if you executes binaries,
+./owlly-for-windows.exe
+./owlly-for-mac
+./owlly-for-mac-m1
+```
+
 Check your slack channel if the message is sent.
 
 **Note**
 
-Owlly ver 0.1.0 does not support hot-reload yet. It means that you have to re-start Owlly in the situation where 1) you sent DM already 2) but updated it again 3) and want to send it again. Log will be printed but Slack API would not invoke in the case.
+Owlly ver 0.1.0 does not support hot-reload yet. It means that you have to re-start Owlly in the situation where 1) you sent DM already 2) but updated it again 3) and want to send it again.
 
-## Contributor
+## Maintainer
 
 Project Created by [developerasun](https://github.com/developerasun)
 
