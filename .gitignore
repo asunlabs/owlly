@@ -3,6 +3,9 @@
 .env.production
 .env.development
 .env.test
+owlly-for-mac
+owlly-for-mac-m1
+owlly.exe
 
 # Pre-feature
 src
