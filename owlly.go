@@ -45,7 +45,7 @@ func getEnvList() []string {
 func registerEnvs() {
 	for _, v := range getEnvList() {
 		wd, _ := os.Getwd()
-		filePath := strings.Join([]string{wd, "\\", v}, "")
+		filePath := strings.Join([]string{wd, "/", v}, "")
 		
 		wErr := watcher.Add(filePath)
 		nilChecker(wErr)
@@ -78,7 +78,7 @@ func updateEnvs() {
 		nilChecker(rErr)
 
 		wrapDirName := "config"
-		wrapDirPath := strings.Join([]string{wd, "\\", wrapDirName, "\\"}, "")
+		wrapDirPath := strings.Join([]string{wd, "/", wrapDirName, "/"}, "")
 		wrapEnvName := strings.Join([]string{v, ".", wrapDirName}, "")
 		wrapEnvFile := strings.Join([]string{wrapDirPath, wrapEnvName}, "")
 
@@ -90,7 +90,7 @@ func updateEnvs() {
 func cleanupEnvs() {
 	wd, _ := os.Getwd()
 	for _, v := range getEnvList() {
-		fullPathForWrapEnv := strings.Join([]string{wd, "\\", "config", "\\", v, ".config"}, "")
+		fullPathForWrapEnv := strings.Join([]string{wd, "/", "config", "/", v, ".config"}, "")
 		_, sErr := os.Stat(fullPathForWrapEnv)
 
 		if ok := os.IsExist(sErr); ok {
@@ -120,7 +120,7 @@ func sendSlackDM() {
 	
 	for _, v := range getEnvList() {
 		if isDone := isUpdateFinished(); isDone[v] {
-			fullPathForWrapEnv := strings.Join([]string{wd, "\\", "config", "\\", v, ".config"}, "")
+			fullPathForWrapEnv := strings.Join([]string{wd, "/", "config", "/", v, ".config"}, "")
 			wrapEnvName := strings.Join([]string{v, ".config"}, "")
 
 			envStringForWrapEnv = convertEnvMapToString(fullPathForWrapEnv, wrapEnvName)
@@ -137,7 +137,7 @@ func isUpdateFinished() map[string]bool {
 
 	for _, v := range getEnvList() {
 		wd, _ := os.Getwd()
-		fullPath := strings.Join([]string{wd, "\\", v}, "")
+		fullPath := strings.Join([]string{wd, "/", v}, "")
 
 		_data, _rErr := os.ReadFile(fullPath)
 		nilChecker(_rErr)
