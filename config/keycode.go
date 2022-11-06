@@ -9,5 +9,6 @@ const (
 	Designer
 	Welfare
 
-	RESERVED = "OWLLY_DONE"
+	RESERVED   = "OWLLY_DONE"
+	OWNER_PERM = 0644
 )

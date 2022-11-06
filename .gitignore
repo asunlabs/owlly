@@ -4,6 +4,9 @@
 .env.development
 .env.test
 
+# Pre-feature
+src
+
 config/*
 !config/database.go
 !config/keycode.go
