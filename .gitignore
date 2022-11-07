@@ -1,8 +1,12 @@
-# Configs
+# env file list
 .env
 .env.production
 .env.development
 .env.test
+.env.dev
+.env.prod
+
+# Owlly binaries
 owlly-for-mac
 owlly-for-mac-m1
 owlly.exe
