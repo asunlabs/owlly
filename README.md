@@ -1,16 +1,16 @@
 <div align="center">
-  <img src="https://user-images.githubusercontent.com/83855174/200222357-3e74436c-36be-41f9-8da6-519052db15bf.png" alt="owlly banner" width="100%" />
+  <img src="https://user-images.githubusercontent.com/83855174/200222357-3e74436c-36be-41f9-8da6-519052db15bf.png" alt="banner" width="100%" />
 </div>
 
 # 🦉 Owlly
 
-<img src="https://img.shields.io/badge/version-v0.1.3-red" alt="version 0.1.3" />
+<img src="https://img.shields.io/badge/version-v0.1.4-red" alt="version 0.1.4" />
 
 A file-based .env change notifier for your slack team.
 
-<img src="https://user-images.githubusercontent.com/83855174/198875029-f20bba16-66e6-48d2-9d06-9feaea8fe175.gif" height="400px" alt="owlly banner" width="100%" />
+<img src="https://user-images.githubusercontent.com/83855174/200312951-eec9e105-1772-4afa-b0ae-233d5fbda28d.gif" alt="demo" width="100%" />
 
-## Contents
+## Table of Contents
 
 - [Owlly](#owlly)
   - [Features](#features)
@@ -23,7 +23,7 @@ A file-based .env change notifier for your slack team.
 ## Features
 
 - Auto-sync .env file changes
-- Watch multiple .env files: .env, .env.test, .env.development, .env.production
+- Watch multiple .env files
 - Auto-post the update to slack channel as attachment
 - Basic metadata supported: timestamp, .env directory
 - Cross platform supported: Windows, Mac OS(intel, m1 chip)
@@ -48,6 +48,23 @@ Or, simply download binaries from [release](https://github.com/asunlabs/owlly/re
 
 ## Prerequisite
 
+### Assumption
+
+Owlly will check if below files exist in your project root and sync if exist.
+
+```go
+	envList  = []string{
+		".env",
+		".env.test",
+		".env.development",
+		".env.production",
+		".env.dev",
+		".env.prod",
+	}
+```
+
+### Slack
+
 In order to use Owlly, you have to
 
 1. Create a slack bot
@@ -66,26 +83,20 @@ SLACK_CHANNEL_ID="channel-id-here"
 
 ## Usage
 
-1. Make sure you have all .env files in project root
-
-```
-.env, .env.test, .env.production, .env.development
-```
-
-2. Update .env files as you wish.
+1. Update .env files as you wish.
 
 ```sh
 FOO="bar"
 ```
 
-3. Once done, set OWLLY_DONE variable in your .env. This variable will be a key for Owlly to know if your update is done.
+2. Once done, set OWLLY_DONE variable in your .env. This variable will be a key for Owlly to know if your update is done.
 
 ```sh
 # length of OWLLY_DONE > 0 ? send a DM : do nothing
 OWLLY_DONE="true"
 ```
 
-4. Run Owlly to watch .env changes.
+3. Run Owlly
 
 ```sh
 # if you cloned a repo,
@@ -97,9 +108,9 @@ go run owlly.go
 ./owlly-for-mac-m1
 ```
 
-Check your slack channel if the message is sent. Result will look like below. 
+Check your slack channel if the message is sent. Result will look like below.
 
-<img src="hhttps://user-images.githubusercontent.com/83855174/198875580-ba52d111-907a-43bf-8937-23b5558378a4.png" height="400px" alt="owlly banner" width="100%" />
+<img src="https://user-images.githubusercontent.com/83855174/200310048-48d918c4-2478-4d60-a68a-906202b1a8db.png" height="400px" alt="owlly banner" width="100%" />
 
 **Note**
 
