@@ -20,7 +20,14 @@ var (
 	watcher  *fsnotify.Watcher
 	api      *slack.Client
 	onlyOnce sync.Once
-	envList  = []string{".env", ".env.test", ".env.development", ".env.production"}
+	envList  = []string{
+		".env", 
+		".env.test", 
+		".env.development", 
+		".env.production", 
+		".env.dev",
+		".env.prod",
+	}
 )
 
 func nilChecker(err error) {
@@ -41,23 +48,50 @@ func getEnvList() []string {
 	return envList
 }
 
+func hasNamedEnvFiles(filePath string) bool {
+	var result bool
+
+	_, fErr := os.Stat(filePath)
+
+	if os.IsNotExist(fErr) {
+		result = false
+	}
+
+	if !os.IsNotExist(fErr) {
+		result = true
+	}
+
+	return result
+}
+
 // @dev start watching multiple envs
 func registerEnvs() {
 	for _, v := range getEnvList() {
 		wd, _ := os.Getwd()
 		filePath := strings.Join([]string{wd, "/", v}, "")
 		
-		wErr := watcher.Add(filePath)
-		nilChecker(wErr)
-		color.Blue(fmt.Sprintf("watching: %v", v))
+		// add only existing envs
+		ok := hasNamedEnvFiles(filePath)
+
+		if ok {
+			wErr := watcher.Add(filePath)
+			nilChecker(wErr)
+			color.Blue(fmt.Sprintf("watching: %v", v))
+		}
 	}
 }
 
 // @dev load multiple envs and init slack instance
 func initSlack() {
 	for _, v := range envList {
-		lErr := godotenv.Load(v)
-		nilChecker(lErr)
+		wd, _ := os.Getwd()
+		filePath := strings.Join([]string{wd, "/", v}, "")
+		ok := hasNamedEnvFiles(filePath)
+		
+		if ok {
+			lErr := godotenv.Load(v)
+			nilChecker(lErr)
+		}
 	}
 
 	_api := slack.New(os.Getenv("SLACK_BOT_USER_OAUTH_TOKEN"))
@@ -66,67 +100,83 @@ func initSlack() {
 
 	connectionMsg := fmt.Sprintf("slack API connected to: %s", res.Team)
 	color.Green(connectionMsg)
-
+	
 	api = _api
 }
 
 func updateEnvs() {
-	wd, _ := os.Getwd()
-
 	for _, v := range getEnvList() {
-		data, rErr := os.ReadFile(v)
-		nilChecker(rErr)
-
-		wrapDirName := "config"
-		wrapDirPath := strings.Join([]string{wd, "/", wrapDirName, "/"}, "")
-		wrapEnvName := strings.Join([]string{v, ".", wrapDirName}, "")
-		wrapEnvFile := strings.Join([]string{wrapDirPath, wrapEnvName}, "")
-
-		// @dev owning user has a read and write permission: 0644
-		os.WriteFile(wrapEnvFile, data, fs.FileMode(config.OWNER_PERM))
+		wd, _ := os.Getwd()
+		filePath := strings.Join([]string{wd, "/", v}, "")
+		
+		ok := hasNamedEnvFiles(filePath)
+		
+		if ok {
+			data, rErr := os.ReadFile(v)
+			nilChecker(rErr)
+			
+			wrapDirName := "config"
+			wrapDirPath := strings.Join([]string{wd, "/", wrapDirName, "/"}, "")
+			wrapEnvName := strings.Join([]string{v, ".", wrapDirName}, "")
+			wrapEnvFile := strings.Join([]string{wrapDirPath, wrapEnvName}, "")
+			
+			// @dev owning user has a read and write permission: 0644
+			os.WriteFile(wrapEnvFile, data, fs.FileMode(config.OWNER_PERM))
+		}
 	}
 }
 
 func cleanupEnvs() {
+	userEnvList := []string{}
 	wd, _ := os.Getwd()
+
 	for _, v := range getEnvList() {
-		fullPathForWrapEnv := strings.Join([]string{wd, "/", "config", "/", v, ".config"}, "")
-		_, sErr := os.Stat(fullPathForWrapEnv)
-
-		if ok := os.IsExist(sErr); ok {
-			rErr := os.Remove(fullPathForWrapEnv)
-			nilChecker(rErr)
+		ok := hasNamedEnvFiles(strings.Join([]string{wd, "/", v}, ""))
+		if ok {
+			userEnvList = append(userEnvList, v)
 		}
+	}
 
+	for _, v := range userEnvList {
+		fullPathForWrapEnv := strings.Join([]string{wd, "/", "config", "/", v, ".config"}, "")
+	
+		rErr := os.Remove(fullPathForWrapEnv)
+		nilChecker(rErr)
+	
 		_, cErr := os.Create(fullPathForWrapEnv)
 		nilChecker(cErr)
-
+		
 		_data, rErr := os.ReadFile(v)
 		nilChecker(rErr)
-
+		
 		wErr := os.WriteFile(fullPathForWrapEnv, _data, fs.FileMode(config.OWNER_PERM))
 		nilChecker(wErr)
 	}
-
 	color.Red("envs config setup done")
 }
 
 func sendSlackDM() {
 	wd, _ := os.Getwd()
-
-	// has
+	
 	envStringMapForWrapEnv := make(map[string]string)
 	envStringForWrapEnv := "DEFAULT_VALUE"
-	
+
 	for _, v := range getEnvList() {
-		if isDone := isUpdateFinished(); isDone[v] {
-			fullPathForWrapEnv := strings.Join([]string{wd, "/", "config", "/", v, ".config"}, "")
-			wrapEnvName := strings.Join([]string{v, ".config"}, "")
+		filePath := strings.Join([]string{wd, "/", v}, "")
 
-			envStringForWrapEnv = convertEnvMapToString(fullPathForWrapEnv, wrapEnvName)
-			envStringMapForWrapEnv[wrapEnvName] = envStringForWrapEnv
+		ok := hasNamedEnvFiles(filePath)
 
-			notifyEnvChange(envStringMapForWrapEnv[wrapEnvName], v)
+		if ok {
+			if isDone := isUpdateFinished(); isDone[v] {
+				
+				fullPathForWrapEnv := strings.Join([]string{wd, "/", "config", "/", v, ".config"}, "")
+				wrapEnvName := strings.Join([]string{v, ".config"}, "")
+				
+				envStringForWrapEnv = convertEnvMapToString(fullPathForWrapEnv, wrapEnvName)
+				envStringMapForWrapEnv[wrapEnvName] = envStringForWrapEnv
+	
+				notifyEnvChange(envStringMapForWrapEnv[wrapEnvName], v)
+			} 
 		}
 	}
 }
@@ -139,12 +189,16 @@ func isUpdateFinished() map[string]bool {
 		wd, _ := os.Getwd()
 		fullPath := strings.Join([]string{wd, "/", v}, "")
 
-		_data, _rErr := os.ReadFile(fullPath)
-		nilChecker(_rErr)
-		data := string(_data)
+		ok := hasNamedEnvFiles(fullPath)
 
-		hasOwllyTrigger := strings.Contains(data, config.RESERVED)
-		isDone[v] = hasOwllyTrigger
+		if ok {
+			_data, _rErr := os.ReadFile(fullPath)
+			nilChecker(_rErr)
+			data := string(_data)
+	
+			hasOwllyTrigger := strings.Contains(data, config.RESERVED)
+			isDone[v] = hasOwllyTrigger
+		}
 	}
 
 	return isDone
