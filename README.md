@@ -1,12 +1,14 @@
-<img src="https://img.shields.io/badge/version-v0.1.0-red" alt="version 0.1.0" />
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/83855174/200222357-3e74436c-36be-41f9-8da6-519052db15bf.png" alt="owlly banner" width="100%" />
+</div>
 
-# Owlly
+# 🦉 Owlly
+
+<img src="https://img.shields.io/badge/version-v0.1.3-red" alt="version 0.1.3" />
 
 A file-based .env change notifier for your slack team.
 
-![owlly-intro](https://user-images.githubusercontent.com/83855174/198875029-f20bba16-66e6-48d2-9d06-9feaea8fe175.gif)
-
-![owlly-result](https://user-images.githubusercontent.com/83855174/198875580-ba52d111-907a-43bf-8937-23b5558378a4.png)
+<img src="https://user-images.githubusercontent.com/83855174/198875029-f20bba16-66e6-48d2-9d06-9feaea8fe175.gif" height="400px" alt="owlly banner" width="100%" />
 
 ## Contents
 
@@ -15,7 +17,7 @@ A file-based .env change notifier for your slack team.
   - [Install](#install)
   - [Prerequisite](#prerequisite)
   - [Usage](#usage)
-  - [Contributor](#contributor)
+  - [Maintainer](#maintainer)
   - [Reference](#reference)
 
 ## Features
@@ -64,20 +66,26 @@ SLACK_CHANNEL_ID="channel-id-here"
 
 ## Usage
 
-1. Update .env as you wish.
+1. Make sure you have all .env files in project root
+
+```
+.env, .env.test, .env.production, .env.development
+```
+
+2. Update .env files as you wish.
 
 ```sh
 FOO="bar"
 ```
 
-2. Once done, set OWLLY_DONE variable in your .env. This variable will be a key for Owlly to know if your update is done.
+3. Once done, set OWLLY_DONE variable in your .env. This variable will be a key for Owlly to know if your update is done.
 
 ```sh
 # length of OWLLY_DONE > 0 ? send a DM : do nothing
 OWLLY_DONE="true"
 ```
 
-3. Run Owlly to watch .env changes.
+4. Run Owlly to watch .env changes.
 
 ```sh
 # if you cloned a repo,
@@ -89,11 +97,13 @@ go run owlly.go
 ./owlly-for-mac-m1
 ```
 
-Check your slack channel if the message is sent.
+Check your slack channel if the message is sent. Result will look like below. 
+
+<img src="hhttps://user-images.githubusercontent.com/83855174/198875580-ba52d111-907a-43bf-8937-23b5558378a4.png" height="400px" alt="owlly banner" width="100%" />
 
 **Note**
 
-Owlly ver 0.1.0 does not support hot-reload yet. It means that you have to re-start Owlly in the situation where 1) you sent DM already 2) but updated it again 3) and want to send it again.
+- Owlly ver 0.1.3 does not support hot-reload yet. It means that you have to re-start Owlly in the situation where 1) you sent DM already 2) but updated it again 3) and want to send it again.
 
 ## Maintainer
 
