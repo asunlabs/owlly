@@ -23,7 +23,7 @@ A file-based .env change notifier for your slack team.
 - Auto-post the update to slack channel as attachment
 - Basic metadata supported: timestamp, .env directory
 - Cross platform supported: Windows, Mac OS(intel, m1 chip)
-- Got a cool hand-drawn logo thanks to @HaidiYJ
+- Got a cool hand-drawn logo thanks to [@HaidiYJ](https://github.com/HaidiYJ)
 
   ![owlly-logo-resized](https://user-images.githubusercontent.com/83855174/201008428-7545fafb-bd55-46dc-ab41-46c1c5d5180c.jpg)
 
@@ -71,16 +71,6 @@ In order to use Owlly, you have to
 2. Install the bot to your slack workspace
 3. Issue bot user oauth token and get channel ID to use the bot.
 
-So your .env will look like,
-
-```sh
-AUTHOR="developerasun"
-FOO="bar"
-SLACK_BOT_USER_OAUTH_TOKEN="xoxb-some-value-here"
-SLACK_CHANNEL_ID="channel-id-here"
-# OWLLY_DONE="true" // add this line when update is done
-```
-
 ## Usage
 
 1. Update .env files as you wish.
@@ -89,11 +79,16 @@ SLACK_CHANNEL_ID="channel-id-here"
 FOO="bar"
 ```
 
-2. Once done, set OWLLY_DONE variable in your .env. This variable will be a key for Owlly to know if your update is done.
+2. Once done, set OWLLY_DONE variable in your .env. This variable will be a key for Owlly to know if your update is done. So your .env will look like,
 
 ```sh
+AUTHOR="developerasun"
+FOO="bar"
+SLACK_BOT_USER_OAUTH_TOKEN="xoxb-some-value-here"
+SLACK_CHANNEL_ID="channel-id-here"
+
 # length of OWLLY_DONE > 0 ? send a DM : do nothing
-OWLLY_DONE="true"
+# OWLLY_DONE="true" // add this line when update is done
 ```
 
 3. Run Owlly
