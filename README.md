@@ -1,10 +1,6 @@
-<div align="center">
-  <img src="https://user-images.githubusercontent.com/83855174/200222357-3e74436c-36be-41f9-8da6-519052db15bf.png" alt="banner" width="100%" />
-</div>
+# 🦉Owlly
 
-# 🦉 Owlly
-
-<img src="https://img.shields.io/badge/version-v0.1.4-red" alt="version 0.1.4" />
+<img src="https://img.shields.io/badge/version-v0.1.4-red" alt="version 0.1.4" /> [![wakatime](https://wakatime.com/badge/user/e56daee8-7aae-4b0e-814c-b6bb7f5f841c/project/c15254fd-0a5e-4b66-b897-5ed473191817.svg)](https://wakatime.com/badge/user/e56daee8-7aae-4b0e-814c-b6bb7f5f841c/project/c15254fd-0a5e-4b66-b897-5ed473191817)
 
 A file-based .env change notifier for your slack team.
 
@@ -27,6 +23,10 @@ A file-based .env change notifier for your slack team.
 - Auto-post the update to slack channel as attachment
 - Basic metadata supported: timestamp, .env directory
 - Cross platform supported: Windows, Mac OS(intel, m1 chip)
+- Got a cool hand-drawn logo thanks to @HaidiYJ
+
+  ![owlly-logo-resized](https://user-images.githubusercontent.com/83855174/201008428-7545fafb-bd55-46dc-ab41-46c1c5d5180c.jpg)
+
 
 ## Install
 
@@ -110,11 +110,11 @@ go run owlly.go
 
 Check your slack channel if the message is sent. Result will look like below.
 
-<img src="https://user-images.githubusercontent.com/83855174/200310048-48d918c4-2478-4d60-a68a-906202b1a8db.png" height="400px" alt="owlly banner" width="100%" />
+<img src="https://user-images.githubusercontent.com/83855174/200310048-48d918c4-2478-4d60-a68a-906202b1a8db.png" alt="owlly banner" width="50%" />
 
 **Note**
 
-- Owlly ver 0.1.3 does not support hot-reload yet. It means that you have to re-start Owlly in the situation where 1) you sent DM already 2) but updated it again 3) and want to send it again.
+- Owlly ver 0.1.4 does not support hot-reload yet. It means that you have to re-start Owlly in the situation where 1) you sent DM already 2) but updated it again 3) and want to send it again.
 
 ## Maintainer
 
