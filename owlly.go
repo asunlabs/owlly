@@ -21,11 +21,12 @@ var (
 	api      *slack.Client
 	onlyOnce sync.Once
 	envList  = []string{
-		".env", 
-		".env.test", 
-		".env.development", 
-		".env.production", 
+		".env",
+		".env.test",
+		".env.development",
+		".env.production",
 		".env.dev",
+		".env.stage",
 		".env.prod",
 	}
 )
@@ -69,7 +70,7 @@ func registerEnvs() {
 	for _, v := range getEnvList() {
 		wd, _ := os.Getwd()
 		filePath := strings.Join([]string{wd, "/", v}, "")
-		
+
 		// add only existing envs
 		ok := hasNamedEnvFiles(filePath)
 
@@ -87,20 +88,20 @@ func initSlack() {
 		wd, _ := os.Getwd()
 		filePath := strings.Join([]string{wd, "/", v}, "")
 		ok := hasNamedEnvFiles(filePath)
-		
+
 		if ok {
 			lErr := godotenv.Load(v)
 			nilChecker(lErr)
 		}
 	}
-
-	_api := slack.New(os.Getenv("SLACK_BOT_USER_OAUTH_TOKEN"))
+	
+	_api := slack.New(config.Owlly.SlackBotOauthToken)
 	res, err := _api.AuthTest()
 	nilChecker(err)
 
 	connectionMsg := fmt.Sprintf("slack API connected to: %s", res.Team)
 	color.Green(connectionMsg)
-	
+
 	api = _api
 }
 
@@ -108,20 +109,21 @@ func updateEnvs() {
 	for _, v := range getEnvList() {
 		wd, _ := os.Getwd()
 		filePath := strings.Join([]string{wd, "/", v}, "")
-		
+
 		ok := hasNamedEnvFiles(filePath)
-		
+
 		if ok {
 			data, rErr := os.ReadFile(v)
 			nilChecker(rErr)
-			
+
 			wrapDirName := "config"
 			wrapDirPath := strings.Join([]string{wd, "/", wrapDirName, "/"}, "")
 			wrapEnvName := strings.Join([]string{v, ".", wrapDirName}, "")
 			wrapEnvFile := strings.Join([]string{wrapDirPath, wrapEnvName}, "")
-			
+
 			// @dev owning user has a read and write permission: 0644
-			os.WriteFile(wrapEnvFile, data, fs.FileMode(config.OWNER_PERM))
+			ownerPerm := 0644 
+			os.WriteFile(wrapEnvFile, data, fs.FileMode(ownerPerm))
 		}
 	}
 }
@@ -139,17 +141,18 @@ func cleanupEnvs() {
 
 	for _, v := range userEnvList {
 		fullPathForWrapEnv := strings.Join([]string{wd, "/", "config", "/", v, ".config"}, "")
-	
+
 		rErr := os.Remove(fullPathForWrapEnv)
 		nilChecker(rErr)
-	
+
 		_, cErr := os.Create(fullPathForWrapEnv)
 		nilChecker(cErr)
-		
+
 		_data, rErr := os.ReadFile(v)
 		nilChecker(rErr)
-		
-		wErr := os.WriteFile(fullPathForWrapEnv, _data, fs.FileMode(config.OWNER_PERM))
+
+		ownerPerm := 0644
+		wErr := os.WriteFile(fullPathForWrapEnv, _data, fs.FileMode(ownerPerm))
 		nilChecker(wErr)
 	}
 	color.Red("envs config setup done")
@@ -157,7 +160,7 @@ func cleanupEnvs() {
 
 func sendSlackDM() {
 	wd, _ := os.Getwd()
-	
+
 	envStringMapForWrapEnv := make(map[string]string)
 	envStringForWrapEnv := "DEFAULT_VALUE"
 
@@ -168,15 +171,18 @@ func sendSlackDM() {
 
 		if ok {
 			if isDone := isUpdateFinished(); isDone[v] {
-				
-				fullPathForWrapEnv := strings.Join([]string{wd, "/", "config", "/", v, ".config"}, "")
+
+				fullPathForWrapEnv := strings.Join(
+					[]string{wd, "/", "config", "/", v, ".config"},
+					"",
+				)
 				wrapEnvName := strings.Join([]string{v, ".config"}, "")
-				
+
 				envStringForWrapEnv = convertEnvMapToString(fullPathForWrapEnv, wrapEnvName)
 				envStringMapForWrapEnv[wrapEnvName] = envStringForWrapEnv
-	
+
 				notifyEnvChange(envStringMapForWrapEnv[wrapEnvName], v)
-			} 
+			}
 		}
 	}
 }
@@ -195,8 +201,8 @@ func isUpdateFinished() map[string]bool {
 			_data, _rErr := os.ReadFile(fullPath)
 			nilChecker(_rErr)
 			data := string(_data)
-	
-			hasOwllyTrigger := strings.Contains(data, config.RESERVED)
+
+			hasOwllyTrigger := strings.Contains(data, config.Owlly.TriggerName)
 			isDone[v] = hasOwllyTrigger
 		}
 	}
@@ -231,31 +237,32 @@ func getUpdateMetadata() (string, string) {
 
 func notifyEnvChange(envString string, envFileName string) {
 	date, dirPath := getUpdateMetadata()
-	dateMsg := fmt.Sprintf("%v updated at: %v", envFileName, date)
-	pathMsg := fmt.Sprintf("directory is: %v", dirPath)
 
+	pathMsg := fmt.Sprintf("directory is: %v", dirPath)
+	footer := fmt.Sprintf("%v at: %v", envFileName, pathMsg)
+ 
 	// @dev assert a parsed env value is thread-safe
 	attachedEnv := slack.AttachmentField{
-		Title: "Copy and paste below texts to update",
+		Title: "🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐",
 		Value: envString,
 		Short: false,
 	}
 
+	postBy := fmt.Sprintf("%v updated %v", config.Owlly.SlackUserName, envFileName)
+
 	attachment := slack.Attachment{
-		Title:   "ENV update",
+		Title:   postBy,
 		Fields:  []slack.AttachmentField{attachedEnv},
-		Pretext: dateMsg,
-		Footer:  pathMsg,
+		Footer:  footer,
+		AuthorID: config.Owlly.SlackUserID,
 	}
-
-	postTo := os.Getenv("SLACK_CHANNEL_ID")
+	
+	postTo := config.Owlly.SlackChannelID
 	postWhat := slack.MsgOptionAttachments(attachment)
-	postAs := slack.MsgOptionAsUser(true)
-
+	
 	channelID, _, msgErr := api.PostMessage(
 		postTo,
 		postWhat,
-		postAs,
 	)
 
 	nilChecker(msgErr)
@@ -265,6 +272,8 @@ func notifyEnvChange(envString string, envFileName string) {
 }
 
 func main() {
+	config.New()
+
 	cleanupEnvs()
 
 	onlyOnce.Do(func() {

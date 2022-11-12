@@ -1,0 +1,5 @@
+TriggerName = "OWLLY_DONE"
+SlackBotOauthToken="xoxb-some-value-here"
+SlackChannelID ="xxx-123-yyy"
+SlackUserID = "aaa-000-zzz"
+SlackUserName = "Jake Sung"
