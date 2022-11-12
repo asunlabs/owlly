@@ -1,4 +1,4 @@
-name: auto-formatter
+name: lint and format
 
 on:
   pull_request:
@@ -16,13 +16,13 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+      - name: repo cloning
+        uses: actions/checkout@v3
+
       - name: go setup
         uses: actions/setup-go@v3
         with:
           go-version: ${{ matrix.go }}
-
-      - name: repo cloning
-        uses: actions/checkout@v3
 
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
