@@ -11,12 +11,15 @@ owlly-for-mac
 owlly-for-mac-m1
 owlly.exe
 
+# Owlly config
+owlly.toml
+
 # Pre-feature
 src
 
 config/*
 !config/database.go
-!config/keycode.go
+!config/setup.go
 bin/*
 
 # Binaries for programs and plugins
