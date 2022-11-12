@@ -14,9 +14,6 @@ owlly.exe
 # Owlly config
 owlly.toml
 
-# Pre-feature
-src
-
 config/*
 !config/database.go
 !config/setup.go

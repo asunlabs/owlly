@@ -28,6 +28,10 @@ var (
 		".env.dev",
 		".env.stage",
 		".env.prod",
+		".env.local",
+		".env.development.local",
+		".env.test.local",
+		".env.production.local",
 	}
 )
 
@@ -94,7 +98,7 @@ func initSlack() {
 			nilChecker(lErr)
 		}
 	}
-	
+
 	_api := slack.New(config.Owlly.SlackBotOauthToken)
 	res, err := _api.AuthTest()
 	nilChecker(err)
@@ -122,7 +126,7 @@ func updateEnvs() {
 			wrapEnvFile := strings.Join([]string{wrapDirPath, wrapEnvName}, "")
 
 			// @dev owning user has a read and write permission: 0644
-			ownerPerm := 0644 
+			ownerPerm := 0644
 			os.WriteFile(wrapEnvFile, data, fs.FileMode(ownerPerm))
 		}
 	}
@@ -240,7 +244,7 @@ func notifyEnvChange(envString string, envFileName string) {
 
 	pathMsg := fmt.Sprintf("directory is: %v", dirPath)
 	footer := fmt.Sprintf("%v at: %v", envFileName, pathMsg)
- 
+
 	// @dev assert a parsed env value is thread-safe
 	attachedEnv := slack.AttachmentField{
 		Title: "🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐",
@@ -251,15 +255,15 @@ func notifyEnvChange(envString string, envFileName string) {
 	postBy := fmt.Sprintf("%v updated %v", config.Owlly.SlackUserName, envFileName)
 
 	attachment := slack.Attachment{
-		Title:   postBy,
-		Fields:  []slack.AttachmentField{attachedEnv},
-		Footer:  footer,
+		Title:    postBy,
+		Fields:   []slack.AttachmentField{attachedEnv},
+		Footer:   footer,
 		AuthorID: config.Owlly.SlackUserID,
 	}
-	
+
 	postTo := config.Owlly.SlackChannelID
 	postWhat := slack.MsgOptionAttachments(attachment)
-	
+
 	channelID, _, msgErr := api.PostMessage(
 		postTo,
 		postWhat,

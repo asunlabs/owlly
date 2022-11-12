@@ -8,19 +8,19 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
-var ( 
+var (
 	Owlly *OwllyConfig
 )
 
 type OwllyConfig struct {
-	TriggerName string;
-	SlackBotOauthToken string;
-	SlackChannelID string;
-	SlackUserID string;
-	SlackUserName string;
+	TriggerName        string
+	SlackBotOauthToken string
+	SlackChannelID     string
+	SlackUserID        string
+	SlackUserName      string
 }
 
-func New()  {
+func New() {
 	var _Owlly OwllyConfig
 
 	path, _ := os.Getwd()
@@ -32,12 +32,12 @@ func New()  {
 	if fErr != nil {
 		log.Fatal(fErr.Error())
 	}
-	
+
 	_, dErr := toml.DecodeFile(fullPath, &_Owlly)
 
 	if dErr != nil {
 		log.Fatal(fErr.Error())
 	}
 
-	Owlly = &_Owlly 
+	Owlly = &_Owlly
 }
