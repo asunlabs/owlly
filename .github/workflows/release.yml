@@ -1,0 +1,19 @@
+---
+name: lint and release
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  release:
+    name: auto release
+    runs-on: ubuntu-latest
+    steps:
+      - name: auto release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          prerelease: false
+          automatic_release_tag: latest

@@ -1,10 +1,7 @@
----
-name: lint and release
+name: auto-formatter
 
 on:
-  push:
-    tags:
-      - "v*"
+  pull_request:
 
 jobs:
   lint:
@@ -14,14 +11,13 @@ jobs:
         os: [macos-latest, windows-latest]
     name: lint
     runs-on: ${{ matrix.os }}
-
     steps:
       - name: go setup
         uses: actions/setup-go@v3
         with:
           go-version: 1.19
 
-      - name: code cloning
+      - name: repo cloning
         uses: actions/checkout@v3
 
       - name: golangci-lint
@@ -29,13 +25,15 @@ jobs:
         with:
           version: v1.50.1
 
-  release:
-    name: auto release
-    runs-on: ubuntu-latest
+  format:
+    name: golines formatting
+    runs-on: "ubuntu-latest"
     steps:
-      - name: auto release
-        uses: marvinpinto/action-automatic-releases@latest
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          prerelease: false
-          automatic_release_tag: latest
+      - name: install
+        run: go install github.com/segmentio/golines@latest
+
+      - name: format
+        run: golines -w .
+
+      - name: done message
+        run: echo "Lines are formatted."
