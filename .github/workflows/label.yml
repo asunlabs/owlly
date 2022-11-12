@@ -1,0 +1,29 @@
+name: auto-labeller
+
+on:
+  pull_request:
+
+jobs:
+  add-labels:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions-ecosystem/action-add-labels@v1
+        if: startsWith(github.head_ref, 'docs/')
+        with:
+          labels: documentation
+
+      - uses: actions-ecosystem/action-add-labels@v1
+        if: startsWith(github.head_ref, 'feature/')
+        with:
+          labels: |
+            enhancement
+
+      - name: set bugfix label
+        run: echo should set a bug label
+
+      - uses: actions-ecosystem/action-add-labels@v1
+        if: startsWith(github.head_ref, 'bugfix/')
+        with:
+          labels: bug
