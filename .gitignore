@@ -8,6 +8,7 @@
 
 # Owlly
 owlly.toml
+owlly.json
 config/*.config
 owlly-for-mac
 owlly-for-mac-m1
