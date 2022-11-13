@@ -1,59 +1,81 @@
 #app {
-    height: 100vh;
-    text-align: center;
+  text-align: center;
 }
 
-#logo {
-    display: block;
-    width: 50%;
-    height: 50%;
-    margin: auto;
-    padding: 10% 0 0;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    background-origin: content-box;
+li {
+  list-style: none;
 }
 
-.result {
-    height: 20px;
-    line-height: 20px;
-    margin: 1.5rem auto;
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
-.input-box .btn {
-    width: 60px;
-    height: 30px;
-    line-height: 30px;
-    border-radius: 3px;
-    border: none;
-    margin: 0 0 0 20px;
-    padding: 0 8px;
-    cursor: pointer;
+#frontBanner {
+  width: 100%;
+  margin: 0;
 }
 
-.input-box .btn:hover {
-    background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
-    color: #333333;
+#footer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background-color: antiquewhite;
+  color: black;
+  font-weight: bold;
+  padding: 1rem;
 }
 
-.input-box .input {
-    border: none;
-    border-radius: 3px;
-    outline: none;
-    height: 30px;
-    line-height: 30px;
-    padding: 0 10px;
-    background-color: rgba(240, 240, 240, 1);
-    -webkit-font-smoothing: antialiased;
+#footer > li {
+  padding: 1rem;
+  cursor: pointer;
 }
 
-.input-box .input:hover {
-    border: none;
-    background-color: rgba(255, 255, 255, 1);
+#footer > li > span {
+  cursor: auto;
 }
 
-.input-box .input:focus {
-    border: none;
-    background-color: rgba(255, 255, 255, 1);
+#body {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  padding: 2rem;
+}
+
+#userConfig > form {
+  display: grid;
+  gap: 0.8rem;
+}
+
+#welcomePanel {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+#sendDMButton {
+  font-size: 14px;
+  color: black;
+  background-color: skyblue;
+  padding: 10px 30px;
+  border: none;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+  border-radius: 50px;
+  transition: 1000ms;
+  transform: translateY(0);
+}
+
+#sendDMButton:hover {
+  transition: 1000ms;
+  padding: 10px 50px;
+  transform: translateY(-0px);
+  background-color: rgb(24, 100, 130);
+  color: #000000;
+  border: none;
+}
+
+.footerModal {
+  background-color: aliceblue;
+  position: absolute;
+  box-sizing: border-box;
+  transform: translateX(-50%) translateY(-100%);
 }
