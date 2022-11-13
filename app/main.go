@@ -1,30 +1,36 @@
 package main
 
 import (
-  _ "embed"
-  "github.com/wailsapp/wails"
+	"embed"
+
+	"github.com/wailsapp/wails/v2"
+	"github.com/wailsapp/wails/v2/pkg/options"
+	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
 )
 
-func basic() string {
-  return "World!"
-}
-
-//go:embed frontend/build/static/js/main.js
-var js string
-
-//go:embed frontend/build/static/css/main.css
-var css string
+//go:embed all:frontend/dist
+var assets embed.FS
 
 func main() {
+	// Create an instance of the app structure
+	app := NewApp()
+	
+	// Create application with options
+	err := wails.Run(&options.App{
+		Title:  "app",
+		Width:  1024,
+		Height: 768,
+		AssetServer: &assetserver.Options{
+			Assets: assets,
+		},
+		BackgroundColour: &options.RGBA{R: 27, G: 38, B: 54, A: 1},
+		OnStartup:        app.startup,
+		Bind: []interface{}{
+			app,
+		},
+	})
 
-  app := wails.CreateApp(&wails.AppConfig{
-    Width:  1024,
-    Height: 768,
-    Title:  "app",
-    JS:     js,
-    CSS:    css,
-    Colour: "#131313",
-  })
-  app.Bind(basic)
-  app.Run()
+	if err != nil {
+		println("Error:", err.Error())
+	}
 }
