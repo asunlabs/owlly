@@ -3,6 +3,7 @@ package config
 import (
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/BurntSushi/toml"
@@ -22,10 +23,11 @@ type OwllyConfig struct {
 
 func New() {
 	var _Owlly OwllyConfig
-
-	path, _ := os.Getwd()
+	wd, _ := os.Getwd()
+	root := filepath.Dir(wd)
+	
 	fileName := "owlly.toml"
-	fullPath := strings.Join([]string{path, "/", fileName}, "")
+	fullPath := strings.Join([]string{root, "/", fileName}, "")
 
 	_, fErr := os.Stat(fullPath)
 
