@@ -6,18 +6,17 @@
 .env.dev
 .env.prod
 
-# Owlly binaries
+# Owlly
+owlly.toml
+config/*.config
 owlly-for-mac
 owlly-for-mac-m1
 owlly.exe
 
-# Owlly config
-owlly.toml
-
-config/*
-!config/database.go
-!config/setup.go
-bin/*
+# Wails
+build/bin
+node_modules
+frontend/dist
 
 # Binaries for programs and plugins
 *.exe
