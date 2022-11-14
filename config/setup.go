@@ -1,12 +1,11 @@
 package config
 
 import (
+	"encoding/json"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
-
-	"github.com/BurntSushi/toml"
 )
 
 var (
@@ -14,11 +13,11 @@ var (
 )
 
 type OwllyConfig struct {
-	TriggerName        string
-	SlackBotOauthToken string
-	SlackChannelID     string
-	SlackUserID        string
-	SlackUserName      string
+	TriggerName        string	`json:"triggerName"`
+	SlackBotOauthToken string	`json:"slackBotOauthToken"`
+	SlackChannelID     string	`json:"slackChannelID"`
+	SlackUserID        string	`json:"slackUserID"`
+	SlackUserName      string	`json:"slackUserName"`
 }
 
 func New() {
@@ -26,19 +25,19 @@ func New() {
 	wd, _ := os.Getwd()
 	root := filepath.Dir(wd)
 	
-	fileName := "owlly.toml"
+	fileName := "owlly.json"
 	fullPath := strings.Join([]string{root, "/", fileName}, "")
 
-	_, fErr := os.Stat(fullPath)
-
-	if fErr != nil {
-		log.Fatal(fErr.Error())
+	data, oErr := os.ReadFile(fullPath)
+	
+	if oErr != nil {
+		log.Fatal(oErr.Error())
 	}
 
-	_, dErr := toml.DecodeFile(fullPath, &_Owlly)
+	unMarshalErr := json.Unmarshal(data, &_Owlly)
 
-	if dErr != nil {
-		log.Fatal(fErr.Error())
+	if unMarshalErr != nil {
+		log.Fatal(unMarshalErr.Error())
 	}
 
 	Owlly = &_Owlly
