@@ -1,9 +1,10 @@
-import { FormEventHandler, useState } from "react";
+import { useState } from "react";
 import banner from "./assets/images/banner.png";
 import "./App.css";
-import owllyConfig from "../../owlly.json";
+import owllyConfig from "../../owlly.example.json";
+import "../wailsjs/runtime";
+import { EventsEmit } from "../wailsjs/runtime";
 
-// TODO add dynamic input value for owlly config
 function App() {
   // @dev footer modal local state
   const [githubModal, setGithubModal] = useState("");
@@ -12,10 +13,38 @@ function App() {
 
   // @dev owlly config local state
   const [triggerName, setTriggerName] = useState(owllyConfig.triggerName);
+  const [slackBotOauthToken, setSlackBotOauthToken] = useState(
+    owllyConfig.slackBotOauthToken
+  );
+  const [slackChannelID, setSlackChannelID] = useState(
+    owllyConfig.slackChannelID
+  );
+  const [slackUserID, setSlackUserID] = useState(owllyConfig.slackUserID);
+  const [slackUserName, setSlackUserName] = useState(owllyConfig.slackUserName);
 
+  // @dev get user input
   function handleTriggerName(e: React.ChangeEvent<HTMLInputElement>) {
-    e.target.value;
     setTriggerName(e.target.value);
+  }
+  function handleSlackBotOauthToken(e: React.ChangeEvent<HTMLInputElement>) {
+    setSlackBotOauthToken(e.target.value);
+  }
+  function handleSlackChannelID(e: React.ChangeEvent<HTMLInputElement>) {
+    setSlackChannelID(e.target.value);
+  }
+  function handleSlackUserID(e: React.ChangeEvent<HTMLInputElement>) {
+    setSlackUserID(e.target.value);
+  }
+  function handleSlackUserName(e: React.ChangeEvent<HTMLInputElement>) {
+    setSlackUserName(e.target.value);
+  }
+
+  // TODO add form value to wails runtime
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    EventsEmit("form_submit", triggerName, slackBotOauthToken);
+    alert("DM sent!");
   }
 
   function useHover(_info: string) {
@@ -53,7 +82,8 @@ function App() {
       <div id="body">
         <div id="userConfig">
           <h2>Let owlly take over your chores!</h2>
-          <form>
+          {/* form submission */}
+          <form onSubmit={(e) => handleSubmit(e)}>
             <fieldset>
               <legend>Owlly</legend>
               <input
@@ -62,10 +92,11 @@ function App() {
                 id="trigger"
                 placeholder="trigger name here"
                 value={triggerName}
-                onChange={(e) => handleTriggerName(e)}
+                onChange={(e) => {
+                  handleTriggerName(e);
+                }}
               />
             </fieldset>
-
             <fieldset>
               <legend>Slack</legend>
               <input
@@ -73,28 +104,40 @@ function App() {
                 name="token"
                 id="token"
                 placeholder="oauth token here"
-                value={owllyConfig.slackBotOauthToken}
+                value={slackBotOauthToken}
+                onChange={(e) => {
+                  handleSlackBotOauthToken(e);
+                }}
               />
               <input
                 type="text"
                 name="channelId"
                 id="channelId"
                 placeholder="channel id here"
-                value={owllyConfig.slackChannelID}
+                value={slackChannelID}
+                onChange={(e) => {
+                  handleSlackChannelID(e);
+                }}
               />
               <input
                 type="text"
                 name="userId"
                 id="userId"
                 placeholder="user id here"
-                value={owllyConfig.slackUserID}
+                value={slackUserID}
+                onChange={(e) => {
+                  handleSlackUserID(e);
+                }}
               />
               <input
                 type="text"
                 name="username"
                 id="username"
                 placeholder="username here"
-                value={owllyConfig.slackUserName}
+                value={slackUserName}
+                onChange={(e) => {
+                  handleSlackUserName(e);
+                }}
               />
             </fieldset>
             <input type="submit" id="sendDMButton" value="Send DM" />
