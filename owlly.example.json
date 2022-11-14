@@ -1,0 +1,7 @@
+{
+  "triggerName": "OWLLY_DONE",
+  "slackBotOauthToken": "xoxb-some-value-here",
+  "slackChannelID": "some-value-here",
+  "slackUserID": "some-value-here",
+  "slackUserName": "Jake Sung"
+}
