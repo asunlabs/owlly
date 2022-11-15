@@ -1,4 +1,4 @@
-package main
+package core
 
 import (
 	"fmt"
@@ -270,11 +270,11 @@ func notifyEnvChange(envString string, envFileName string) {
 	color.Green(resultMessage)
 }
 
-func main() {
+func InitOwlly() {
 	wd, _ := os.Getwd()
 	root = filepath.Dir(wd)
 
-	config.New()
+	// config.New()
 
 	cleanupEnvs()
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import banner from "./assets/images/banner.png";
 import "./App.css";
-import owllyConfig from "../../owlly.example.json";
+import owllyConfig from "../../owlly.json";
 import "../wailsjs/runtime";
 import { EventsEmit } from "../wailsjs/runtime";
 
@@ -43,7 +43,14 @@ function App() {
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    EventsEmit("form_submit", triggerName, slackBotOauthToken);
+    EventsEmit(
+      "form_submit",
+      triggerName,
+      slackBotOauthToken,
+      slackChannelID,
+      slackUserID,
+      slackUserName
+    );
     alert("DM sent!");
   }
 

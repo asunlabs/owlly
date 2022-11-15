@@ -12,6 +12,10 @@ var (
 	Owlly *OwllyConfig
 )
 
+const (
+	EVENT_CONFIG_UPDATE = "form_submit"
+)
+
 type OwllyConfig struct {
 	TriggerName        string	`json:"triggerName"`
 	SlackBotOauthToken string	`json:"slackBotOauthToken"`
@@ -22,6 +26,7 @@ type OwllyConfig struct {
 
 func New() {
 	var _Owlly OwllyConfig
+
 	wd, _ := os.Getwd()
 	root := filepath.Dir(wd)
 	
