@@ -1,14 +1,30 @@
 package main
 
+// TODO fix ERROR: Unable to find Wails in go.mod
 import (
 	"context"
-		"github.com/wailsapp/wails/v2/pkg/runtime"
-	
+	"fmt"
+
+	// "reflect"
+
+	"github.com/asunlabs/owlly/v2/config"
+	"github.com/asunlabs/owlly/v2/core"
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 // App struct
 type App struct {
 	ctx context.Context
+}
+
+type StartOwlly struct { }
+
+func NewOwlly() *StartOwlly {
+	return &StartOwlly{}
+}
+
+func (s *StartOwlly) Init()  {
+	core.InitOwlly()
 }
 
 // NewApp creates a new App application struct
@@ -17,9 +33,25 @@ func NewApp() *App {
 }
 
 // @dev runtime context should be obtained from the OnStartup or OnDomReady hooks.
-func EventListener(ctx context.Context)  {
-	runtime.EventsOn(ctx, "form_submit", func(optionalData ...interface{}) {
-		println(optionalData)
+func EventListener(ctx context.Context)  {	
+	runtime.EventsOn(ctx, config.EVENT_CONFIG_UPDATE, func(optionalData ...interface{}) {
+		_newConfig := make(map[int]string)
+
+		var newConfig config.OwllyConfig
+
+		for k, v := range optionalData {
+			fmt.Printf("value: %v\n", v)
+			_newConfig[k] = v.(string)
+		}
+		newConfig.TriggerName = _newConfig[0]
+		newConfig.SlackBotOauthToken = _newConfig[1]
+		newConfig.SlackChannelID = _newConfig[2]
+		newConfig.SlackUserID = _newConfig[3]
+		newConfig.SlackUserName = _newConfig[4]
+
+		fmt.Printf("new config %v", newConfig)
+
+		config.Owlly = &newConfig
 	})
 }
 
