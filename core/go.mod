@@ -1,4 +1,4 @@
-module github.com/asunlabs/owlly/v2/core
+module owlly/v2/core
 
 go 1.19
 

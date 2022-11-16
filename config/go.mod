@@ -1,3 +1,3 @@
-module github.com/asunlabs/owlly/v2/config
+module github.com/asunlabs/owlly/config
 
 go 1.19
