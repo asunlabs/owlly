@@ -1,14 +1,10 @@
 package main
 
-// TODO fix ERROR: Unable to find Wails in go.mod
 import (
 	"context"
-	"fmt"
 
-	// "reflect"
-
-	"github.com/asunlabs/owlly/v2/config"
-	"github.com/asunlabs/owlly/v2/core"
+	"github.com/asunlabs/owlly/config"
+	"owlly/v2/core"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
@@ -40,7 +36,6 @@ func EventListener(ctx context.Context)  {
 		var newConfig config.OwllyConfig
 
 		for k, v := range optionalData {
-			fmt.Printf("value: %v\n", v)
 			_newConfig[k] = v.(string)
 		}
 		newConfig.TriggerName = _newConfig[0]
@@ -49,9 +44,13 @@ func EventListener(ctx context.Context)  {
 		newConfig.SlackUserID = _newConfig[3]
 		newConfig.SlackUserName = _newConfig[4]
 
-		fmt.Printf("new config %v", newConfig)
-
-		config.Owlly = &newConfig
+		config.New(
+			newConfig.TriggerName,
+			newConfig.SlackBotOauthToken,
+			newConfig.SlackChannelID,
+			newConfig.SlackUserID,
+			newConfig.SlackUserName,
+		)
 	})
 }
 
