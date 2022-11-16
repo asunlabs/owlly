@@ -1,0 +1,5 @@
+go 1.19
+
+use ./core
+use ./config
+use . // don't forget to add root workspace

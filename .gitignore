@@ -1,26 +1,28 @@
 # env file list
 .env
-.env.production
-.env.development
 .env.test
+.env.development
+.env.production
 .env.dev
+.env.stage
 .env.prod
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# Owlly binaries
+# Owlly
+owlly.toml
+owlly.json
+config/*.config
 owlly-for-mac
 owlly-for-mac-m1
 owlly.exe
 
-# Owlly config
-owlly.toml
-
-# Pre-feature
-src
-
-config/*
-!config/database.go
-!config/setup.go
-bin/*
+# Wails
+build/bin
+node_modules
+frontend/dist
 
 # Binaries for programs and plugins
 *.exe

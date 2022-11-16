@@ -1,43 +1,44 @@
 package config
 
 import (
-	"log"
-	"os"
-	"strings"
+	"fmt"
 
-	"github.com/BurntSushi/toml"
+	"github.com/fatih/color"
 )
 
-var ( 
+var (
 	Owlly *OwllyConfig
 )
 
+const (
+	EVENT_CONFIG_UPDATE = "form_submit"
+)
+
 type OwllyConfig struct {
-	TriggerName string;
-	SlackBotOauthToken string;
-	SlackChannelID string;
-	SlackUserID string;
-	SlackUserName string;
+	TriggerName        string	`json:"triggerName"`
+	SlackBotOauthToken string	`json:"slackBotOauthToken"`
+	SlackChannelID     string	`json:"slackChannelID"`
+	SlackUserID        string	`json:"slackUserID"`
+	SlackUserName      string	`json:"slackUserName"`
 }
 
-func New()  {
+func New(
+	triggerName string, 
+	slackBotOauthToken string, 
+	slackChannelID string,
+	slackUserID string,
+	slackUserName string,
+	) {
+
 	var _Owlly OwllyConfig
 
-	path, _ := os.Getwd()
-	fileName := "owlly.toml"
-	fullPath := strings.Join([]string{path, "/", fileName}, "")
+	_Owlly.TriggerName = triggerName
+	_Owlly.SlackBotOauthToken = slackBotOauthToken
+	_Owlly.SlackChannelID = slackChannelID
+	_Owlly.SlackUserID = slackUserID
+	_Owlly.SlackUserName = slackUserName
 
-	_, fErr := os.Stat(fullPath)
-
-	if fErr != nil {
-		log.Fatal(fErr.Error())
-	}
-	
-	_, dErr := toml.DecodeFile(fullPath, &_Owlly)
-
-	if dErr != nil {
-		log.Fatal(fErr.Error())
-	}
-
-	Owlly = &_Owlly 
+	Owlly = &_Owlly
+	msg := fmt.Sprintf("Config from GUI: %v", Owlly)
+	color.Cyan(msg)
 }
