@@ -1,9 +1,9 @@
 import { useState } from "react";
 import banner from "./assets/images/banner.png";
 import "./App.css";
-import owllyConfig from "../../owlly.json";
-import "../wailsjs/runtime";
+import configExample from "../../owlly.example.json";
 import { EventsEmit } from "../wailsjs/runtime";
+import { Init } from "../wailsjs/go/main/StartOwlly";
 
 function App() {
   // @dev footer modal local state
@@ -12,15 +12,17 @@ function App() {
   const [gmailModal, setGmailModal] = useState("");
 
   // @dev owlly config local state
-  const [triggerName, setTriggerName] = useState(owllyConfig.triggerName);
+  const [triggerName, setTriggerName] = useState(configExample.triggerName);
   const [slackBotOauthToken, setSlackBotOauthToken] = useState(
-    owllyConfig.slackBotOauthToken
+    configExample.slackBotOauthToken
   );
   const [slackChannelID, setSlackChannelID] = useState(
-    owllyConfig.slackChannelID
+    configExample.slackChannelID
   );
-  const [slackUserID, setSlackUserID] = useState(owllyConfig.slackUserID);
-  const [slackUserName, setSlackUserName] = useState(owllyConfig.slackUserName);
+  const [slackUserID, setSlackUserID] = useState(configExample.slackUserID);
+  const [slackUserName, setSlackUserName] = useState(
+    configExample.slackUserName
+  );
 
   // @dev get user input
   function handleTriggerName(e: React.ChangeEvent<HTMLInputElement>) {
@@ -39,8 +41,18 @@ function App() {
     setSlackUserName(e.target.value);
   }
 
-  // TODO add form value to wails runtime
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  // TODO add save feature in ver 0.2.1
+  function handleSave() {
+    localStorage.setItem("TriggerName", triggerName);
+    localStorage.setItem("SlackBotOauthToken", slackBotOauthToken);
+    localStorage.setItem("SlackChannelID", slackChannelID);
+    localStorage.setItem("SlackUserID", slackUserID);
+    localStorage.setItem("SlackUserName", slackUserName);
+
+    alert("Value saved!");
+  }
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     EventsEmit(
@@ -51,6 +63,8 @@ function App() {
       slackUserID,
       slackUserName
     );
+
+    await Init();
     alert("DM sent!");
   }
 
@@ -90,14 +104,13 @@ function App() {
         <div id="userConfig">
           <h2>Let owlly take over your chores!</h2>
           {/* form submission */}
-          <form onSubmit={(e) => handleSubmit(e)}>
+          <form onSubmit={async (e) => handleSubmit(e)}>
             <fieldset>
               <legend>Owlly</legend>
               <input
                 type="text"
                 name="trigger"
                 id="trigger"
-                placeholder="trigger name here"
                 value={triggerName}
                 onChange={(e) => {
                   handleTriggerName(e);
@@ -110,7 +123,6 @@ function App() {
                 type="text"
                 name="token"
                 id="token"
-                placeholder="oauth token here"
                 value={slackBotOauthToken}
                 onChange={(e) => {
                   handleSlackBotOauthToken(e);
@@ -120,7 +132,6 @@ function App() {
                 type="text"
                 name="channelId"
                 id="channelId"
-                placeholder="channel id here"
                 value={slackChannelID}
                 onChange={(e) => {
                   handleSlackChannelID(e);
@@ -130,7 +141,6 @@ function App() {
                 type="text"
                 name="userId"
                 id="userId"
-                placeholder="user id here"
                 value={slackUserID}
                 onChange={(e) => {
                   handleSlackUserID(e);
@@ -140,14 +150,15 @@ function App() {
                 type="text"
                 name="username"
                 id="username"
-                placeholder="username here"
                 value={slackUserName}
                 onChange={(e) => {
                   handleSlackUserName(e);
                 }}
               />
             </fieldset>
-            <input type="submit" id="sendDMButton" value="Send DM" />
+            <button type="submit" id="sendButton">
+              Send DM
+            </button>
           </form>
         </div>
         <div id="welcomePanel">
