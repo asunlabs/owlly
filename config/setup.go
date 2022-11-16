@@ -1,11 +1,9 @@
 package config
 
 import (
-	"encoding/json"
-	"log"
-	"os"
-	"path/filepath"
-	"strings"
+	"fmt"
+
+	"github.com/fatih/color"
 )
 
 var (
@@ -24,26 +22,23 @@ type OwllyConfig struct {
 	SlackUserName      string	`json:"slackUserName"`
 }
 
-func New() {
+func New(
+	triggerName string, 
+	slackBotOauthToken string, 
+	slackChannelID string,
+	slackUserID string,
+	slackUserName string,
+	) {
+
 	var _Owlly OwllyConfig
 
-	wd, _ := os.Getwd()
-	root := filepath.Dir(wd)
-	
-	fileName := "owlly.json"
-	fullPath := strings.Join([]string{root, "/", fileName}, "")
-
-	data, oErr := os.ReadFile(fullPath)
-	
-	if oErr != nil {
-		log.Fatal(oErr.Error())
-	}
-
-	unMarshalErr := json.Unmarshal(data, &_Owlly)
-
-	if unMarshalErr != nil {
-		log.Fatal(unMarshalErr.Error())
-	}
+	_Owlly.TriggerName = triggerName
+	_Owlly.SlackBotOauthToken = slackBotOauthToken
+	_Owlly.SlackChannelID = slackChannelID
+	_Owlly.SlackUserID = slackUserID
+	_Owlly.SlackUserName = slackUserName
 
 	Owlly = &_Owlly
+	msg := fmt.Sprintf("Config from GUI: %v", Owlly)
+	color.Cyan(msg)
 }
