@@ -73,8 +73,10 @@ func hasNamedEnvFiles(filePath string) bool {
 
 // @dev start watching multiple envs
 func registerEnvs() {
+	wd, _ := os.Getwd()
+
 	for _, v := range getEnvList() {
-		filePath := strings.Join([]string{root, "/", v}, "")
+		filePath := strings.Join([]string{wd, "/", v}, "")
 
 		// add only existing envs
 		ok := hasNamedEnvFiles(filePath)
@@ -89,8 +91,9 @@ func registerEnvs() {
 
 // @dev load multiple envs and init slack instance
 func initSlack() {
+	wd, _ := os.Getwd()
 	for _, v := range envList {
-		filePath := strings.Join([]string{root, "/", v}, "")
+		filePath := strings.Join([]string{wd, "/", v}, "")
 		ok := hasNamedEnvFiles(filePath)
 
 		if ok {
@@ -110,8 +113,10 @@ func initSlack() {
 }
 
 func updateEnvs() {
+	wd, _ := os.Getwd()
+
 	for _, v := range getEnvList() {
-		filePath := strings.Join([]string{root, "/", v}, "")
+		filePath := strings.Join([]string{wd, "/", v}, "")
 
 		ok := hasNamedEnvFiles(filePath)
 
@@ -120,7 +125,7 @@ func updateEnvs() {
 			nilChecker(rErr)
 
 			wrapDirName := "config"
-			wrapDirPath := strings.Join([]string{root, "/", wrapDirName, "/"}, "")
+			wrapDirPath := strings.Join([]string{wd, "/", wrapDirName, "/"}, "")
 			wrapEnvName := strings.Join([]string{v, ".", wrapDirName}, "")
 			wrapEnvFile := strings.Join([]string{wrapDirPath, wrapEnvName}, "")
 
@@ -133,20 +138,25 @@ func updateEnvs() {
 
 func cleanupEnvs() {
 	userEnvList := []string{}
+	wd, _ := os.Getwd()
 
 	for _, v := range getEnvList() {
-		ok := hasNamedEnvFiles(strings.Join([]string{root, "/", v}, ""))
+		ok := hasNamedEnvFiles(strings.Join([]string{wd, "/", v}, ""))
 		if ok {
 			userEnvList = append(userEnvList, v)
 		}
 	}
 
 	for _, v := range userEnvList {
-		fullPathForWrapEnv := strings.Join([]string{root, "/", "config", "/", v, ".config"}, "")
-		rootEnvPath := strings.Join([]string{root, "/", v}, "")
+		fullPathForWrapEnv := strings.Join([]string{wd, "/", "config", "/", v, ".config"}, "")
+		rootEnvPath := strings.Join([]string{wd, "/", v}, "")
 
-		rErr := os.Remove(fullPathForWrapEnv)
-		nilChecker(rErr)
+		ok := hasNamedEnvFiles(fullPathForWrapEnv)
+
+		if ok {
+			rErr := os.Remove(fullPathForWrapEnv)
+			nilChecker(rErr)
+		}
 
 		_, cErr := os.Create(fullPathForWrapEnv)
 		nilChecker(cErr)
@@ -162,11 +172,12 @@ func cleanupEnvs() {
 }
 
 func sendSlackDM() {
+	wd, _ := os.Getwd()
 	envStringMapForWrapEnv := make(map[string]string)
 	envStringForWrapEnv := "DEFAULT_VALUE"
 
 	for _, v := range getEnvList() {
-		filePath := strings.Join([]string{root, "/", v}, "")
+		filePath := strings.Join([]string{wd, "/", v}, "")
 
 		ok := hasNamedEnvFiles(filePath)
 
@@ -174,7 +185,7 @@ func sendSlackDM() {
 			if isDone := isUpdateFinished(); isDone[v] {
 
 				fullPathForWrapEnv := strings.Join(
-					[]string{root, "/", "config", "/", v, ".config"},
+					[]string{wd, "/", "config", "/", v, ".config"},
 					"",
 				)
 				wrapEnvName := strings.Join([]string{v, ".config"}, "")
@@ -191,9 +202,10 @@ func sendSlackDM() {
 func isUpdateFinished() map[string]bool {
 	// @dev initialze a map with make
 	isDone := make(map[string]bool)
+	wd, _ := os.Getwd()
 
 	for _, v := range getEnvList() {
-		fullPath := strings.Join([]string{root, "/", v}, "")
+		fullPath := strings.Join([]string{wd, "/", v}, "")
 
 		ok := hasNamedEnvFiles(fullPath)
 
@@ -274,8 +286,6 @@ func InitOwlly() {
 	wd, _ := os.Getwd()
 	root = filepath.Dir(wd)
 
-	// config.New()
-
 	cleanupEnvs()
 
 	onlyOnce.Do(func() {
@@ -307,6 +317,5 @@ func InitOwlly() {
 	}()
 
 	sendSlackDM()
-	color.Blue("WORK DONE! Exit Owlly 👋")
-	os.Exit(1)
+	color.Blue("WORK DONE! 👋")
 }
