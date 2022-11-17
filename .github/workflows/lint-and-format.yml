@@ -8,13 +8,7 @@ permissions:
 
 jobs:
   lint:
-    strategy:
-      matrix:
-        go: [1.18]
-        os: [macos-latest, windows-latest]
-    name: lint
-    runs-on: ${{ matrix.os }}
-
+    runs-on: ubuntu-latest
     steps:
       - name: repo cloning
         uses: actions/checkout@v3
@@ -29,15 +23,8 @@ jobs:
         with:
           version: v1.50 # specifiy without patch version.
 
-  format:
-    name: golines formatting
-    runs-on: "ubuntu-latest"
-    steps:
       - name: install
         run: go install github.com/segmentio/golines@latest
 
       - name: format
         run: golines -w .
-
-      - name: done message
-        run: echo "Lines are formatted."

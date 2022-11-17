@@ -1,5 +1,4 @@
----
-name: lint and release
+name: auto release
 
 on:
   push:

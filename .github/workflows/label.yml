@@ -1,4 +1,4 @@
-name: auto-labeller
+name: auto label
 
 on:
   pull_request:
@@ -17,11 +17,12 @@ jobs:
       - uses: actions-ecosystem/action-add-labels@v1
         if: startsWith(github.head_ref, 'feature/')
         with:
-          labels: |
-            enhancement
+          labels: enhancement
 
-      - name: set bugfix label
-        run: echo should set a bug label
+      - uses: actions-ecosystem/action-add-labels@v1
+        if: startsWith(github.head_ref, 'test/')
+        with:
+          labels: test
 
       - uses: actions-ecosystem/action-add-labels@v1
         if: startsWith(github.head_ref, 'bugfix/')
