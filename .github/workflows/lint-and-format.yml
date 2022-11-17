@@ -1,0 +1,30 @@
+name: lint and format
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: repo cloning
+        uses: actions/checkout@v3
+
+      - name: go setup
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ matrix.go }}
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: v1.50 # specifiy without patch version.
+
+      - name: install
+        run: go install github.com/segmentio/golines@latest
+
+      - name: format
+        run: golines -w .
