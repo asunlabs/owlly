@@ -3,7 +3,7 @@ name: auto release
 on:
   push:
     tags:
-      - v*
+      - ver*
 
 jobs:
   release:
