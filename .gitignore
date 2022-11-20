@@ -24,6 +24,9 @@ build/bin
 node_modules
 frontend/dist
 
+# VS Code
+.vscode
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
