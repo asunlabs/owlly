@@ -282,7 +282,7 @@ func notifyEnvChange(envString string, envFileName string) {
 	color.Green(resultMessage)
 }
 
-func InitOwlly() {
+func InitOwlly() bool {
 	wd, _ := os.Getwd()
 	root = filepath.Dir(wd)
 
@@ -318,4 +318,6 @@ func InitOwlly() {
 
 	sendSlackDM()
 	color.Blue("WORK DONE! 👋")
+
+	return true
 }
