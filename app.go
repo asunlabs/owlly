@@ -19,8 +19,12 @@ func NewOwlly() *StartOwlly {
 	return &StartOwlly{}
 }
 
-func (s *StartOwlly) Init()  {
-	core.InitOwlly()
+func (s *StartOwlly) Init() bool  {
+	if ok := core.InitOwlly(); ok { 
+		return true
+	}
+
+	return false
 }
 
 // NewApp creates a new App application struct
