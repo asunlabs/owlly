@@ -1,22 +1,47 @@
+import { ToastContainer, toast, useToast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
-interface IButtonProps {
-  primary?: boolean;
-}
+export const Button = styled.button`
+  // default
+  font-size: 14px;
+  color: black;
+  background-color: skyblue;
+  padding: 10px 30px;
+  border: none;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+  border-radius: 50px;
+  transition: 1000ms;
+  transform: translateY(0);
+  cursor: pointer;
 
-export const Button = styled.button<IButtonProps>`
-  background: transparent;
-  border-radius: 3px;
-  border: 2px solid palevioletred;
-  color: palevioletred;
-  margin: 0 1em;
-  padding: 0.25em 1em;
-
-  ${({ primary }: IButtonProps) =>
-    primary &&
-    css`
-      background: palevioletred;
-      color: white;
-    `};
+  // hover
+  &:hover {
+    transition: 1000ms;
+    padding: 10px 50px;
+    transform: translateY(-0px);
+    background-color: rgb(159, 72, 193);
+    color: #000000;
+    border: none;
+  }
 `;
+
+export function ToastNotification() {
+  const notify = () => {
+    toast.info(<div>✉️ DM processing!</div>, {
+      position: toast.POSITION.TOP_LEFT,
+      autoClose: 1000,
+      icon: '🦉',
+      theme: 'dark',
+    });
+  };
+
+  return (
+    <div>
+      <Button type="submit" onClick={notify}>
+        Send DM
+      </Button>
+      <ToastContainer />
+    </div>
+  );
+}

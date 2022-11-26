@@ -13,23 +13,23 @@ type App struct {
 	ctx context.Context
 }
 
-type StartOwlly struct { }
-
-func NewOwlly() *StartOwlly {
-	return &StartOwlly{}
+// NewApp creates a new App application struct
+func NewApp() *App {
+	return &App{}
 }
 
-func (s *StartOwlly) Init() bool  {
-	if ok := core.InitOwlly(); ok { 
+type Owlly struct {}
+
+func NewOwlly() *Owlly {
+	return &Owlly{}
+}
+
+func (s *Owlly) InitEnvBot() bool  {
+	if ok := core.InitEnvBot_(); ok { 
 		return true
 	}
 
 	return false
-}
-
-// NewApp creates a new App application struct
-func NewApp() *App {
-	return &App{}
 }
 
 // @dev runtime context should be obtained from the OnStartup or OnDomReady hooks.

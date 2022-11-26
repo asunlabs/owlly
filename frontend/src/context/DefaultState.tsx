@@ -2,41 +2,18 @@ import * as React from 'react';
 
 export interface ISlackContext {
   triggerName: string;
-  slackBotOauthToken: string;
-  slackChannelID: string;
-  slackUserID: string;
-  slackUserName: string;
-
-  // prettier-ignore
-  updateContext: (
-    _triggerName: string,
-    _slackBotOauthToken: string,
-    _slackChannelID: string,
-    _slackUserID: string,
-    _slackUserName: string,
-    ) => void;
+  botOauthToken: string;
+  channelID: string;
+  userID: string;
+  userName: string;
 }
 
 const _slackContext: ISlackContext = {
   triggerName: '',
-  slackBotOauthToken: '',
-  slackChannelID: '',
-  slackUserID: '',
-  slackUserName: '',
-
-  updateContext(
-    _triggerName: string,
-    _slackBotOauthToken: string,
-    _slackChannelID: string,
-    _slackUserID: string,
-    _slackUserName: string
-  ) {
-    this.triggerName = _triggerName;
-    this.slackBotOauthToken = _slackBotOauthToken;
-    this.slackChannelID = _slackChannelID;
-    this.slackUserID = _slackUserID;
-    this.slackUserName = _slackUserName;
-  },
+  botOauthToken: '',
+  channelID: '',
+  userID: '',
+  userName: '',
 };
 
 export const slackContext = React.createContext(_slackContext);
