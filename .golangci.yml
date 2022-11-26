@@ -1,5 +1,9 @@
-skip-dirs:
-  - build/*
-  - frontend/*
-
-go: "1.19"
+run:
+  timeout: "1m"
+  issue-exit-code: 1
+  tests: true
+  allow-parallel-runners: false
+  go: "1.19"
+  skip-dirs:
+    - build/*
+    - frontend/*
