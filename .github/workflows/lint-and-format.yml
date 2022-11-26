@@ -18,13 +18,16 @@ jobs:
         with:
           go-version: ${{ matrix.go }}
 
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@v3
-        with:
-          version: v1.50 # specifiy without patch version.
-
-      - name: install
+      - name: install formatter
         run: go install github.com/segmentio/golines@latest
 
       - name: format
         run: golines -w .
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: v1.50 # specifiy without patch version.
+          working-directory: |
+            - "core"
+            - "config"
