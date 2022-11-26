@@ -108,9 +108,13 @@ FOO="bar"
 
 <img src="https://user-images.githubusercontent.com/83855174/202205966-bd345933-1842-4779-ad10-ab21152cce1b.png" alt="owlly banner" width="70%" />
 
-## Maintainer
+## Contribution
 
-Project Created by [developerasun](https://github.com/developerasun)
+Owlly is a open sourc project. Feel free to open a pull request and suggest changes / improvement. 
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=asunlabs/owlly&type=Date)](https://star-history.com/#asunlabs/owlly&Date)
 
 ## Reference
 
