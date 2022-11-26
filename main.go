@@ -1,6 +1,5 @@
 package main
 
-// TODO fix ERROR: Unable to find Wails in go.mod
 import (
 	"embed"
 
@@ -15,7 +14,7 @@ var assets embed.FS
 func main() {
 	// Create an instance of the app structure
 	app := NewApp()
-	startOwlly := NewOwlly()
+	owlly := NewOwlly()
 
 	// Create application with options
 	err := wails.Run(&options.App{
@@ -29,7 +28,7 @@ func main() {
 		OnStartup: app.startup,
 		Bind: []interface{}{
 			app,
-			startOwlly,
+			owlly,
 		},
 	})
 	if err != nil {

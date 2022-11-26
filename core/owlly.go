@@ -37,11 +37,13 @@ var (
 	}
 )
 
-func nilChecker(err error) {
+func nilChecker(err error) (bool, string) {
 	if err != nil {
 		color.Red(err.Error())
-		os.Exit(1)
+		return false, err.Error()
 	}
+
+	return true, ""
 }
 
 func initWatcher() {
@@ -282,7 +284,7 @@ func notifyEnvChange(envString string, envFileName string) {
 	color.Green(resultMessage)
 }
 
-func InitOwlly() bool {
+func InitEnvBot_() bool {
 	wd, _ := os.Getwd()
 	root = filepath.Dir(wd)
 
@@ -299,10 +301,7 @@ func InitOwlly() bool {
 	go func() {
 		for {
 			select {
-			case event, ok := <-watcher.Events:
-				if !ok {
-					log.Println("event failing")
-				}
+			case event, _ := <-watcher.Events:
 				if event.Has(fsnotify.Write) {
 					log.Println("modified file: ", event.Name)
 					updateEnvs()
