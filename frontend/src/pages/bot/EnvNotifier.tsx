@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { useState } from 'react';
 import './EnvNotifier.css';
-import banner from '@assets/images/banner.png';
-import { EventsEmit } from '../../../wailsjs/runtime/runtime';
-import { Init } from '../../../wailsjs/go/main/StartOwlly';
-import { slackContext } from '../../context/DefaultState';
-import useHover from '../../hooks/useHover';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import banner from '@owlly/assets/images/banner.png';
+import useHover from '@owlly/hooks/useHover';
+import { slackContext } from '@owlly/context/DefaultState';
+import { ToastNotification } from '@owlly/components/Button';
+import { EventsEmit } from '@wailsjs/runtime/runtime';
+import { InitEnvBot } from '@wailsjs/go/main/Owlly';
 
 function EnvNotifier() {
   // @dev footer modal local state
@@ -15,29 +16,17 @@ function EnvNotifier() {
   const [linkedinModal, setLinkedinModal] = useState('');
   const [gmailModal, setGmailModal] = useState('');
 
-  // @dev owlly config local state
-  const [triggerName, setTriggerName] = useState('');
-  const [slackBotOauthToken, setSlackBotOauthToken] = useState('');
-  const [slackChannelID, setSlackChannelID] = useState('');
-  const [slackUserID, setSlackUserID] = useState('');
-  const [slackUserName, setSlackUserName] = useState('');
-
   const getSlackContext = React.useContext(slackContext);
-  // @dev get user input
-  function handleTriggerName(e: React.ChangeEvent<HTMLInputElement>) {
-    setTriggerName(e.target.value);
-  }
-  function handleSlackBotOauthToken(e: React.ChangeEvent<HTMLInputElement>) {
-    setSlackBotOauthToken(e.target.value);
-  }
-  function handleSlackChannelID(e: React.ChangeEvent<HTMLInputElement>) {
-    setSlackChannelID(e.target.value);
-  }
-  function handleSlackUserID(e: React.ChangeEvent<HTMLInputElement>) {
-    setSlackUserID(e.target.value);
-  }
-  function handleSlackUserName(e: React.ChangeEvent<HTMLInputElement>) {
-    setSlackUserName(e.target.value);
+  const [slackConfig, setSlackConfig] = useState(getSlackContext);
+
+  // handle multi-input
+  function handleSlackConfig(e: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value } = e.target;
+
+    setSlackConfig((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -45,41 +34,35 @@ function EnvNotifier() {
 
     EventsEmit(
       'form_submit',
-      triggerName,
-      slackBotOauthToken,
-      slackChannelID,
-      slackUserID,
-      slackUserName
+      slackConfig.triggerName,
+      slackConfig.botOauthToken,
+      slackConfig.channelID,
+      slackConfig.userID,
+      slackConfig.userName
     );
 
     // execute owlly core
-    const ok = await Init();
+    const ok = await InitEnvBot();
 
     if (ok) {
       setTimeout(() => {
-        toast.success('🦉✉️ DM sent!', {
+        toast.success('DM sent!', {
           position: toast.POSITION.TOP_LEFT,
           autoClose: 800,
+          icon: '🗨️🦉',
+          theme: 'dark',
+        });
+      }, 1000);
+    } else {
+      setTimeout(() => {
+        toast.success('Owlly failed!', {
+          position: toast.POSITION.TOP_LEFT,
+          autoClose: 800,
+          icon: '🗨️💀',
+          theme: 'dark',
         });
       }, 1000);
     }
-  }
-
-  function ToastNotification() {
-    const notify = () => {
-      toast.info('🦉✉️ DM processing!', {
-        position: toast.POSITION.TOP_LEFT,
-        autoClose: 1000,
-      });
-    };
-    return (
-      <>
-        <button onClick={notify} type="submit" id="sendButton">
-          Send DM
-        </button>
-        <ToastContainer theme="dark" />
-      </>
-    );
   }
 
   return (
@@ -90,62 +73,62 @@ function EnvNotifier() {
 
       <div id="body">
         <div id="userConfig">
-          <h2>Let owlly take over your chores!</h2>
+          <h2>Env bot configuration</h2>
           {/* form submission */}
           <form onSubmit={async (e) => handleSubmit(e)}>
             <fieldset>
-              <legend>Owlly</legend>
+              <legend>For Owlly</legend>
               <input
                 type="text"
-                name="trigger"
+                name="triggerName"
                 id="trigger"
                 placeholder="trigger name here"
                 required={true}
                 onChange={(e) => {
-                  handleTriggerName(e);
+                  handleSlackConfig(e);
                 }}
               />
             </fieldset>
             <fieldset>
-              <legend>Slack</legend>
+              <legend>For Slack</legend>
               <input
                 type="text"
-                name="token"
+                name="botOauthToken"
                 id="token"
                 placeholder="slack token here"
                 required={true}
                 onChange={(e) => {
-                  handleSlackBotOauthToken(e);
+                  handleSlackConfig(e);
                 }}
               />
               <input
                 type="text"
-                name="channelId"
+                name="channelID"
                 id="channelId"
                 placeholder="channel id here"
                 required={true}
                 onChange={(e) => {
-                  handleSlackChannelID(e);
+                  handleSlackConfig(e);
                 }}
               />
               <input
                 type="text"
-                name="userId"
+                name="userID"
                 id="userId"
                 placeholder="user id here"
                 required={true}
                 onChange={(e) => {
-                  handleSlackUserID(e);
+                  handleSlackConfig(e);
                 }}
               />
               <input
                 type="text"
-                name="username"
+                name="userName"
                 id="username"
                 placeholder="username here"
                 required={true}
                 onChange={(e) => {
-                  handleSlackUserName(e);
+                  handleSlackConfig(e);
                 }}
               />
             </fieldset>
@@ -153,6 +136,7 @@ function EnvNotifier() {
           </form>
         </div>
 
+        {JSON.stringify(getSlackContext)}
         <div id="welcomePanel">
           <h2>Welcome to owlly :)</h2>
           <p>Let your teammate know .env changes instantly with Owlly.</p>
