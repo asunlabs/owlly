@@ -21,8 +21,11 @@
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "@/*": [
+      "@owlly/*": [
         "./src/*"
+      ],
+      "@wailsjs/*": [
+        "./wailsjs/*"
       ]
     }
   },

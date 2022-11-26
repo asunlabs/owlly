@@ -8,6 +8,9 @@ export default defineConfig({
 
   // ! PATH: incorrect: "/src", correct: "./src"
   resolve: {
-    alias: [{ find: '@', replacement: path.resolve(__dirname, './src') }],
+    alias: [
+      { find: '@owlly', replacement: path.resolve(__dirname, './src') },
+      { find: '@wailsjs', replacement: path.resolve(__dirname, './wailsjs') },
+    ],
   },
 });
