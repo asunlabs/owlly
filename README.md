@@ -1,6 +1,6 @@
 # 🦉Owlly
 
-<img src="https://img.shields.io/badge/version-v0.2.0-red" alt="version" /> [![wakatime](https://wakatime.com/badge/user/e56daee8-7aae-4b0e-814c-b6bb7f5f841c/project/c15254fd-0a5e-4b66-b897-5ed473191817.svg)](https://wakatime.com/badge/user/e56daee8-7aae-4b0e-814c-b6bb7f5f841c/project/c15254fd-0a5e-4b66-b897-5ed473191817)
+<img src="https://img.shields.io/badge/version-v0.3.1-red" alt="version" /> [![wakatime](https://wakatime.com/badge/user/e56daee8-7aae-4b0e-814c-b6bb7f5f841c/project/c15254fd-0a5e-4b66-b897-5ed473191817.svg)](https://wakatime.com/badge/user/e56daee8-7aae-4b0e-814c-b6bb7f5f841c/project/c15254fd-0a5e-4b66-b897-5ed473191817)
 
 A file-based .env change notifier for your slack team.
 
