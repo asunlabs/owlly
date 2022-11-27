@@ -1,7 +1,4 @@
-export default function useHover(
-  _info: string,
-  callback: React.Dispatch<React.SetStateAction<string>>
-) {
+export default function useHover(_info: string, callback: React.Dispatch<React.SetStateAction<string>>) {
   const info = _info.toLowerCase();
 
   let modalText = {

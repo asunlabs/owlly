@@ -3,5 +3,5 @@ import * as React from 'react';
 export interface IFaucetGetterProps {}
 
 export function FaucetGetter(props: IFaucetGetterProps) {
-  return <div>temp</div>;
+  return <div>FaucetGetter</div>;
 }
