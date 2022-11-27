@@ -67,10 +67,6 @@ function EnvNotifier() {
 
   return (
     <div id="app">
-      <div id="owlly">
-        <img src={banner} alt="banner" id="frontBanner" />
-      </div>
-
       <div id="body">
         <div id="userConfig">
           <h2>Env bot configuration</h2>
@@ -136,7 +132,6 @@ function EnvNotifier() {
           </form>
         </div>
 
-        {JSON.stringify(getSlackContext)}
         <div id="welcomePanel">
           <h2>Welcome to owlly :)</h2>
           <p>Let your teammate know .env changes instantly with Owlly.</p>
@@ -145,21 +140,21 @@ function EnvNotifier() {
 
       <ul id="footer">
         <li
-          onMouseOver={() => useHover('github')}
+          onMouseOver={() => useHover('github', setGithubModal)}
           onMouseLeave={() => setGithubModal('')}
         >
           Github
           <span className="footerModal">{githubModal}</span>
         </li>
         <li
-          onMouseOver={() => useHover('linkedin')}
+          onMouseOver={() => useHover('linkedin', setLinkedinModal)}
           onMouseLeave={() => setLinkedinModal('')}
         >
           Linkedin
           <span className="footerModal">{linkedinModal}</span>
         </li>
         <li
-          onMouseOver={() => useHover('gmail')}
+          onMouseOver={() => useHover('gmail', setGmailModal)}
           onMouseLeave={() => setGmailModal('')}
         >
           Gmail
