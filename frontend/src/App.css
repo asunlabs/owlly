@@ -11,11 +11,6 @@ a {
   text-decoration: none;
 }
 
-#frontBanner {
-  width: 100%;
-  margin: 0;
-}
-
 #footer {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -34,44 +29,9 @@ a {
   cursor: auto;
 }
 
-#body {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  padding: 2rem;
-}
-
 #userConfig > form {
   display: grid;
   gap: 0.8rem;
-}
-
-#welcomePanel {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-  padding: 1.5rem;
-}
-
-button {
-  font-size: 14px;
-  color: black;
-  background-color: skyblue;
-  padding: 10px 30px;
-  border: none;
-  box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
-  border-radius: 50px;
-  transition: 1000ms;
-  transform: translateY(0);
-  cursor: pointer;
-}
-
-#sendButton:hover {
-  transition: 1000ms;
-  padding: 10px 50px;
-  transform: translateY(-0px);
-  background-color: rgb(159, 72, 193);
-  color: #000000;
-  border: none;
 }
 
 .footerModal {
