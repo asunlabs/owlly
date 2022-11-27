@@ -13,7 +13,8 @@ A file-based .env change notifier for your slack team.
   - [Install](#install)
   - [Prerequisite](#prerequisite)
   - [Usage](#usage)
-  - [Maintainer](#maintainer)
+  - [Contribution](#contribution)
+  - [Star history](#star-history)
   - [Reference](#reference)
 
 ## Features
@@ -30,19 +31,37 @@ A file-based .env change notifier for your slack team.
 
 ## Install
 
-Clone this repo.
+### Stable
+
+Download stable release [here](https://github.com/asunlabs/owlly/releases/tag/stable). This is the almost same version with the above GIF demonstration(toast notification added)
+
+### Latest
+
+Owlly is under active development. If you want to explore the latest feature and changes, follow below install guide.
+
+Clone this repo. Make sure to install all dependencies.
 
 ```sh
 git clone https://github.com/asunlabs/owlly.git
 ```
 
-Build it with Wails.
+Look over with development mode.
+
+```sh
+wails dev
+```
+
+Build it with Wails. This will conveniently compile the project based on your OS and architecture.
 
 ```sh
 wails build
 ```
 
-Or, simply download binaries from [release](https://github.com/asunlabs/owlly/releases) and execute it.
+Execute binary.
+
+```sh
+owlly
+```
 
 ## Prerequisite
 
@@ -66,17 +85,19 @@ Owlly will check if below files exist in your project root and sync if exist.
 	}
 ```
 
-Owlly ver 0.2.0 is event-based. When form value is submitted in react client side, the value is tossed to go backend by wails. Owlly takes the value and uses for its configuration under the hood.
+Owlly ver 0.3.1 is event-based. When form value is submitted in react client side, the value is tossed to go backend by wails. Owlly takes the value and uses for its configuration under the hood.
 
 ### Slack
 
 In order to use Owlly, you have to
 
-1. Create a slack bot
+1. Create a slack bot [here](https://api.slack.com/apps)
 2. Install the bot to your slack workspace
 3. Issue bot user oauth token and get channel ID to use the bot.
 
-Make sure your bot has proper configuration/privileges to for sending DM.
+Make sure your bot has proper configuration/privileges to for sending DM. Refer below to set up a permission scope.
+
+![bot-permission-scope](https://user-images.githubusercontent.com/83855174/204130558-8c4e6759-c2b8-43ae-877e-4d8c9eed4790.png)
 
 ## Usage
 
@@ -110,7 +131,7 @@ FOO="bar"
 
 ## Contribution
 
-Owlly is a open sourc project. Feel free to open a pull request and suggest changes / improvement. 
+Owlly is a open sourc project. Feel free to open a pull request and suggest changes / improvement.
 
 ## Star History
 
