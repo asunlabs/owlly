@@ -4,5 +4,5 @@ export interface ISlackConfigProps {}
 
 // TODO create a slack config context and share it across app
 export function SlackConfig(props: ISlackConfigProps) {
-  return <div>temp</div>;
+  return <div>SlackConfig</div>;
 }

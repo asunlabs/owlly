@@ -24,6 +24,9 @@ build/bin
 node_modules
 frontend/dist
 
+# Assets 
+frontend/src/assets/images/pokemon
+
 # VS Code
 .vscode
 
