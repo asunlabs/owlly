@@ -34,7 +34,8 @@ func (s *Owlly) InitEnvBot() bool  {
 
 // @dev runtime context should be obtained from the OnStartup or OnDomReady hooks.
 func EventListener(ctx context.Context)  {	
-	runtime.EventsOn(ctx, config.EVENT_CONFIG_UPDATE, func(optionalData ...interface{}) {
+	// slack event listener
+	runtime.EventsOn(ctx, config.SLACK_EVENT["update"], func(optionalData ...interface{}) {
 		_newConfig := make(map[int]string)
 
 		var newConfig config.OwllyConfig
