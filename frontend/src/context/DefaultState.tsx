@@ -1,49 +1,47 @@
 import * as React from 'react';
 
-export interface ISlackContext {
-  triggerName: string;
-  botOauthToken: string;
-  channelID: string;
-  userID: string;
-  userName: string;
-
-  // prettier-ignore
-  getNewContext: (
-    _triggerName: string,
-    _botOauthToken: string,
-    _channelID: string,
-    _userID: string,
-    _userName: string
-  ) => ISlackContext
-}
-
-const _slackContext: ISlackContext = {
-  triggerName: '',
-  botOauthToken: '',
-  channelID: '',
-  userID: '',
-  userName: '',
-
-  getNewContext(_triggerName: string, _botOauthToken: string, _channelID: string, _userID: string, _userName: string) {
-    return {
-      triggerName: _triggerName,
-      botOauthToken: _botOauthToken,
-      channelID: _channelID,
-      userID: _userID,
-      userName: _userName,
-      getNewContext: this.getNewContext,
-    };
+export const SlackContext = React.createContext({
+  slackContext: {
+    triggerName: '',
+    botOauthToken: '',
+    channelID: '',
+    userID: '',
+    userName: '',
   },
-};
 
-export const slackContext = React.createContext(_slackContext);
+  // type Dispatch<A> = (value: A) => void;
+  setSlackContext: (
+    prev: React.SetStateAction<{
+      triggerName: string;
+      botOauthToken: string;
+      channelID: string;
+      userID: string;
+      userName: string;
+    }>
+  ) => {},
+});
 
 export interface ISlackContextProvider {
   children?: React.ReactNode;
 }
 
 export function SlackContextProvider({ children }: ISlackContextProvider) {
-  return <slackContext.Provider value={_slackContext}>{children}</slackContext.Provider>;
+  const [slackContext, setSlackContext] = React.useState({
+    triggerName: '',
+    botOauthToken: '',
+    channelID: '',
+    userID: '',
+    userName: '',
+  });
+
+  const value = { slackContext, setSlackContext };
+
+  // prettier-ignore
+  return (
+    <SlackContext.Provider value={value}>
+      {children}
+    </SlackContext.Provider>
+  );
 }
 
 export const breakpoints = {
@@ -60,4 +58,9 @@ export const breakpoints = {
     },
     desktop: '2560px',
   },
+};
+
+export const EVENT_SLACK = {
+  update: 'SLACK_UPDATE_EVENT',
+  delete: 'SLACK_DELETE_EVENT',
 };
