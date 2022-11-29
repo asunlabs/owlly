@@ -19,7 +19,7 @@ export default function useHover(_info: string, callback: React.Dispatch<React.S
       break;
     case 'gmail':
       modalText.gmail = 'nellow1102@gmail.com';
-      callback(modalText.github);
+      callback(modalText.gmail);
       break;
     default:
       break;
