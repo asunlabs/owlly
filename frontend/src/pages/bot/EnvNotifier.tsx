@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import useHover from '@owlly/hooks/useHover';
-import { slackContext } from '@owlly/context/DefaultState';
+import { EVENT_SLACK, SlackContext } from '@owlly/context/DefaultState';
 import { ToastNotification } from '@owlly/components/Button';
 import { EventsEmit } from '@wailsjs/runtime/runtime';
 import { InitEnvBot } from '@wailsjs/go/main/Owlly';
@@ -14,14 +14,13 @@ function EnvNotifier() {
   const [linkedinModal, setLinkedinModal] = useState('');
   const [gmailModal, setGmailModal] = useState('');
 
-  const getSlackContext = React.useContext(slackContext);
-  const [slackConfig, setSlackConfig] = useState(getSlackContext);
+  const { slackContext, setSlackContext } = React.useContext(SlackContext);
 
   // handle multi-input
   function handleSlackConfig(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
 
-    setSlackConfig((prev) => ({
+    setSlackContext((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -31,14 +30,15 @@ function EnvNotifier() {
     e.preventDefault();
 
     EventsEmit(
-      'form_submit',
-      slackConfig.triggerName,
-      slackConfig.botOauthToken,
-      slackConfig.channelID,
-      slackConfig.userID,
-      slackConfig.userName
+      EVENT_SLACK.update,
+      slackContext.triggerName,
+      slackContext.botOauthToken,
+      slackContext.channelID,
+      slackContext.userID,
+      slackContext.userName
     );
 
+    // TODO fix multiple toasts
     // execute owlly core
     const ok = await InitEnvBot();
 
@@ -141,7 +141,6 @@ function EnvNotifier() {
           <span className="footerModal">{linkedinModal}</span>
         </li>
         <li onMouseOver={() => useHover('gmail', setGmailModal)} onMouseLeave={() => setGmailModal('')}>
-          {/* ! fix gmail useHover error */}
           Gmail
           <span className="footerModal">{gmailModal}</span>
         </li>

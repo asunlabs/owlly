@@ -2,9 +2,11 @@ package main
 
 import (
 	"context"
+	"log"
+
+	"owlly/v2/core"
 
 	"github.com/asunlabs/owlly/config"
-	"owlly/v2/core"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
@@ -34,13 +36,19 @@ func (s *Owlly) InitEnvBot() bool  {
 
 // @dev runtime context should be obtained from the OnStartup or OnDomReady hooks.
 func EventListener(ctx context.Context)  {	
-	runtime.EventsOn(ctx, config.EVENT_CONFIG_UPDATE, func(optionalData ...interface{}) {
+	// slack event listener
+	runtime.EventsOn(ctx, config.SLACK_EVENT["update"], func(optionalData ...interface{}) {
 		_newConfig := make(map[int]string)
 
 		var newConfig config.OwllyConfig
 
 		for k, v := range optionalData {
-			_newConfig[k] = v.(string)
+			switch _v := v.(type) {
+			case string:
+				_newConfig[k] = _v
+			default: 
+				log.Fatal("EventListener: Invalid config data type")
+			}
 		}
 		newConfig.TriggerName = _newConfig[0]
 		newConfig.SlackBotOauthToken = _newConfig[1]

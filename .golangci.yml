@@ -1,9 +1,12 @@
-run:
-  timeout: "1m"
-  issue-exit-code: 1
-  tests: true
-  allow-parallel-runners: false
-  go: "1.19"
-  skip-dirs:
-    - build/*
-    - frontend/*
+# see here for more details: https://golangci-lint.run/usage/configuration/
+# linters and linters-settings is applied to core directory
+linters:
+  disable:
+    - gosimple
+
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+    check-blank: false
+    ignore: fmt:.*
+    disable-default-exclusions: true

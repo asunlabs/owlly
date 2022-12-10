@@ -5,7 +5,6 @@ import (
 	"io/fs"
 	"log"
 	"os"
-	"path/filepath"
 	"strings"
 	"sync"
 	"time"
@@ -18,7 +17,6 @@ import (
 )
 
 var (
-	root string
 	watcher  *fsnotify.Watcher
 	api      *slack.Client
 	onlyOnce sync.Once
@@ -133,7 +131,8 @@ func updateEnvs() {
 
 			// @dev owning user has a read and write permission: 0644
 			ownerPerm := 0644
-			os.WriteFile(wrapEnvFile, data, fs.FileMode(ownerPerm))
+			wErr := os.WriteFile(wrapEnvFile, data, fs.FileMode(ownerPerm))
+			nilChecker(wErr)
 		}
 	}
 }
@@ -176,7 +175,6 @@ func cleanupEnvs() {
 func sendSlackDM() {
 	wd, _ := os.Getwd()
 	envStringMapForWrapEnv := make(map[string]string)
-	envStringForWrapEnv := "DEFAULT_VALUE"
 
 	for _, v := range getEnvList() {
 		filePath := strings.Join([]string{wd, "/", v}, "")
@@ -192,7 +190,7 @@ func sendSlackDM() {
 				)
 				wrapEnvName := strings.Join([]string{v, ".config"}, "")
 
-				envStringForWrapEnv = convertEnvMapToString(fullPathForWrapEnv, wrapEnvName)
+				envStringForWrapEnv := convertEnvMapToString(fullPathForWrapEnv, wrapEnvName)
 				envStringMapForWrapEnv[wrapEnvName] = envStringForWrapEnv
 
 				notifyEnvChange(envStringMapForWrapEnv[wrapEnvName], v)
@@ -285,9 +283,6 @@ func notifyEnvChange(envString string, envFileName string) {
 }
 
 func InitEnvBot_() bool {
-	wd, _ := os.Getwd()
-	root = filepath.Dir(wd)
-
 	cleanupEnvs()
 
 	onlyOnce.Do(func() {
@@ -302,7 +297,7 @@ func InitEnvBot_() bool {
 		for {
 			select {
 			case event, _ := <-watcher.Events:
-				if event.Has(fsnotify.Write) {
+				if ok := event.Has(fsnotify.Write); ok {
 					log.Println("modified file: ", event.Name)
 					updateEnvs()
 				}
