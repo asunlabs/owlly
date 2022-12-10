@@ -18,11 +18,18 @@ var (
 )
 
 type OwllyConfig struct {
+	gorm.Model // embed gorm convention: ID, CreatedAt, UpdatedAt, DeletedAt
 	TriggerName        string `json:"triggerName"`
 	SlackBotOauthToken string `json:"slackBotOauthToken"`
 	SlackChannelID     string `json:"slackChannelID"`
 	SlackUserID        string `json:"slackUserID"`
 	SlackUserName      string `json:"slackUserName"`
+}
+
+type User struct {
+	gorm.Model
+	Email string `json:"email"`
+	Password string `json:"password"`
 }
 
 // @dev get event values from front end and update config
@@ -41,17 +48,29 @@ func New(
 	_Owlly.SlackUserID = slackUserID
 	_Owlly.SlackUserName = slackUserName
 
-	Owlly = &_Owlly
+	Owlly = &_Owlly 
 
-	ok, _ := ConnectDB()
-
-	if ok {
-		DB_HANDLE.Model(&OwllyConfig{}).Updates(&_Owlly)
-		msg := fmt.Sprintf("Config from GUI: %v saved to DB", Owlly)
-		color.Cyan(msg)
+	if 	ok, _ := ConnectDB(); ok {
+		color.Green("Setup.go: DB connected")
 	} else {
-		color.Red("DB connection failed")
+		color.Red("Setup.go: DB connection failed")
 	}
+
+	// if record exists, update it
+	if exists := DB_HANDLE.First(Owlly); exists.Error == nil {
+		DB_HANDLE.Model(Owlly).Where("id = ?", Owlly.ID).Updates(Owlly)
+	} else {
+		// if new, create it
+		cResult := DB_HANDLE.Create(Owlly)
+	
+		if cResult.Error != nil {
+			color.Red("Setup.go: DB create op failed")
+		}
+		msg := fmt.Sprintf("Setup.go: New config from GUI: %v saved to DB", Owlly)
+		color.Cyan(msg)
+	}
+
+	color.Cyan("Setup.go: Envbot properly configured")
 }
 
 func ConnectDB() (bool, string) {
