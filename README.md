@@ -129,6 +129,27 @@ FOO="bar"
 
 <img src="https://user-images.githubusercontent.com/83855174/202205966-bd345933-1842-4779-ad10-ab21152cce1b.png" alt="owlly banner" width="70%" />
 
+## Workflows
+
+In Owlly, a several groups of automation is configured.
+
+- auto pull request reviewer
+- auto pull request label by branch name
+- auto format and lint for go codes
+- auto release by push
+- auto dependency tracking
+- auto staled issue checking
+
+If you add some workflows to owlly, I would suggest to develop it with [act](https://github.com/nektos/act) to check the workflows locally first and then open a pull request.
+
+Note that the act is based on Docker, meaning you have to run Docker daemon first.
+
+```sh
+# Run act dry-run
+act -n push
+act -n pull_request
+```
+
 ## Contribution
 
 Owlly is a open sourc project. Feel free to open a pull request and suggest changes / improvement.
