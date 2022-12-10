@@ -9,6 +9,8 @@ export const Background = styled.div`
   background-position: center;
   background-size: cover;
   height: 100%;
+  display: flex;
+  flex-flow: row nowrap;
 
   li:hover {
     font-weight: bold;
