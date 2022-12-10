@@ -29,3 +29,4 @@ jobs:
         uses: golangci/golangci-lint-action@v3
         with:
           version: v1.50 # specifiy without patch version.
+          working-directory: "core"
