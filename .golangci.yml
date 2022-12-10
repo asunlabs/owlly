@@ -1,0 +1,12 @@
+# see here for more details: https://golangci-lint.run/usage/configuration/
+# linters and linters-settings is applied to core directory
+linters:
+  disable:
+    - gosimple
+
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+    check-blank: false
+    ignore: fmt:.*
+    disable-default-exclusions: true
