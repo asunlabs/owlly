@@ -140,6 +140,7 @@ function EnvNotifier() {
           Linkedin
           <span className="footerModal">{linkedinModal}</span>
         </li>
+        {/* TODO fix span text overflow */}
         <li onMouseOver={() => useHover('gmail', setGmailModal)} onMouseLeave={() => setGmailModal('')}>
           Gmail
           <span className="footerModal">{gmailModal}</span>

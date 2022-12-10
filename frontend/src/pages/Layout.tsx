@@ -1,5 +1,5 @@
 import { Background } from '@owlly/components/Background';
-import { Anchor, Dropdown, List, Navbar } from '@owlly/components/Navbar';
+import { Anchor, Body, Dropdown, List, Navbar } from '@owlly/components/Navbar';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -12,29 +12,27 @@ export function Layout({ children }: ILayoutProps) {
     <>
       <Background id="layout">
         <Navbar>
-          <Anchor href="#">Owlly</Anchor>
-
           <List>
             <Link to={'/'}>Home</Link>
           </List>
 
           <List>
-            <Link to={'account/login'}>Sign in</Link>
+            <Link to={'account/login'}>🗝️ Sign in</Link>
           </List>
 
           <List>
-            <Link to={'account/slack'}>Manage Slack</Link>
+            <Link to={'account/slack'}>📩 Slack</Link>
           </List>
 
           <List>
-            <Link to={'automation/faucet-getter'}>Faucet bot</Link>
+            <Link to={'automation/faucet-getter'}>💸 Faucet</Link>
           </List>
 
           <List>
-            <Link to={'bot/env-notifier'}>ENV bot</Link>
+            <Link to={'bot/env-notifier'}>🔐 Dotenv</Link>
           </List>
         </Navbar>
-        {children}
+        <Body id="body">{children}</Body>
       </Background>
     </>
   );
