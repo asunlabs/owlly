@@ -17,8 +17,8 @@ function getSiweSetup() {
 
   const _window = window as any;
   const ethereum = _window.ethereum;
-  const provider = new ethers.providers.Web3Provider(ethereum);
 
+  const provider = new ethers.providers.Web3Provider(ethereum);
   const signer = provider.getSigner();
 
   return {
@@ -104,7 +104,7 @@ export function Login() {
         {signerInfo.network.length !== 0 ? signerInfo.network : 'No connection'}
       </p>
       <p>{signerInfo.isLogin ? 'you can see hidden info after sign-in' : ''}</p>
-      <Button onClick={() => signInWithEthereum(setSignerInfo)}>Sign in with Ethereum</Button>
+      <Button onClick={async () => await signInWithEthereum(setSignerInfo)}>Sign in with Ethereum</Button>
     </div>
   );
 }
