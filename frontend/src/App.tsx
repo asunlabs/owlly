@@ -18,7 +18,7 @@ function App() {
               <Route path="/" element={<App_ />} />
               <Route path="account/login" element={<Login />} />
               <Route path="account/slack" element={<SlackConfig />} />
-              <Route path="automation/faucet-getter" element={<FaucetGetter />} />
+              <Route path="bot/faucet-getter" element={<FaucetGetter />} />
               <Route path="bot/env-notifier" element={<EnvNotifier />} />
             </Routes>
           </Layout>
