@@ -10,33 +10,3 @@ a {
   color: inherit;
   text-decoration: none;
 }
-
-#footer {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  background-color: antiquewhite;
-  color: black;
-  font-weight: bold;
-  padding: 1rem;
-}
-
-#footer > li {
-  padding: 1rem;
-  cursor: pointer;
-}
-
-#footer > li > span {
-  cursor: auto;
-}
-
-#userConfig > form {
-  display: grid;
-  gap: 0.8rem;
-}
-
-.footerModal {
-  background-color: aliceblue;
-  position: absolute;
-  box-sizing: border-box;
-  transform: translateX(-50%) translateY(-100%);
-}
