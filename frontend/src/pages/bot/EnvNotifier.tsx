@@ -7,13 +7,10 @@ import { EVENT_SLACK, SlackContext } from '@owlly/context/DefaultState';
 import { ToastNotification } from '@owlly/components/Button';
 import { EventsEmit } from '@wailsjs/runtime/runtime';
 import { InitEnvBot } from '@wailsjs/go/main/Owlly';
+import { List } from '@owlly/components/Navbar';
+import { Link } from 'react-router-dom';
 
 function EnvNotifier() {
-  // @dev footer modal local state
-  const [githubModal, setGithubModal] = useState('');
-  const [linkedinModal, setLinkedinModal] = useState('');
-  const [gmailModal, setGmailModal] = useState('');
-
   const { slackContext, setSlackContext } = React.useContext(SlackContext);
 
   // handle multi-input
@@ -130,22 +127,6 @@ function EnvNotifier() {
           </form>
         </div>
       </div>
-
-      <ul id="footer">
-        <li onMouseOver={() => useHover('github', setGithubModal)} onMouseLeave={() => setGithubModal('')}>
-          Github
-          <span className="footerModal">{githubModal}</span>
-        </li>
-        <li onMouseOver={() => useHover('linkedin', setLinkedinModal)} onMouseLeave={() => setLinkedinModal('')}>
-          Linkedin
-          <span className="footerModal">{linkedinModal}</span>
-        </li>
-        {/* TODO fix span text overflow */}
-        <li onMouseOver={() => useHover('gmail', setGmailModal)} onMouseLeave={() => setGmailModal('')}>
-          Gmail
-          <span className="footerModal">{gmailModal}</span>
-        </li>
-      </ul>
     </div>
   );
 }
