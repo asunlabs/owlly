@@ -7,6 +7,7 @@ import { FaucetGetter } from './pages/automation/FaucetGetter';
 import { Login } from './pages/account/Login';
 import { App_ } from './_App';
 import './App.css';
+import { Contact } from './pages/help/Contact';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
               <Route path="account/slack" element={<SlackConfig />} />
               <Route path="bot/faucet-getter" element={<FaucetGetter />} />
               <Route path="bot/env-notifier" element={<EnvNotifier />} />
+              <Route path="help/contact" element={<Contact />} />
             </Routes>
           </Layout>
         </SlackContextProvider>
