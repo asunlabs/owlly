@@ -1,8 +1,12 @@
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-export const Button = styled.button`
+export interface IButtonProps {
+  isDynamic?: boolean;
+}
+
+export const Button = styled.button<IButtonProps>`
   // default
   font-size: 14px;
   color: black;
@@ -16,6 +20,9 @@ export const Button = styled.button`
   cursor: pointer;
 
   // hover
+  ${(props) =>
+    props.isDynamic &&
+    css`
   &:hover {
     transition: 1000ms;
     padding: 10px 50px;
@@ -23,7 +30,7 @@ export const Button = styled.button`
     background-color: rgb(159, 72, 193);
     color: #000000;
     border: none;
-  }
+  `}
 `;
 
 export function ToastNotification() {

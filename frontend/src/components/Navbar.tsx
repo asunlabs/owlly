@@ -1,3 +1,4 @@
+import { breakpoints } from '@owlly/context/DefaultState';
 import { ReactNode } from 'react';
 import styled from 'styled-components';
 
@@ -5,7 +6,11 @@ export const Navbar = styled.nav`
   display: flex;
   flex-flow: column nowrap;
   background-color: RGB(94 67 60);
-  width: fit-content;
+  width: 100%;
+
+  @media screen and (min-width: ${breakpoints.device.tablet}) {
+    width: fit-content;
+  }
 `;
 
 export const Body = styled.div`
