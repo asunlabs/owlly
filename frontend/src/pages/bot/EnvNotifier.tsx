@@ -63,7 +63,7 @@ function EnvNotifier() {
   return (
     <div>
       <div id="body">
-        <div id="userConfig">
+        <div>
           <h2>Env bot configuration</h2>
           {/* form submission */}
           <form onSubmit={async (e) => handleSubmit(e)}>
