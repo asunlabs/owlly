@@ -1,6 +1,6 @@
 # 🦉Owlly
 
-[![wakatime](https://wakatime.com/badge/user/e56daee8-7aae-4b0e-814c-b6bb7f5f841c/project/c15254fd-0a5e-4b66-b897-5ed473191817.svg)](https://wakatime.com/badge/user/e56daee8-7aae-4b0e-814c-b6bb7f5f841c/project/c15254fd-0a5e-4b66-b897-5ed473191817) ![lint-and-format](https://github.com/asunlabs/owlly/actions/workflows/lint-and-format.yml/badge.svg) ![assign](https://github.com/asunlabs/owlly/actions/workflows/release.yml/badge.svg)
+[![wakatime](https://wakatime.com/badge/user/e56daee8-7aae-4b0e-814c-b6bb7f5f841c/project/c15254fd-0a5e-4b66-b897-5ed473191817.svg)](https://wakatime.com/badge/user/e56daee8-7aae-4b0e-814c-b6bb7f5f841c/project/c15254fd-0a5e-4b66-b897-5ed473191817) ![lint-and-format](https://github.com/asunlabs/owlly/actions/workflows/lint-and-format.yml/badge.svg) ![assign](https://github.com/asunlabs/owlly/actions/workflows/release.yml/badge.svg) ![GitHub last commit](https://img.shields.io/github/last-commit/asunlabs/owlly)
 
 A file-based .env change notifier for your slack team.
 
