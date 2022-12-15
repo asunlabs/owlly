@@ -2,6 +2,9 @@ import { Button } from '@owlly/components/Button';
 import * as React from 'react';
 import { ethers } from 'ethers';
 import { SiweMessage } from 'siwe';
+import { Form, FormTitle, Input, Label } from '../../components/Form';
+import { MdOutlinePassword } from 'react-icons/md';
+import { AiOutlineMail } from 'react-icons/ai';
 
 export interface ISignerInfoProps {
   address: string;
@@ -18,6 +21,7 @@ function getSiweSetup() {
   const _window = window as any;
   const ethereum = _window.ethereum;
 
+  // Web3 provider(metamask) already has a EOA signer in it, requiring Chrome extension to be installed
   const provider = new ethers.providers.Web3Provider(ethereum);
   const signer = provider.getSigner();
 
@@ -85,6 +89,31 @@ async function signInWithEthereum(callback: React.Dispatch<React.SetStateAction<
   }
 }
 
+function EmailLogin() {
+  return (
+    <div>
+      <FormTitle>Login with Email</FormTitle>
+      <Form>
+        <Label htmlFor="email">
+          <AiOutlineMail />
+          <Input id="email" type={'email'} placeholder={'Email'} />
+        </Label>
+        <Label htmlFor="password">
+          <MdOutlinePassword />
+          <Input id="password" type={'password'} placeholder={'Password'} />
+        </Label>
+
+        <Button type={'button'} id={'sign-up'}>
+          Sign up
+        </Button>
+        <Button type={'button'} id={'sign-in'}>
+          Sign in
+        </Button>
+      </Form>
+    </div>
+  );
+}
+
 export function Login() {
   const [signerInfo, setSignerInfo] = React.useState<ISignerInfoProps>({
     address: '',
@@ -96,7 +125,8 @@ export function Login() {
 
   return (
     <div>
-      profile here
+      <EmailLogin />
+      and password login method 2: sign in with ethereum profile here
       <p>address: {signerInfo.address}</p>
       <p>balance: {JSON.stringify(signerInfo.balance)}</p>
       <p>
@@ -104,7 +134,9 @@ export function Login() {
         {signerInfo.network.length !== 0 ? signerInfo.network : 'No connection'}
       </p>
       <p>{signerInfo.isLogin ? 'you can see hidden info after sign-in' : ''}</p>
-      <Button onClick={async () => await signInWithEthereum(setSignerInfo)}>Sign in with Ethereum</Button>
+      <Button isDynamic={true} onClick={async () => await signInWithEthereum(setSignerInfo)}>
+        Sign in with Ethereum
+      </Button>
     </div>
   );
 }
