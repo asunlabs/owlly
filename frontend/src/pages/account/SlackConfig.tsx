@@ -1,8 +1,11 @@
+import { SlackContext } from '@owlly/context/DefaultState';
 import * as React from 'react';
 
 export interface ISlackConfigProps {}
 
-// TODO create a slack config context and share it across app
 export function SlackConfig(props: ISlackConfigProps) {
-  return <div>SlackConfig</div>;
+  // @dev check slack context is working
+  const slackContext = React.useContext(SlackContext);
+
+  return <div>{JSON.stringify(slackContext.slackContext)}</div>;
 }
