@@ -64,6 +64,7 @@ export const breakpoints = {
   },
 };
 
+// @dev state should synced with config/setup.go
 export const EVENT_SLACK = {
   update: 'SLACK_UPDATE_EVENT',
   delete: 'SLACK_DELETE_EVENT',

@@ -3,7 +3,7 @@ import { HashRouter, Routes, Route } from 'react-router-dom';
 import EnvNotifier from './pages/bot/EnvNotifier';
 import { Layout } from './pages/Layout';
 import { SlackConfig } from './pages/account/SlackConfig';
-import { FaucetGetter } from './pages/automation/FaucetGetter';
+import { FaucetGetter } from './pages/bot/FaucetGetter';
 import { Login } from './pages/account/Login';
 import { App_ } from './_App';
 import './App.css';

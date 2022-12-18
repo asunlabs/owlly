@@ -61,6 +61,8 @@ function EnvNotifier() {
     <div>
       <div id="body">
         <div>
+          {/* TODO read slack config from DB or SlackContext */}
+          {/* TODO refactor using styled-components */}
           <h2>Env bot configuration</h2>
           {/* form submission */}
           <form onSubmit={async (e) => handleSubmit(e)}>
