@@ -10,9 +10,9 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
-// ==================================================================== //  
-// ========================== Init Wails app ========================== //  
-// ==================================================================== //    
+// ==================================================================== //
+// ========================== Init Wails app ========================== //
+// ==================================================================== //
 type App struct {
 	ctx context.Context
 }
@@ -27,29 +27,29 @@ func (a *App) startup(ctx context.Context) {
 	EventListener(ctx)
 }
 
-// ==================================================================== //  
-// ========================== Init Owlly app ========================== //  
-// ==================================================================== //    
-type Owlly struct {}
+// ==================================================================== //
+// ========================== Init Owlly app ========================== //
+// ==================================================================== //
+type Owlly struct{}
 
 func NewOwlly() *Owlly {
 	return &Owlly{}
 }
 
 // @dev set controller for Wails
-func (s *Owlly) InitEnvBot() bool  {
-	if ok := core.InitEnvBot_(); ok { 
+func (s *Owlly) InitEnvBot() bool {
+	if ok := core.InitEnvBot_(); ok {
 		return true
 	}
 
 	return false
 }
 
-// ==================================================================== //  
-// ======================= Wails event listener ======================= //  
-// ==================================================================== //   
+// ==================================================================== //
+// ======================= Wails event listener ======================= //
+// ==================================================================== //
 // @dev runtime context should be obtained from the OnStartup or OnDomReady hooks.
-func EventListener(ctx context.Context)  {	
+func EventListener(ctx context.Context) {
 	runtime.EventsOn(ctx, config.SLACK_EVENT["update"], func(optionalData ...interface{}) {
 		_newConfig := make(map[int]string)
 
@@ -59,7 +59,7 @@ func EventListener(ctx context.Context)  {
 			switch _v := v.(type) {
 			case string:
 				_newConfig[k] = _v
-			default: 
+			default:
 				log.Fatal("app.go:EventListener: Invalid config data type")
 			}
 		}
@@ -80,4 +80,3 @@ func EventListener(ctx context.Context)  {
 		)
 	})
 }
-

@@ -57,7 +57,7 @@ func getEnvList() []string {
 
 func hasNamedEnvFiles(filePath string) bool {
 	var result bool
-	
+
 	_, fErr := os.Stat(filePath)
 
 	if os.IsNotExist(fErr) {

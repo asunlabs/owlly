@@ -17,13 +17,12 @@ var (
 	AUTH_EVENT = map[string]string{
 		"sign-up": "AUTH_SIGN_UP_EVENT",
 		"sign-in": "AUTH_SIGN_IN_EVENT",
-		"logout": "AUTH_LOGOUT_EVENT",
+		"logout":  "AUTH_LOGOUT_EVENT",
 	}
-	DB_HANDLE *gorm.DB
 )
 
 type OwllyConfig struct {
-	gorm.Model // embed gorm convention: ID, CreatedAt, UpdatedAt, DeletedAt
+	gorm.Model                // embed gorm convention: ID, CreatedAt, UpdatedAt, DeletedAt
 	TriggerName        string `json:"triggerName"`
 	SlackBotOauthToken string `json:"slackBotOauthToken"`
 	SlackChannelID     string `json:"slackChannelID"`
@@ -33,7 +32,7 @@ type OwllyConfig struct {
 
 type User struct {
 	gorm.Model
-	Email string `json:"email"`
+	Email    string `json:"email"`
 	Password string `json:"password"`
 }
 
@@ -54,9 +53,9 @@ func New(
 	_Owlly.SlackUserID = slackUserID
 	_Owlly.SlackUserName = slackUserName
 
-	Owlly = &_Owlly 
+	Owlly = &_Owlly
 
-	if 	ok, _ := ConnectDB(); ok {
+	if ok, _ := ConnectDB(); ok {
 		color.Green("Setup.go: DB connected")
 	} else {
 		color.Red("Setup.go: DB connection failed")
@@ -68,7 +67,7 @@ func New(
 	} else {
 		// if new, create it
 		cResult := DB_HANDLE.Create(Owlly)
-	
+
 		if cResult.Error != nil {
 			color.Red("Setup.go: DB create op failed")
 		}
