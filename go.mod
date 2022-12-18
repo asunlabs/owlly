@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/asunlabs/owlly v0.0.0-20221112102046-763a825700d4
+	github.com/fatih/color v1.13.0
 	github.com/wailsapp/wails/v2 v2.2.0
 )
 
