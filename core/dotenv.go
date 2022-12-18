@@ -102,7 +102,7 @@ func initSlack() {
 		}
 	}
 
-	_api := slack.New(config.Owlly.SlackBotOauthToken)
+	_api := slack.New(config.EnvBot.SlackBotOauthToken)
 	res, err := _api.AuthTest()
 	nilChecker(err)
 
@@ -214,7 +214,7 @@ func isUpdateFinished() map[string]bool {
 			nilChecker(_rErr)
 			data := string(_data)
 
-			hasOwllyTrigger := strings.Contains(data, config.Owlly.TriggerName)
+			hasOwllyTrigger := strings.Contains(data, config.EnvBot.TriggerName)
 			isDone[v] = hasOwllyTrigger
 		}
 	}
@@ -259,16 +259,16 @@ func notifyEnvChange(envString string, envFileName string) {
 		Short: false,
 	}
 
-	postBy := fmt.Sprintf("%v updated %v", config.Owlly.SlackUserName, envFileName)
+	postBy := fmt.Sprintf("%v updated %v", config.EnvBot.SlackUserName, envFileName)
 
 	attachment := slack.Attachment{
 		Title:    postBy,
 		Fields:   []slack.AttachmentField{attachedEnv},
 		Footer:   footer,
-		AuthorID: config.Owlly.SlackUserID,
+		AuthorID: config.EnvBot.SlackUserID,
 	}
 
-	postTo := config.Owlly.SlackChannelID
+	postTo := config.EnvBot.SlackChannelID
 	postWhat := slack.MsgOptionAttachments(attachment)
 
 	channelID, _, msgErr := api.PostMessage(

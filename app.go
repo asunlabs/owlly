@@ -53,7 +53,7 @@ func EventListener(ctx context.Context) {
 	runtime.EventsOn(ctx, config.SLACK_EVENT["update"], func(optionalData ...interface{}) {
 		_newConfig := make(map[int]string)
 
-		var newConfig config.OwllyConfig
+		var newConfig config.ModelEnvBot
 
 		for k, v := range optionalData {
 			switch _v := v.(type) {
