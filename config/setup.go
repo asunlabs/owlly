@@ -14,6 +14,11 @@ var (
 		"update": "SLACK_UPDATE_EVENT",
 		"delete": "SLACK_DELETE_EVENT",
 	}
+	AUTH_EVENT = map[string]string{
+		"sign-up": "AUTH_SIGN_UP_EVENT",
+		"sign-in": "AUTH_SIGN_IN_EVENT",
+		"logout": "AUTH_LOGOUT_EVENT",
+	}
 	DB_HANDLE *gorm.DB
 )
 
@@ -32,6 +37,7 @@ type User struct {
 	Password string `json:"password"`
 }
 
+// TODO split DB op
 // @dev get event values from front end and update config
 func New(
 	triggerName string,
@@ -73,6 +79,7 @@ func New(
 	color.Cyan("Setup.go: Envbot properly configured")
 }
 
+// TODO split DB op
 func ConnectDB() (bool, string) {
 	_db, oErr := gorm.Open(sqlite.Open("owlly.db"), &gorm.Config{})
 
@@ -80,7 +87,7 @@ func ConnectDB() (bool, string) {
 		return false, oErr.Error()
 	}
 
-	_db.AutoMigrate(&OwllyConfig{})
+	_db.AutoMigrate(&OwllyConfig{}, &User{})
 	DB_HANDLE = _db
 
 	return true, ""
