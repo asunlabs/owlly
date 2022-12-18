@@ -27,6 +27,7 @@
     "prettier": "^2.8.0",
     "react-is": "^18.2.0",
     "react-router-dom": "^6.4.3",
+    "react-tabs": "^6.0.0",
     "react-toastify": "^9.1.1",
     "rollup": "^3.3.0",
     "styled-components": "^5.3.6",
