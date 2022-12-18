@@ -19,3 +19,13 @@ export interface ISiweProps {
   version: string;
   chainId: number;
 }
+
+export interface ILayoutProps {
+  children?: React.ReactNode;
+}
+
+export interface IDropdownProps {
+  account: boolean;
+  bot: boolean;
+  help: boolean;
+}
