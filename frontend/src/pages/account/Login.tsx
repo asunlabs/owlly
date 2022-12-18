@@ -5,6 +5,7 @@ import { SiweMessage } from 'siwe';
 import { Form, FormTitle, Input, Label } from '../../components/Form';
 import { MdOutlinePassword } from 'react-icons/md';
 import { AiOutlineMail } from 'react-icons/ai';
+import { NETWORK_ID } from '@owlly/context/DefaultState';
 
 export interface ISignerInfoProps {
   address: string;
@@ -14,9 +15,13 @@ export interface ISignerInfoProps {
   isLogin: boolean;
 }
 
+/**
+ * @dev domain: SIWE's domain. e.g. window.location.host => 'localhost:5173'
+ * @dev origin: SIWE's URI. e.g.window.location.origin =>'http://localhost:5173'
+ */
 function getSiweSetup() {
-  const domain = window.location.host;
-  const origin = window.location.origin;
+  const domain = 'Owlly ver 0.3.1';
+  const origin = 'developerasun laptop';
 
   const _window = window as any;
   const ethereum = _window.ethereum;
@@ -34,6 +39,13 @@ function getSiweSetup() {
   };
 }
 
+/**
+ *
+ * @param address a signer's Ethereum address
+ * @param statement a message that user will see when signing with SIWE
+ * @dev version: current message version
+ * @returns
+ */
 function createSiweMessage(address: string, statement: string) {
   const { domain, origin } = getSiweSetup();
   const _message = new SiweMessage({
@@ -41,8 +53,8 @@ function createSiweMessage(address: string, statement: string) {
     address,
     statement,
     uri: origin,
-    version: '1', // @dev current message version
-    chainId: 5, // goerli
+    version: '1',
+    chainId: NETWORK_ID.goerli,
   });
 
   // @dev Returns a message ready to be signed according with the type defined in the object.
@@ -50,6 +62,7 @@ function createSiweMessage(address: string, statement: string) {
   return { message };
 }
 
+// TODO replace metamask account set => owlly account set
 async function connectWallet(callback: React.Dispatch<React.SetStateAction<ISignerInfoProps>>) {
   try {
     const { provider, signer } = getSiweSetup();
