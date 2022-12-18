@@ -2,18 +2,13 @@ import { Button } from '@owlly/components/Button';
 import * as React from 'react';
 import { ethers } from 'ethers';
 import { SiweMessage } from 'siwe';
-import { Form, FormTitle, Input, Label } from '../../components/Form';
+import { Form, FormTitle, Input, Label } from '@owlly/components/Form';
 import { MdOutlinePassword } from 'react-icons/md';
 import { AiOutlineMail } from 'react-icons/ai';
 import { NETWORK_ID } from '@owlly/context/DefaultState';
-
-export interface ISignerInfoProps {
-  address: string;
-  balance: string;
-  network: string;
-  isActive: boolean;
-  isLogin: boolean;
-}
+import { ISignerInfoProps } from '@owlly/context/types';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
 
 /**
  * @dev domain: SIWE's domain. e.g. window.location.host => 'localhost:5173'
@@ -44,7 +39,16 @@ function getSiweSetup() {
  * @param address a signer's Ethereum address
  * @param statement a message that user will see when signing with SIWE
  * @dev version: current message version
- * @returns
+ * @returns message returns a string message in a below format
+ * 
+    "Owlly ver 0.3.1 wants you to sign in with your Ethereum account:
+    \n0xEcAB21327B6EbA1FB0631Dc9bBc5863B6B2be3E4\n
+    \nOwlly: Sign in with Ethereum\n
+    \nURI: developerasun laptop
+    \nVersion: 1
+    \nChain ID: 5
+    \nNonce: D40vyrk2K1M6DrHSX
+    \nIssued At: 2022-12-18T08:43:49.191Z"
  */
 function createSiweMessage(address: string, statement: string) {
   const { domain, origin } = getSiweSetup();
@@ -137,19 +141,31 @@ export function Login() {
   });
 
   return (
-    <div>
-      <EmailLogin />
-      and password login method 2: sign in with ethereum profile here
-      <p>address: {signerInfo.address}</p>
-      <p>balance: {JSON.stringify(signerInfo.balance)}</p>
-      <p>
-        network:
-        {signerInfo.network.length !== 0 ? signerInfo.network : 'No connection'}
-      </p>
-      <p>{signerInfo.isLogin ? 'you can see hidden info after sign-in' : ''}</p>
-      <Button isDynamic={true} onClick={async () => await signInWithEthereum(setSignerInfo)}>
-        Sign in with Ethereum
-      </Button>
-    </div>
+    <>
+      {/* TODO React-tabs CSS */}
+      {/* TODO SIWE signer context persist */}
+      <Tabs>
+        <TabList>
+          <Tab>Sign in with Email</Tab>
+          <Tab>Sign in with Ethereum</Tab>
+        </TabList>
+
+        <TabPanel>
+          <EmailLogin />
+        </TabPanel>
+        <TabPanel>
+          <p>address: {signerInfo.address}</p>
+          <p>balance: {JSON.stringify(signerInfo.balance)}</p>
+          <p>
+            network:
+            {signerInfo.network.length !== 0 ? signerInfo.network : 'No connection'}
+          </p>
+          <p>{signerInfo.isLogin ? 'you can see hidden info after sign-in' : ''}</p>
+          <Button isDynamic={true} onClick={async () => await signInWithEthereum(setSignerInfo)}>
+            Sign in with Ethereum
+          </Button>
+        </TabPanel>
+      </Tabs>
+    </>
   );
 }

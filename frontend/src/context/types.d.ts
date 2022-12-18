@@ -11,6 +11,14 @@ export interface ISlackConfigProps {
   userName: string;
 }
 
+export interface ISignerInfoProps {
+  address: string;
+  balance: string;
+  network: string;
+  isActive: boolean;
+  isLogin: boolean;
+}
+
 export interface ISiweProps {
   domain: string;
   address: string;
