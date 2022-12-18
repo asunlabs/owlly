@@ -1,9 +1,10 @@
 package config
 
 import (
-	"fmt"
+	"errors"
 
 	"github.com/fatih/color"
+	"gorm.io/gorm"
 )
 
 var (
@@ -37,25 +38,11 @@ func New(
 
 	EnvBot = &_EnvBot
 
-	if ok, _ := ConnectDB(); ok {
-		color.Green("Setup.go: DB connected")
-	} else {
-		color.Red("Setup.go: DB connection failed")
+	// TODO fix gorm UNIQUE constraint failed
+	if rErr := DB_HANDLE.Where("id = ?", EnvBot.ID).First(EnvBot).Error; errors.Is(rErr, gorm.ErrRecordNotFound) {
+		CreateEnvBotConfig(*EnvBot)
+	} else { 
+		UpdateEnvBotConfig(*EnvBot)
 	}
-
-	// if record exists, update it
-	if exists := DB_HANDLE.First(EnvBot); exists.Error == nil {
-		DB_HANDLE.Model(EnvBot).Where("id = ?", EnvBot.ID).Updates(EnvBot)
-	} else {
-		// if new, create it
-		cResult := DB_HANDLE.Create(EnvBot)
-
-		if cResult.Error != nil {
-			color.Red("Setup.go: DB create op failed")
-		}
-		msg := fmt.Sprintf("Setup.go: New config from GUI: %v saved to DB", EnvBot)
-		color.Cyan(msg)
-	}
-
 	color.Cyan("Setup.go: Envbot properly configured")
 }

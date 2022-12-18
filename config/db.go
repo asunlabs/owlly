@@ -35,7 +35,8 @@ func ConnectDB() (bool, string) {
 // EnvBot DB OP
 
 func CreateEnvBotConfig(botConfig ModelEnvBot) {
-	cResult := DB_HANDLE.Create(botConfig)
+	// @dev should t ake a struct pointer as parameter
+	cResult := DB_HANDLE.Create(&botConfig)
 
 	if cResult.Error != nil {
 		color.Red("db.go: CreateEnvBotConfig failed to execute")

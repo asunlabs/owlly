@@ -7,6 +7,7 @@ import (
 	"owlly/v2/core"
 
 	"github.com/asunlabs/owlly/config"
+	"github.com/fatih/color"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
@@ -24,6 +25,15 @@ func NewApp() *App {
 // @dev startup is called when the app starts. The context is saved so we can call the runtime methods
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
+
+	// connect DB
+	if ok, _ := config.ConnectDB(); ok {
+		color.Green("Setup.go: DB connected")
+	} else {
+		color.Red("Setup.go: DB connection failed")
+	}
+
+	// init listener for Go <=> JS
 	EventListener(ctx)
 }
 
@@ -37,12 +47,17 @@ func NewOwlly() *Owlly {
 }
 
 // @dev set controller for Wails
-func (s *Owlly) InitEnvBot() bool {
+func (o *Owlly) InitEnvBot() bool {
 	if ok := core.InitEnvBot_(); ok {
 		return true
 	}
 
 	return false
+}
+
+// TODO split service(provider) and controller like Nestjs
+func (o *Owlly) CreateEnvBotConfig(botConfig config.ModelEnvBot) {
+	config.CreateEnvBotConfig(botConfig)
 }
 
 // ==================================================================== //
