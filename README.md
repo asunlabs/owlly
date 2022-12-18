@@ -1,6 +1,6 @@
 # 🦉Owlly
 
-<img src="https://img.shields.io/badge/version-v0.3.1-red" alt="version" /> [![wakatime](https://wakatime.com/badge/user/e56daee8-7aae-4b0e-814c-b6bb7f5f841c/project/c15254fd-0a5e-4b66-b897-5ed473191817.svg)](https://wakatime.com/badge/user/e56daee8-7aae-4b0e-814c-b6bb7f5f841c/project/c15254fd-0a5e-4b66-b897-5ed473191817)
+[![wakatime](https://wakatime.com/badge/user/e56daee8-7aae-4b0e-814c-b6bb7f5f841c/project/c15254fd-0a5e-4b66-b897-5ed473191817.svg)](https://wakatime.com/badge/user/e56daee8-7aae-4b0e-814c-b6bb7f5f841c/project/c15254fd-0a5e-4b66-b897-5ed473191817) ![lint-and-format](https://github.com/asunlabs/owlly/actions/workflows/lint-and-format.yml/badge.svg) ![assign](https://github.com/asunlabs/owlly/actions/workflows/release.yml/badge.svg) ![GitHub last commit](https://img.shields.io/github/last-commit/asunlabs/owlly)
 
 A file-based .env change notifier for your slack team.
 
@@ -128,6 +128,27 @@ FOO="bar"
 4. Click send button. Check your slack channel if the message is sent. Result will look like below.
 
 <img src="https://user-images.githubusercontent.com/83855174/202205966-bd345933-1842-4779-ad10-ab21152cce1b.png" alt="owlly banner" width="70%" />
+
+## Workflows
+
+In Owlly, a several groups of automation is configured.
+
+- auto pull request reviewer
+- auto pull request label by branch name
+- auto format and lint for go codes
+- auto release by push
+- auto dependency tracking
+- auto staled issue checking
+
+If you add some workflows to owlly, I would suggest to develop it with [act](https://github.com/nektos/act) to check the workflows locally first and then open a pull request.
+
+Note that the act is based on Docker, meaning you have to run Docker daemon first.
+
+```sh
+# Run act dry-run
+act -n push
+act -n pull_request
+```
 
 ## Contribution
 

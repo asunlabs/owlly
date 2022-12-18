@@ -1,29 +1,24 @@
 package config
 
 import (
-	"fmt"
+	"errors"
 
 	"github.com/fatih/color"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
 var (
-	Owlly       *OwllyConfig
+	EnvBot       *ModelEnvBot
 	SLACK_EVENT = map[string]string{
 		"update": "SLACK_UPDATE_EVENT",
 		"delete": "SLACK_DELETE_EVENT",
 	}
-	DB_HANDLE *gorm.DB
+	AUTH_EVENT = map[string]string{
+		"sign-up": "AUTH_SIGN_UP_EVENT",
+		"sign-in": "AUTH_SIGN_IN_EVENT",
+		"logout":  "AUTH_LOGOUT_EVENT",
+	}
 )
-
-type OwllyConfig struct {
-	TriggerName        string `json:"triggerName"`
-	SlackBotOauthToken string `json:"slackBotOauthToken"`
-	SlackChannelID     string `json:"slackChannelID"`
-	SlackUserID        string `json:"slackUserID"`
-	SlackUserName      string `json:"slackUserName"`
-}
 
 // @dev get event values from front end and update config
 func New(
@@ -33,36 +28,21 @@ func New(
 	slackUserID string,
 	slackUserName string,
 ) {
-	var _Owlly OwllyConfig
+	var _EnvBot ModelEnvBot
 
-	_Owlly.TriggerName = triggerName
-	_Owlly.SlackBotOauthToken = slackBotOauthToken
-	_Owlly.SlackChannelID = slackChannelID
-	_Owlly.SlackUserID = slackUserID
-	_Owlly.SlackUserName = slackUserName
+	_EnvBot.TriggerName = triggerName
+	_EnvBot.SlackBotOauthToken = slackBotOauthToken
+	_EnvBot.SlackChannelID = slackChannelID
+	_EnvBot.SlackUserID = slackUserID
+	_EnvBot.SlackUserName = slackUserName
 
-	Owlly = &_Owlly
+	EnvBot = &_EnvBot
 
-	ok, _ := ConnectDB()
-
-	if ok {
-		DB_HANDLE.Model(&OwllyConfig{}).Updates(&_Owlly)
-		msg := fmt.Sprintf("Config from GUI: %v saved to DB", Owlly)
-		color.Cyan(msg)
-	} else {
-		color.Red("DB connection failed")
+	// TODO fix gorm UNIQUE constraint failed
+	if rErr := DB_HANDLE.Where("id = ?", EnvBot.ID).First(EnvBot).Error; errors.Is(rErr, gorm.ErrRecordNotFound) {
+		CreateEnvBotConfig(*EnvBot)
+	} else { 
+		UpdateEnvBotConfig(*EnvBot)
 	}
-}
-
-func ConnectDB() (bool, string) {
-	_db, oErr := gorm.Open(sqlite.Open("owlly.db"), &gorm.Config{})
-
-	if oErr != nil {
-		return false, oErr.Error()
-	}
-
-	_db.AutoMigrate(&OwllyConfig{})
-	DB_HANDLE = _db
-
-	return true, ""
+	color.Cyan("Setup.go: Envbot properly configured")
 }

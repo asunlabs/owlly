@@ -18,6 +18,7 @@ config/*.config
 owlly-for-mac
 owlly-for-mac-m1
 owlly.exe
+owlly.db
 
 # Wails
 build/bin

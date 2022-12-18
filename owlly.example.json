@@ -1,7 +1,0 @@
-{
-  "triggerName": "trigger name here",
-  "slackBotOauthToken": "oauth token here",
-  "slackChannelID": "channel id here",
-  "slackUserID": "user id here",
-  "slackUserName": "username here"
-}

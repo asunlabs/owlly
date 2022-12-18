@@ -2,18 +2,12 @@ import * as React from 'react';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import useHover from '@owlly/hooks/useHover';
 import { EVENT_SLACK, SlackContext } from '@owlly/context/DefaultState';
 import { ToastNotification } from '@owlly/components/Button';
 import { EventsEmit } from '@wailsjs/runtime/runtime';
 import { InitEnvBot } from '@wailsjs/go/main/Owlly';
 
 function EnvNotifier() {
-  // @dev footer modal local state
-  const [githubModal, setGithubModal] = useState('');
-  const [linkedinModal, setLinkedinModal] = useState('');
-  const [gmailModal, setGmailModal] = useState('');
-
   const { slackContext, setSlackContext } = React.useContext(SlackContext);
 
   // handle multi-input
@@ -66,7 +60,9 @@ function EnvNotifier() {
   return (
     <div>
       <div id="body">
-        <div id="userConfig">
+        <div>
+          {/* TODO read slack config from DB or SlackContext */}
+          {/* TODO refactor using styled-components */}
           <h2>Env bot configuration</h2>
           {/* form submission */}
           <form onSubmit={async (e) => handleSubmit(e)}>
@@ -130,21 +126,6 @@ function EnvNotifier() {
           </form>
         </div>
       </div>
-
-      <ul id="footer">
-        <li onMouseOver={() => useHover('github', setGithubModal)} onMouseLeave={() => setGithubModal('')}>
-          Github
-          <span className="footerModal">{githubModal}</span>
-        </li>
-        <li onMouseOver={() => useHover('linkedin', setLinkedinModal)} onMouseLeave={() => setLinkedinModal('')}>
-          Linkedin
-          <span className="footerModal">{linkedinModal}</span>
-        </li>
-        <li onMouseOver={() => useHover('gmail', setGmailModal)} onMouseLeave={() => setGmailModal('')}>
-          Gmail
-          <span className="footerModal">{gmailModal}</span>
-        </li>
-      </ul>
     </div>
   );
 }
