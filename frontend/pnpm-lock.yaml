@@ -12,6 +12,7 @@ specifiers:
   prettier: ^2.8.0
   react: ^18.2.0
   react-dom: ^18.2.0
+  react-icons: ^4.7.1
   react-is: ^18.2.0
   react-router-dom: ^6.4.3
   react-tabs: ^6.0.0
@@ -38,6 +39,7 @@ devDependencies:
   '@types/styled-components': 5.1.26
   '@vitejs/plugin-react': 2.2.0_vite@3.2.3
   prettier: 2.8.0
+  react-icons: 4.7.1_react@18.2.0
   react-is: 18.2.0
   react-router-dom: 6.4.3_biqbaboplfbrettd7655fr4n2y
   react-tabs: 6.0.0_react@18.2.0
@@ -1534,6 +1536,14 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
+
+  /react-icons/4.7.1_react@18.2.0:
+    resolution: {integrity: sha512-yHd3oKGMgm7zxo3EA7H2n7vxSoiGmHk5t6Ou4bXsfcgWyhfDKMpyKfhHR6Bjnn63c+YXBLBPUql9H4wPJM6sXw==}
+    peerDependencies:
+      react: '*'
+    dependencies:
+      react: 18.2.0
+    dev: true
 
   /react-is/16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
