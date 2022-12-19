@@ -8,7 +8,9 @@ import { AiOutlineMail } from 'react-icons/ai';
 import { NETWORK_ID } from '@owlly/context/DefaultState';
 import { ISignerInfoProps } from '@owlly/context/types';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import { BsKey } from 'react-icons/bs';
 import 'react-tabs/style/react-tabs.css';
+import { WrapperTab, WrapperTabPanel } from './../../components/Wrapper';
 
 /**
  * @dev domain: SIWE's domain. e.g. window.location.host => 'localhost:5173'
@@ -108,8 +110,9 @@ async function signInWithEthereum(callback: React.Dispatch<React.SetStateAction<
 
 function EmailLogin() {
   return (
-    <div>
-      <FormTitle>Login with Email</FormTitle>
+    <>
+      <FormTitle>Owlly: sign in with Wallet</FormTitle>
+
       <Form>
         <Label htmlFor="email">
           <AiOutlineMail />
@@ -119,19 +122,19 @@ function EmailLogin() {
           <MdOutlinePassword />
           <Input id="password" type={'password'} placeholder={'Password'} />
         </Label>
-
-        <Button type={'button'} id={'sign-up'}>
+        {/* <Buttons> */}
+        <Button isDynamic={true} type={'button'} id={'sign-up'}>
           Sign up
         </Button>
-        <Button type={'button'} id={'sign-in'}>
+        <Button transparent={true} type={'button'} id={'sign-in'}>
           Sign in
         </Button>
       </Form>
-    </div>
+    </>
   );
 }
 
-export function Login() {
+function WalletLogin() {
   const [signerInfo, setSignerInfo] = React.useState<ISignerInfoProps>({
     address: '',
     balance: '0',
@@ -142,30 +145,52 @@ export function Login() {
 
   return (
     <>
+      <FormTitle>Owlly: sign in with Wallet</FormTitle>
+      <Form>
+        <Label htmlFor="privateKey">
+          <BsKey />
+          <Input id="privateKey" type={'password'} placeholder={'Private key'} />
+        </Label>
+
+        <Button className="button" isDynamic={true} type={'button'} id={'sign-up'}>
+          Sign up
+        </Button>
+        <Button
+          className="button"
+          type={'button'}
+          id={'sign-in'}
+          transparent={true}
+          onClick={async () => await signInWithEthereum(setSignerInfo)}
+        >
+          Sign in
+        </Button>
+      </Form>
+    </>
+  );
+}
+
+export function Login() {
+  return (
+    <>
       {/* TODO React-tabs CSS */}
       {/* TODO SIWE signer context persist */}
-      <Tabs>
-        <TabList>
-          <Tab>Sign in with Email</Tab>
-          <Tab>Sign in with Ethereum</Tab>
-        </TabList>
+      <WrapperTab>
+        <Tabs id="login-tab">
+          <TabList>
+            <Tab>Quick start</Tab>
+            <Tab>Experimental</Tab>
+          </TabList>
 
-        <TabPanel>
-          <EmailLogin />
-        </TabPanel>
-        <TabPanel>
-          <p>address: {signerInfo.address}</p>
-          <p>balance: {JSON.stringify(signerInfo.balance)}</p>
-          <p>
-            network:
-            {signerInfo.network.length !== 0 ? signerInfo.network : 'No connection'}
-          </p>
-          <p>{signerInfo.isLogin ? 'you can see hidden info after sign-in' : ''}</p>
-          <Button isDynamic={true} onClick={async () => await signInWithEthereum(setSignerInfo)}>
-            Sign in with Ethereum
-          </Button>
-        </TabPanel>
-      </Tabs>
+          <WrapperTabPanel>
+            <TabPanel className={'tab-panel'}>
+              <EmailLogin />
+            </TabPanel>
+            <TabPanel className={'tab-panel'}>
+              <WalletLogin />
+            </TabPanel>
+          </WrapperTabPanel>
+        </Tabs>
+      </WrapperTab>
     </>
   );
 }

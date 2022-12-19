@@ -4,13 +4,14 @@ import styled, { css } from 'styled-components';
 
 export interface IButtonProps {
   isDynamic?: boolean;
+  transparent?: boolean;
 }
 
 export const Button = styled.button<IButtonProps>`
   // default
   font-size: 14px;
   color: black;
-  background-color: skyblue;
+  background-color: #eabb87;
   padding: 10px 30px;
   border: none;
   box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
@@ -24,13 +25,27 @@ export const Button = styled.button<IButtonProps>`
     props.isDynamic &&
     css`
   &:hover {
+    color:white;
+    font-weight: bold;
     transition: 1000ms;
     padding: 10px 50px;
     transform: translateY(-0px);
     background-color: rgb(159, 72, 193);
-    color: #000000;
     border: none;
   `}
+
+  ${(props) =>
+    props.transparent &&
+    css`
+      background-color: transparent;
+      border: 1px solid skyblue;
+
+      &:hover {
+        width: fit-contents;
+        color: white;
+        font-weight: bold;
+      }
+    `}
 `;
 
 export function ToastNotification() {
