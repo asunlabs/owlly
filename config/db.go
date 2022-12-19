@@ -71,6 +71,7 @@ func ReadEmailUser(email string)  {
 	// db.First, db.Last only works with struct pointer parameter
 	rResult := DB_HANDLE.Where("email = ?", email).First(&ModelEmailUser{})
 
+	// TODO add password comparison with JWT
 	if rResult.Error != nil {
 		color.Red("db.go: UpdateEmailUser failed to execute")
 	} else {
