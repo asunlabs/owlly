@@ -1,57 +1,45 @@
 package bot
 
+
 import (
+	"context"
+	"log"
+
 	"github.com/asunlabs/owlly/config"
-	"github.com/fatih/color"
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
-// ==================================================================== //
-// ====================== Event-based CRUD DB OP ====================== //
-// ==================================================================== //
-// EnvBot DB OP
+/**
+	@dev http request/response <=> wails event listener
+*/
+func HandleSlackUpdate(ctx context.Context)  {
+	runtime.EventsOn(ctx, config.SLACK_EVENT["update"], func(optionalData ...interface{}) {
+		_newConfig := make(map[int]string)
 
-func CreateEnvBotConfig(botConfig config.ModelEnvBot) {
+		var newConfig config.ModelEnvBot
 
-	// @dev should t ake a struct pointer as parameter
-	cResult := config.DB_HANDLE.Create(&botConfig)
+		for k, v := range optionalData {
+			switch _v := v.(type) {
+			case string:
+				_newConfig[k] = _v
+			default:
+				log.Fatal("app.go:EventListener: Invalid config data type")
+			}
+		}
 
-	if cResult.Error != nil {
-		color.Red("db.go: CreateEnvBotConfig failed to execute")
-	} else {
-		color.Green(("db.go:DONE: envbot config created"))
-	}
-}
+		newConfig.TriggerName = _newConfig[0]
+		newConfig.SlackBotOauthToken = _newConfig[1]
+		newConfig.SlackChannelID = _newConfig[2]
+		newConfig.SlackUserID = _newConfig[3]
+		newConfig.SlackUserName = _newConfig[4]
 
-// @dev &struct{}: type, &struct: value
-func ReadEnvBotConfigById(id uint) {
-	var botConfig config.ModelEnvBot
-
-	rResult := config.DB_HANDLE.Where("id = ?", id).First(&botConfig)
-
-	if rResult.Error != nil {
-		color.Red("db.go: ReadEnvBotConfigById failed to execute")
-	} else {
-		color.Green(("db.go:DONE: envbot config record fetched"))
-	}
-}
-
-func UpdateEnvBotConfig(botConfig config.ModelEnvBot) {
-	uResult := config.DB_HANDLE.Model(&botConfig).Where("id = ?", botConfig.ID).Updates(botConfig)
-
-	if uResult.Error != nil {
-		color.Red("db.go: UpdateEnvBotConfig failed to execute")
-	} else {
-		color.Green(("db.go:DONE: envbot config updated"))
-	}
-}
-
-func DeleteEnvBotConfig(botConfig config.ModelEnvBot) {
-	// soft delete
-	dResult := config.DB_HANDLE.Where("id = ?", botConfig.ID).Delete(&botConfig)
-
-	if dResult.Error != nil {
-		color.Red("db.go: DeleteEnvBotConfig failed to execute")
-	} else {
-		color.Green(("db.go:DONE: envbot config deleted"))
-	}
+		// Read config info from frontend and do DB operation
+		config.New(
+			newConfig.TriggerName,
+			newConfig.SlackBotOauthToken,
+			newConfig.SlackChannelID,
+			newConfig.SlackUserID,
+			newConfig.SlackUserName,
+		)
+})
 }
