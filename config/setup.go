@@ -1,14 +1,15 @@
 package config
 
 import (
-	"errors"
-
 	"github.com/fatih/color"
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
 var (
-	EnvBot       *ModelEnvBot
+	DB_HANDLE *gorm.DB
+	EnvBot      *ModelEnvBot
+	DATABASE_NAME = "owlly.db"
 	SLACK_EVENT = map[string]string{
 		"update": "SLACK_UPDATE_EVENT",
 		"delete": "SLACK_DELETE_EVENT",
@@ -19,6 +20,22 @@ var (
 		"logout":  "AUTH_LOGOUT_EVENT",
 	}
 )
+
+// ==================================================================== //
+// ========================= Init SQLite3 DB ========================== //
+// ==================================================================== //
+func ConnectDB() (bool, string) {
+	_db, oErr := gorm.Open(sqlite.Open(DATABASE_NAME), &gorm.Config{})
+
+	if oErr != nil {
+		return false, oErr.Error()
+	}
+
+	_db.AutoMigrate(&ModelEmailUser{}, &ModelWalletUser{}, &ModelEnvBot{})
+	DB_HANDLE = _db
+
+	return true, ""
+}
 
 // @dev get event values from front end and update config
 func New(
@@ -37,12 +54,5 @@ func New(
 	_EnvBot.SlackUserName = slackUserName
 
 	EnvBot = &_EnvBot
-
-	// TODO fix gorm UNIQUE constraint failed
-	if rErr := DB_HANDLE.Where("id = ?", EnvBot.ID).First(EnvBot).Error; errors.Is(rErr, gorm.ErrRecordNotFound) {
-		CreateEnvBotConfig(*EnvBot)
-	} else { 
-		UpdateEnvBotConfig(*EnvBot)
-	}
 	color.Cyan("Setup.go: Envbot properly configured")
 }
