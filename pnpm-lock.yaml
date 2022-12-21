@@ -5,6 +5,7 @@ specifiers:
   '@babel/preset-env': ^7.20.2
   '@tanstack/query-core': ^4.20.2
   ethers: ^5.7.2
+  husky: ^8.0.0
   react: ^18.2.0
   react-icons: ^4.7.1
   react-native: ^0.70.6
@@ -20,6 +21,7 @@ devDependencies:
   '@babel/core': 7.20.5
   '@babel/preset-env': 7.20.2_@babel+core@7.20.5
   '@tanstack/query-core': 4.20.2
+  husky: 8.0.2
   react-icons: 4.7.1_react@18.2.0
   react-native: 0.70.6_ildacul6tjko7jf3wnaev3ii3q
   typescript: 4.9.4
@@ -3686,6 +3688,12 @@ packages:
       setprototypeof: 1.2.0
       statuses: 2.0.1
       toidentifier: 1.0.1
+
+  /husky/8.0.2:
+    resolution: {integrity: sha512-Tkv80jtvbnkK3mYWxPZePGFpQ/tT3HNSs/sasF9P2YfkMezDl3ON37YN6jUUI4eTg5LcyVynlb6r4eyvOmspvg==}
+    engines: {node: '>=14'}
+    hasBin: true
+    dev: true
 
   /ieee754/1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
