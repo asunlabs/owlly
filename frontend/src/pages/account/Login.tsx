@@ -13,6 +13,7 @@ import 'react-tabs/style/react-tabs.css';
 import { WrapperTab, WrapperTabPanel } from './../../components/Wrapper';
 import { Modal, ModalIconWrapper } from '@owlly/components/Modal';
 import { AiFillCloseCircle } from 'react-icons/ai';
+import { EventsEmit } from '@wailsjs/runtime/runtime';
 
 /**
  * @dev domain: SIWE's domain. e.g. window.location.host => 'localhost:5173'
@@ -113,6 +114,15 @@ async function signInWithEthereum(callback: React.Dispatch<React.SetStateAction<
 function EmailLogin() {
   const [isModal, setIsModal] = React.useState(false);
 
+  function handleEmailSignUp(e: any) {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+    const email = formData.get('signup-email');
+    const password = formData.get('signup-password');
+    EventsEmit('AUTH_SIGN_UP_EVENT', email, password);
+  }
+
   return (
     <>
       <FormTitle>Owlly: Sign in with Email</FormTitle>
@@ -141,14 +151,14 @@ function EmailLogin() {
             <ModalIconWrapper onClick={() => setIsModal(false)}>
               <AiFillCloseCircle />
             </ModalIconWrapper>
-            <Form>
+            <Form onSubmit={handleEmailSignUp}>
               <Label htmlFor="email">
                 <AiOutlineMail />
-                <Input id="email" type={'email'} placeholder={'Email'} />
+                <Input name="signup-email" id="email" type={'email'} placeholder={'Email'} />
               </Label>
               <Label htmlFor="password">
                 <MdOutlinePassword />
-                <Input id="password" type={'password'} placeholder={'Password'} />
+                <Input name="signup-password" id="password" type={'password'} placeholder={'Password'} />
               </Label>
               <Button transparent={true} type={'button'} id={'sign-up'}>
                 Sign up
@@ -226,11 +236,16 @@ function WalletLogin() {
             <Form>
               <Label htmlFor="privateKey">
                 <BsKey />
-                <Input id="privateKey" type={'password'} placeholder={'Private key'} />
+                <Input name="signup-private-key" id="privateKey" type={'password'} placeholder={'Private key'} />
               </Label>
               <Label htmlFor="password">
                 <MdOutlinePassword />
-                <Input id="password" type={'password'} placeholder={'Alchemy api key'} />
+                <Input
+                  name="signup-alchemy-api-key"
+                  id="alchemyApiKey"
+                  type={'password'}
+                  placeholder={'Alchemy api key'}
+                />
               </Label>
               <Button transparent={true} type={'button'} id={'sign-up'}>
                 Sign up
