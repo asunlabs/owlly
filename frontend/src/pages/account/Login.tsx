@@ -11,6 +11,8 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { BsKey } from 'react-icons/bs';
 import 'react-tabs/style/react-tabs.css';
 import { WrapperTab, WrapperTabPanel } from './../../components/Wrapper';
+import { Modal, ModalIconWrapper } from '@owlly/components/Modal';
+import { AiFillCloseCircle } from 'react-icons/ai';
 
 /**
  * @dev domain: SIWE's domain. e.g. window.location.host => 'localhost:5173'
@@ -109,9 +111,11 @@ async function signInWithEthereum(callback: React.Dispatch<React.SetStateAction<
 }
 
 function EmailLogin() {
+  const [isModal, setIsModal] = React.useState(false);
+
   return (
     <>
-      <FormTitle>Owlly: sign in with Wallet</FormTitle>
+      <FormTitle>Owlly: Sign in with Email</FormTitle>
 
       <Form>
         <Label htmlFor="email">
@@ -122,16 +126,54 @@ function EmailLogin() {
           <MdOutlinePassword />
           <Input id="password" type={'password'} placeholder={'Password'} />
         </Label>
-        {/* <Buttons> */}
-        <Button isDynamic={true} type={'button'} id={'sign-up'}>
-          Sign up
+        <Button isDynamic={true} type={'button'} id={'sign-up'} onClick={() => handleSignUpModal('email', setIsModal)}>
+          Don't have an account?
         </Button>
         <Button transparent={true} type={'button'} id={'sign-in'}>
           Sign in
         </Button>
       </Form>
+
+      {isModal && (
+        <>
+          <Modal modalType="email">
+            <FormTitle>Owlly: Create an email account</FormTitle>
+            <ModalIconWrapper onClick={() => setIsModal(false)}>
+              <AiFillCloseCircle />
+            </ModalIconWrapper>
+            <Form>
+              <Label htmlFor="email">
+                <AiOutlineMail />
+                <Input id="email" type={'email'} placeholder={'Email'} />
+              </Label>
+              <Label htmlFor="password">
+                <MdOutlinePassword />
+                <Input id="password" type={'password'} placeholder={'Password'} />
+              </Label>
+              <Button transparent={true} type={'button'} id={'sign-up'}>
+                Sign up
+              </Button>
+            </Form>
+          </Modal>
+        </>
+      )}
     </>
   );
+}
+
+export type TypeSignUp = 'email' | 'wallet';
+
+function handleSignUpModal(signUpType: TypeSignUp, callback: React.Dispatch<React.SetStateAction<boolean>>) {
+  switch (signUpType) {
+    case 'email':
+      callback(true);
+    case 'wallet':
+      callback(true);
+      break;
+
+    default:
+      throw new Error('Login.tsx: Invalid sign-up type');
+  }
 }
 
 function WalletLogin() {
@@ -143,17 +185,25 @@ function WalletLogin() {
     isLogin: false,
   });
 
+  const [isModal, setIsModal] = React.useState(false);
+
   return (
     <>
-      <FormTitle>Owlly: sign in with Wallet</FormTitle>
+      <FormTitle>Owlly: Sign in with Wallet</FormTitle>
       <Form>
         <Label htmlFor="privateKey">
           <BsKey />
           <Input id="privateKey" type={'password'} placeholder={'Private key'} />
         </Label>
 
-        <Button className="button" isDynamic={true} type={'button'} id={'sign-up'}>
-          Sign up
+        <Button
+          className="button"
+          isDynamic={true}
+          type={'button'}
+          id={'sign-up'}
+          onClick={() => handleSignUpModal('wallet', setIsModal)}
+        >
+          Don't have an account?
         </Button>
         <Button
           className="button"
@@ -165,6 +215,30 @@ function WalletLogin() {
           Sign in
         </Button>
       </Form>
+
+      {isModal && (
+        <>
+          <Modal modalType="wallet">
+            <FormTitle>Owlly: Create a wallet account</FormTitle>
+            <ModalIconWrapper onClick={() => setIsModal(false)}>
+              <AiFillCloseCircle />
+            </ModalIconWrapper>
+            <Form>
+              <Label htmlFor="privateKey">
+                <BsKey />
+                <Input id="privateKey" type={'password'} placeholder={'Private key'} />
+              </Label>
+              <Label htmlFor="password">
+                <MdOutlinePassword />
+                <Input id="password" type={'password'} placeholder={'Alchemy api key'} />
+              </Label>
+              <Button transparent={true} type={'button'} id={'sign-up'}>
+                Sign up
+              </Button>
+            </Form>
+          </Modal>
+        </>
+      )}
     </>
   );
 }
