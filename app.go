@@ -2,13 +2,11 @@ package main
 
 import (
 	"context"
-	"log"
-
-	"owlly/v2/core"
-
-	"github.com/asunlabs/owlly/config"
 	"github.com/fatih/color"
-	"github.com/wailsapp/wails/v2/pkg/runtime"
+	config "github.com/asunlabs/owlly/config"
+	core "owlly/v2/core"
+	// account "github.com/asunlabs/owlly/core/account"
+	bot "owlly/v2/core/bot"
 )
 
 // ==================================================================== //
@@ -46,7 +44,7 @@ func NewOwlly() *Owlly {
 	return &Owlly{}
 }
 
-// @dev set controller for Wails
+// @dev Go/Js binding
 func (o *Owlly) InitEnvBot() bool {
 	if ok := core.InitEnvBot_(); ok {
 		return true
@@ -55,9 +53,8 @@ func (o *Owlly) InitEnvBot() bool {
 	return false
 }
 
-// TODO split service(provider) and controller like Nestjs
 func (o *Owlly) CreateEnvBotConfig(botConfig config.ModelEnvBot) {
-	config.CreateEnvBotConfig(botConfig)
+	bot.CreateEnvBotConfig(botConfig)
 }
 
 // ==================================================================== //
@@ -65,33 +62,5 @@ func (o *Owlly) CreateEnvBotConfig(botConfig config.ModelEnvBot) {
 // ==================================================================== //
 // @dev runtime context should be obtained from the OnStartup or OnDomReady hooks.
 func EventListener(ctx context.Context) {
-	runtime.EventsOn(ctx, config.SLACK_EVENT["update"], func(optionalData ...interface{}) {
-		_newConfig := make(map[int]string)
-
-		var newConfig config.ModelEnvBot
-
-		for k, v := range optionalData {
-			switch _v := v.(type) {
-			case string:
-				_newConfig[k] = _v
-			default:
-				log.Fatal("app.go:EventListener: Invalid config data type")
-			}
-		}
-
-		newConfig.TriggerName = _newConfig[0]
-		newConfig.SlackBotOauthToken = _newConfig[1]
-		newConfig.SlackChannelID = _newConfig[2]
-		newConfig.SlackUserID = _newConfig[3]
-		newConfig.SlackUserName = _newConfig[4]
-
-		// Read config info from frontend and do DB operation
-		config.New(
-			newConfig.TriggerName,
-			newConfig.SlackBotOauthToken,
-			newConfig.SlackChannelID,
-			newConfig.SlackUserID,
-			newConfig.SlackUserName,
-		)
-	})
+	bot.HandleSlackUpdate(ctx)
 }
