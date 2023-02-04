@@ -16,7 +16,9 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "format": "prettier -w ./frontend/src/**/*",
+    "format:js": "prettier -w ./frontend/src/**/*",
+    "format:go": "golines -w ./config & golines -w ./core",
+    "format": "pnpm format:js & pnpm format:go",
     "format:check": "prettier -c ./src/**/*"
   }
 }
