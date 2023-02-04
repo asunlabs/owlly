@@ -5,7 +5,7 @@ import { SiweMessage } from 'siwe';
 import { Form, FormTitle, Input, Label } from '@owlly/components/Form';
 import { MdOutlinePassword } from 'react-icons/md';
 import { AiOutlineMail } from 'react-icons/ai';
-import { NETWORK_ID } from '@owlly/context/DefaultState';
+import { EVENT_AUTH, NETWORK_ID } from '@owlly/context/DefaultState';
 import { ISignerInfoProps } from '@owlly/context/types';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { BsKey } from 'react-icons/bs';
@@ -13,7 +13,7 @@ import 'react-tabs/style/react-tabs.css';
 import { WrapperTab, WrapperTabPanel } from './../../components/Wrapper';
 import { Modal, ModalIconWrapper } from '@owlly/components/Modal';
 import { AiFillCloseCircle } from 'react-icons/ai';
-import { EventsEmit } from '@wailsjs/runtime/runtime';
+import { EventsEmit as SendWailsRequest } from '@wailsjs/runtime/runtime';
 
 /**
  * @dev domain: SIWE's domain. e.g. window.location.host => 'localhost:5173'
@@ -71,7 +71,6 @@ function createSiweMessage(address: string, statement: string) {
   return { message };
 }
 
-// TODO replace metamask account set => owlly account set
 async function connectWallet(callback: React.Dispatch<React.SetStateAction<ISignerInfoProps>>) {
   try {
     const { provider, signer } = getSiweSetup();
@@ -120,7 +119,8 @@ function EmailLogin() {
     const formData = new FormData(e.target);
     const email = formData.get('signup-email');
     const password = formData.get('signup-password');
-    EventsEmit('AUTH_SIGN_UP_EVENT', email, password);
+
+    SendWailsRequest(EVENT_AUTH.signUp, email, password);
   }
 
   return (
@@ -160,7 +160,7 @@ function EmailLogin() {
                 <MdOutlinePassword />
                 <Input name="signup-password" id="password" type={'password'} placeholder={'Password'} />
               </Label>
-              <Button transparent={true} type={'button'} id={'sign-up'}>
+              <Button transparent={true} type={'submit'} id={'sign-up'}>
                 Sign up
               </Button>
             </Form>
@@ -261,8 +261,6 @@ function WalletLogin() {
 export function Login() {
   return (
     <>
-      {/* TODO React-tabs CSS */}
-      {/* TODO SIWE signer context persist */}
       <WrapperTab>
         <Tabs id="login-tab">
           <TabList>
