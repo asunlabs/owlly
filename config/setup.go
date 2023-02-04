@@ -7,10 +7,10 @@ import (
 )
 
 var (
-	DB_HANDLE *gorm.DB
-	EnvBot      *ModelEnvBot
+	DB_HANDLE     *gorm.DB
+	EnvBot        *ModelEnvBot
 	DATABASE_NAME = "owlly.db"
-	SLACK_EVENT = map[string]string{
+	SLACK_EVENT   = map[string]string{
 		"update": "SLACK_UPDATE_EVENT",
 		"delete": "SLACK_DELETE_EVENT",
 	}
