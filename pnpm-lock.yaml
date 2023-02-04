@@ -5,6 +5,8 @@ specifiers:
   '@babel/preset-env': ^7.20.2
   '@tanstack/query-core': ^4.20.2
   ethers: ^5.7.2
+  husky: ^8.0.0
+  prettier: ^2.8.3
   react: ^18.2.0
   react-icons: ^4.7.1
   react-native: ^0.70.6
@@ -20,6 +22,8 @@ devDependencies:
   '@babel/core': 7.20.5
   '@babel/preset-env': 7.20.2_@babel+core@7.20.5
   '@tanstack/query-core': 4.20.2
+  husky: 8.0.3
+  prettier: 2.8.3
   react-icons: 4.7.1_react@18.2.0
   react-native: 0.70.6_ildacul6tjko7jf3wnaev3ii3q
   typescript: 4.9.4
@@ -3687,6 +3691,12 @@ packages:
       statuses: 2.0.1
       toidentifier: 1.0.1
 
+  /husky/8.0.3:
+    resolution: {integrity: sha512-+dQSyqPh4x1hlO1swXBiNb2HzTDN1I2IGLQx1GrBuiqFJfoMrnZWwVmatvSiO+Iz8fBUnf+lekwNo4c2LlXItg==}
+    engines: {node: '>=14'}
+    hasBin: true
+    dev: true
+
   /ieee754/1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
 
@@ -4878,6 +4888,12 @@ packages:
   /preact/10.4.1:
     resolution: {integrity: sha512-WKrRpCSwL2t3tpOOGhf2WfTpcmbpxaWtDbdJdKdjd0aEiTkvOmS4NBkG6kzlaAHI9AkQ3iVqbFWM3Ei7mZ4o1Q==}
     dev: false
+
+  /prettier/2.8.3:
+    resolution: {integrity: sha512-tJ/oJ4amDihPoufT5sM0Z1SKEuKay8LfVAMlbbhnnkvt6BUserZylqo2PN+p9KeljLr0OHa2rXHU1T8reeoTrw==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
+    dev: true
 
   /pretty-format/26.6.2:
     resolution: {integrity: sha512-7AeGuCYNGmycyQbCqd/3PWH4eOoX/OiCa0uphp57NVTeAGdJGaAliecxwBDHYQCIvrW7aDBZCYeNTP/WX69mkg==}
