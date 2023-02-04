@@ -4,7 +4,7 @@
 
 [![wakatime](https://wakatime.com/badge/user/e56daee8-7aae-4b0e-814c-b6bb7f5f841c/project/c15254fd-0a5e-4b66-b897-5ed473191817.svg)](https://wakatime.com/badge/user/e56daee8-7aae-4b0e-814c-b6bb7f5f841c/project/c15254fd-0a5e-4b66-b897-5ed473191817) ![GitHub last commit](https://img.shields.io/github/last-commit/asunlabs/owlly) [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
-![lint-and-format](https://github.com/asunlabs/owlly/actions/workflows/lint-and-format.yml/badge.svg) ![assign](https://github.com/asunlabs/owlly/actions/workflows/release.yml/badge.svg) ![label](https://github.com/asunlabs/owlly/actions/workflows/label.yml/badge.svg) ![assign](https://github.com/asunlabs/owlly/actions/workflows/assign.yml/badge.svg)
+![lint](https://github.com/asunlabs/owlly/actions/workflows/lint.yml/badge.svg) ![assign](https://github.com/asunlabs/owlly/actions/workflows/release.yml/badge.svg) ![label](https://github.com/asunlabs/owlly/actions/workflows/label.yml/badge.svg) ![assign](https://github.com/asunlabs/owlly/actions/workflows/assign.yml/badge.svg)
 
 A file-based .env change notifier for your slack team.
 
