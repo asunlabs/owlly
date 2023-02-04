@@ -19,12 +19,6 @@ jobs:
           go-version: ">=1.18"
       - run: go version
 
-      - name: install formatter
-        run: go install github.com/segmentio/golines@latest
-
-      - name: format
-        run: golines -w .
-
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
         with:
