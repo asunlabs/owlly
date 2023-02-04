@@ -70,10 +70,17 @@ export const EVENT_SLACK = {
   delete: 'SLACK_DELETE_EVENT',
 };
 
+export const EVENT_AUTH = {
+  signUp: 'AUTH_SIGN_UP_EVENT',
+  signIn: 'AUTH_SIGN_IN_EVENT',
+  logout: 'AUTH_LOGOUT_EVENT',
+};
+
 export const NETWORK_ID = {
   goerli: 5,
 };
 
+// TODO fix config later
 export const SIWE_MESSAGE_PROPS: ISiweProps = {
   domain: 'Owlly ver 0.3.2' || window.location.host,
   address: '0xEcAB21327B6EbA1FB0631Dc9bBc5863B6B2be3E4',
