@@ -1,6 +1,0 @@
-node_modules/
-dist/
-wailsjs/
-pnpm-lock.yaml
-.pnpm-store
-src/assets/*

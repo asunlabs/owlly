@@ -23,6 +23,7 @@ function EnvNotifier() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
+    // update slack config
     EventsEmit(
       EVENT_SLACK.update,
       slackContext.triggerName,

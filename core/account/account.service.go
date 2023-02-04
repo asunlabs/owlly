@@ -17,8 +17,8 @@ import (
 // ==================================================================== //
 func CreateEmailUser(emailUser config.ModelEmailUser) {
 	hashedPassword := HashCredential(emailUser.Password)
-	cResult := config.DB_HANDLE.Create(&config.ModelEmailUser {
-		Email: emailUser.Email,
+	cResult := config.DB_HANDLE.Create(&config.ModelEmailUser{
+		Email:    emailUser.Email,
 		Password: string(hashedPassword),
 	})
 
@@ -61,15 +61,15 @@ func DeleteEmailUserById(id uint) {
 
 	if rResult.Error != nil {
 		color.Red("account.controller.go: DeleteEmailUser failed to execute")
-		} else {
-			config.DB_HANDLE.Where("id = ?", id).Delete(&config.ModelEmailUser{})
+	} else {
+		config.DB_HANDLE.Where("id = ?", id).Delete(&config.ModelEmailUser{})
 	}
 }
 
 // ==================================================================== //
 // ====================== Wallet user sign-up  ======================== //
 // ==================================================================== //
-func CreateWalletUser(user config.ModelWalletUser)  {
+func CreateWalletUser(user config.ModelWalletUser) {
 	hashedApiKey := HashCredential(user.AlchemyKey)
 	hashedPrivateKey := HashCredential(user.PrivateKey)
 
@@ -77,7 +77,7 @@ func CreateWalletUser(user config.ModelWalletUser)  {
 		AlchemyKey: string(hashedApiKey),
 		PrivateKey: string(hashedPrivateKey),
 	})
-	
+
 	if cResult.Error != nil {
 		color.Red("account.controller.go: CreateWalletUser failed to execute")
 	} else {
@@ -85,7 +85,7 @@ func CreateWalletUser(user config.ModelWalletUser)  {
 	}
 }
 
-func ReadWalletUserById(id uint)  {
+func ReadWalletUserById(id uint) {
 	rResult := config.DB_HANDLE.Where("id = ?", id).First(&config.ModelWalletUser{})
 
 	if rResult.Error != nil {
@@ -95,7 +95,7 @@ func ReadWalletUserById(id uint)  {
 	}
 }
 
-func UpdateWalletUser(user config.ModelWalletUser)  {
+func UpdateWalletUser(user config.ModelWalletUser) {
 	uResult := config.DB_HANDLE.Where("id = ?", user.ID).Updates(&user)
 
 	if uResult.Error != nil {
@@ -106,7 +106,7 @@ func UpdateWalletUser(user config.ModelWalletUser)  {
 	}
 }
 
-func DeleteWalletUserById(id uint)  {
+func DeleteWalletUserById(id uint) {
 	dResult := config.DB_HANDLE.Where("id = ?", id).First(&config.ModelWalletUser{})
 
 	if dResult.Error != nil {
@@ -147,7 +147,7 @@ func ValidatePassword(password string) bool {
 // ==================================================================== //
 // =========================== JWT service  =========================== //
 // ==================================================================== //
-func CreateToken() (*jwt.Token)  {
+func CreateToken() *jwt.Token {
 	token := jwt.New(&jwt.SigningMethodECDSA{})
 
 	return token
@@ -155,7 +155,7 @@ func CreateToken() (*jwt.Token)  {
 
 func UpdateToken(token *jwt.Token) {
 	claims := token.Claims.(jwt.MapClaims)
-	
+
 	claims["expire"] = time.Now().Add(10 * time.Minute)
 	claims["authorized"] = true
 	claims["user"] = "username"
@@ -167,12 +167,12 @@ func SignTokenWithSecret(token *jwt.Token) (string, error) {
 
 	if err != nil {
 		return "", err
-	 }
+	}
 
-	 return tokenString, nil
+	return tokenString, nil
 }
 
-func VerifyToken(tokenString string)  {
+func VerifyToken(tokenString string) {
 	jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
 		_, ok := t.Method.(*jwt.SigningMethodECDSA)
 

@@ -1,0 +1,6 @@
+node_modules/
+frontend/dist
+frontend/wailsjs
+frontend/src/assets/*
+pnpm-lock.yaml
+.pnpm-store

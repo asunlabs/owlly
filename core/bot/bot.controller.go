@@ -1,6 +1,5 @@
 package bot
 
-
 import (
 	"context"
 	"log"
@@ -9,10 +8,11 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
-/**
-	@dev http request/response <=> wails event listener
+/*
+*
+@dev http request/response <=> wails event listener
 */
-func HandleSlackUpdate(ctx context.Context)  {
+func HandleSlackUpdate(ctx context.Context) {
 	runtime.EventsOn(ctx, config.SLACK_EVENT["update"], func(optionalData ...interface{}) {
 		_newConfig := make(map[int]string)
 
@@ -41,5 +41,5 @@ func HandleSlackUpdate(ctx context.Context)  {
 			newConfig.SlackUserID,
 			newConfig.SlackUserName,
 		)
-})
+	})
 }

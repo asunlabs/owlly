@@ -5,7 +5,7 @@ import (
 	"github.com/fatih/color"
 	config "github.com/asunlabs/owlly/config"
 	core "owlly/v2/core"
-	// account "github.com/asunlabs/owlly/core/account"
+	account "owlly/v2/core/account"
 	bot "owlly/v2/core/bot"
 )
 
@@ -44,7 +44,9 @@ func NewOwlly() *Owlly {
 	return &Owlly{}
 }
 
-// @dev Go/Js binding
+/*
+	Front end JS modules will call these Go methods
+*/
 func (o *Owlly) InitEnvBot() bool {
 	if ok := core.InitEnvBot_(); ok {
 		return true
@@ -53,14 +55,12 @@ func (o *Owlly) InitEnvBot() bool {
 	return false
 }
 
-func (o *Owlly) CreateEnvBotConfig(botConfig config.ModelEnvBot) {
-	bot.CreateEnvBotConfig(botConfig)
-}
-
 // ==================================================================== //
 // ======================= Wails event listener ======================= //
 // ==================================================================== //
 // @dev runtime context should be obtained from the OnStartup or OnDomReady hooks.
+// @dev call controller and deliver wails context
 func EventListener(ctx context.Context) {
 	bot.HandleSlackUpdate(ctx)
+	account.HandleEmailSignUp(ctx)
 }
