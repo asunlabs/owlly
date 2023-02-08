@@ -1,7 +1,11 @@
 package config
 
 import (
+	"os"
+	"strings"
+
 	"github.com/fatih/color"
+	"go.uber.org/zap"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -9,7 +13,7 @@ import (
 var (
 	DB_HANDLE     *gorm.DB
 	EnvBot        *ModelEnvBot
-	DATABASE_NAME = "owlly.db"
+	Logger *zap.SugaredLogger
 	SLACK_EVENT   = map[string]string{
 		"update": "SLACK_UPDATE_EVENT",
 		"delete": "SLACK_DELETE_EVENT",
@@ -27,10 +31,16 @@ var (
 	ERROR_CODE = map[string]uint{
 		"DB_OB_FAILURE":    777,
 		"UUID_GEN_FAILURE": 778,
+		"ZAP_FAILURE": 779,
 	}
 	SUCCESS_CODE = map[string]uint{
 		"OK": 200,
 	}
+)
+
+const (
+	DATABASE_NAME = "owlly.db" 
+	LOG_DIR_NAME = "logs"
 )
 
 type OWLLY_RESPONSE struct {
@@ -72,4 +82,27 @@ func New(
 
 	EnvBot = &_EnvBot
 	color.Cyan("Setup.go: Envbot properly configured")
+}
+
+/*
+	@dev Applications should take care to call Sync before exiting.
+	@dev Check out logger configs below
+		Level:            NewAtomicLevelAt(DebugLevel),
+		Development:      true,
+		Encoding:         "console",
+		EncoderConfig:    NewDevelopmentEncoderConfig(),
+		OutputPaths:      []string{"stderr"},
+		ErrorOutputPaths: []string{"stderr"},
+*/
+func InitLogger() {
+	root, _ := os.Getwd()
+	_output := strings.Join([]string{root, LOG_DIR_NAME, "output-log.txt"}, "/")
+	_error := strings.Join([]string{root, LOG_DIR_NAME, "error-log.txt"}, "/")
+	
+	options := zap.NewDevelopmentConfig()
+	options.OutputPaths = []string{_output}
+	options.ErrorOutputPaths = []string{_error}
+
+	_logger, _ := options.Build()
+	Logger = _logger.Sugar()
 }

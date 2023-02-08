@@ -2,11 +2,12 @@ package main
 
 import (
 	"context"
-	"github.com/fatih/color"
-	config "github.com/asunlabs/owlly/config"
 	core "owlly/v2/core"
 	account "owlly/v2/core/account"
 	bot "owlly/v2/core/bot"
+
+	config "github.com/asunlabs/owlly/config"
+	"github.com/fatih/color"
 )
 
 // ==================================================================== //
@@ -22,13 +23,18 @@ func NewApp() *App {
 
 // @dev startup is called when the app starts. The context is saved so we can call the runtime methods
 func (a *App) startup(ctx context.Context) {
+	// @dev enable logger globally 
+	config.InitLogger()
+	defer config.Logger.Sync()
 	a.ctx = ctx
 
 	// connect DB
 	if ok, _ := config.ConnectDB(); ok {
 		color.Green("Setup.go: DB connected")
+		config.Logger.Info("DB connected")
 	} else {
-		color.Red("Setup.go: DB connection failed")
+		color.Red("Setup.go: DB connection failure")
+		config.Logger.Error("Setup.go: DB connection failure")
 	}
 
 	// init listener for Go <=> JS
