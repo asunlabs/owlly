@@ -8,37 +8,78 @@ import (
 
 	"github.com/asunlabs/owlly/config"
 	"github.com/fatih/color"
+	"github.com/gofrs/uuid"
 	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
 )
 
 // ==================================================================== //
-// ======================= Email user sign-up  ======================== //
+// ======================= Email user API  ======================== //
 // ==================================================================== //
-func CreateEmailUser(emailUser config.ModelEmailUser) {
+// TODO change terminal logging to logger service
+func CreateEmailUser(emailUser config.ModelEmailUser) config.OWLLY_RESPONSE {
 	hashedPassword := HashCredential(emailUser.Password)
+	label, err := uuid.NewV4()
+
+	if err != nil {
+		color.Red("account.controller.go: UUID failed")
+
+		return config.OWLLY_RESPONSE{
+			Code: config.ERROR_CODE["UUID_GEN_FAILURE"],
+			Message: "account.controller.go: UUID failed",
+		}
+	}
+
+	_username := ""
+
+	if emailUser.Username == "" {
+		_username = string(label.Bytes())
+	} else { 
+		_username = emailUser.Username
+	}
+
 	cResult := config.DB_HANDLE.Create(&config.ModelEmailUser{
 		Email:    emailUser.Email,
 		Password: string(hashedPassword),
+		Username: _username,
 	})
 
 	if cResult.Error != nil {
 		color.Red("account.controller.go: CreateEmailUser failed to execute")
-	} else {
-		color.Green(("account.controller.go:DONE: new email user created"))
+
+		_error := config.OWLLY_RESPONSE{
+			Code: config.ERROR_CODE["DB_OB_FAILURE"],
+			Message: "account.controller.go: CreateEmailUser failed to execute",
+		}
+
+		return _error
+	} 
+	
+	color.Green(("account.controller.go:DONE: new email user created"))
+
+	_success := config.OWLLY_RESPONSE{
+		Code: config.SUCCESS_CODE["OK"],
+		Message: "account.controller.go:DONE: new email user created",
 	}
+
+	return _success
 }
 
-func ReadEmailUser(email string) {
-	// db.First, db.Last only works with struct pointer parameter
-	rResult := config.DB_HANDLE.Where("email = ?", email).First(&config.ModelEmailUser{})
+func ReadEmailUser(email string) string {
+	var emailUser config.ModelEmailUser
+	rResult := config.DB_HANDLE.Where("email = ?", email).First(&emailUser)
 
-	// TODO add password comparison with JWT
 	if rResult.Error != nil {
 		color.Red("account.controller.go: UpdateEmailUser failed to execute")
-	} else {
-		color.Green("account.controller.go:DONE: email user record fetched")
+	} 
+
+	color.Green("account.controller.go:DONE: email user record fetched")
+	
+	if emailUser.Username != "" {
+		return emailUser.Username
 	}
+
+	return emailUser.Email
 }
 
 // update password
@@ -67,7 +108,7 @@ func DeleteEmailUserById(id uint) {
 }
 
 // ==================================================================== //
-// ====================== Wallet user sign-up  ======================== //
+// ====================== Wallet user API  ======================== //
 // ==================================================================== //
 func CreateWalletUser(user config.ModelWalletUser) {
 	hashedApiKey := HashCredential(user.AlchemyKey)
