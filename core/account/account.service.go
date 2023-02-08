@@ -14,19 +14,21 @@ import (
 )
 
 // ==================================================================== //
-// ======================= Email user API  ======================== //
+// ========================= Email user API  ========================== //
 // ==================================================================== //
-// TODO change terminal logging to logger service
 func CreateEmailUser(emailUser config.ModelEmailUser) config.OWLLY_RESPONSE {
+	// ! sync should be called
+	defer config.Logger.Sync()
+
 	hashedPassword := HashCredential(emailUser.Password)
 	label, err := uuid.NewV4()
 
 	if err != nil {
-		color.Red("account.controller.go: UUID failed")
+		config.Logger.Error("account.controller.go: UUID failed")
 
 		return config.OWLLY_RESPONSE{
 			Code:    config.ERROR_CODE["UUID_GEN_FAILURE"],
-			Message: "account.controller.go: UUID failed",
+			Message: "UUID failure",
 		}
 	}
 
@@ -45,26 +47,27 @@ func CreateEmailUser(emailUser config.ModelEmailUser) config.OWLLY_RESPONSE {
 	})
 
 	if cResult.Error != nil {
-		color.Red("account.controller.go: CreateEmailUser failed to execute")
+		config.Logger.Error("account.controller.go: CreateEmailUser failed")
 
 		_error := config.OWLLY_RESPONSE{
 			Code:    config.ERROR_CODE["DB_OB_FAILURE"],
-			Message: "account.controller.go: CreateEmailUser failed to execute",
+			Message: "CreateEmailUser failure",
 		}
 
 		return _error
 	}
 
-	color.Green(("account.controller.go:DONE: new email user created"))
+	config.Logger.Info("account.controller.go: new email user created")
 
 	_success := config.OWLLY_RESPONSE{
 		Code:    config.SUCCESS_CODE["OK"],
-		Message: "account.controller.go:DONE: new email user created",
+		Message: "CreateEmailUser success",
 	}
 
 	return _success
 }
 
+// TODO change terminal logging to logger service
 func ReadEmailUser(email string) string {
 	var emailUser config.ModelEmailUser
 	rResult := config.DB_HANDLE.Where("email = ?", email).First(&emailUser)
