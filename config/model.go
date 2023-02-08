@@ -13,7 +13,7 @@ type ModelEmailUser struct {
 	gorm.Model
 	Email    string `gorm:"unique;not null" json:"email"`
 	Password string `gorm:"not null"        json:"password"`
-	Username string `gorm:"not null"        json:"username"`
+	Username string `gorm:"unique"        json:"username"`
 }
 
 type ModelWalletUser struct {

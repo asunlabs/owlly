@@ -14,12 +14,29 @@ var (
 		"update": "SLACK_UPDATE_EVENT",
 		"delete": "SLACK_DELETE_EVENT",
 	}
-	AUTH_EVENT = map[string]string{
+	AUTH_EMAIL = map[string]string{
 		"sign-up": "AUTH_SIGN_UP_EVENT",
 		"sign-in": "AUTH_SIGN_IN_EVENT",
 		"logout":  "AUTH_LOGOUT_EVENT",
 	}
+	AUTH_WALLET = map[string]string{
+		"sign-up": "AUTH_SIGN_UP_EVENT",
+		"sign-in": "AUTH_SIGN_IN_EVENT",
+		"logout":  "AUTH_LOGOUT_EVENT",
+	}
+	ERROR_CODE = map[string]uint {
+		"DB_OB_FAILURE": 777,
+		"UUID_GEN_FAILURE": 778,
+	}
+	SUCCESS_CODE = map[string]uint {
+		"OK": 200,
+	}
 )
+
+type OWLLY_RESPONSE struct { 
+	Code uint
+	Message string
+}
 
 // ==================================================================== //
 // ========================= Init SQLite3 DB ========================== //
