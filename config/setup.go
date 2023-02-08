@@ -24,17 +24,17 @@ var (
 		"sign-in": "AUTH_SIGN_IN_EVENT",
 		"logout":  "AUTH_LOGOUT_EVENT",
 	}
-	ERROR_CODE = map[string]uint {
-		"DB_OB_FAILURE": 777,
+	ERROR_CODE = map[string]uint{
+		"DB_OB_FAILURE":    777,
 		"UUID_GEN_FAILURE": 778,
 	}
-	SUCCESS_CODE = map[string]uint {
+	SUCCESS_CODE = map[string]uint{
 		"OK": 200,
 	}
 )
 
-type OWLLY_RESPONSE struct { 
-	Code uint
+type OWLLY_RESPONSE struct {
+	Code    uint
 	Message string
 }
 

@@ -25,7 +25,7 @@ func CreateEmailUser(emailUser config.ModelEmailUser) config.OWLLY_RESPONSE {
 		color.Red("account.controller.go: UUID failed")
 
 		return config.OWLLY_RESPONSE{
-			Code: config.ERROR_CODE["UUID_GEN_FAILURE"],
+			Code:    config.ERROR_CODE["UUID_GEN_FAILURE"],
 			Message: "account.controller.go: UUID failed",
 		}
 	}
@@ -34,7 +34,7 @@ func CreateEmailUser(emailUser config.ModelEmailUser) config.OWLLY_RESPONSE {
 
 	if emailUser.Username == "" {
 		_username = string(label.Bytes())
-	} else { 
+	} else {
 		_username = emailUser.Username
 	}
 
@@ -48,17 +48,17 @@ func CreateEmailUser(emailUser config.ModelEmailUser) config.OWLLY_RESPONSE {
 		color.Red("account.controller.go: CreateEmailUser failed to execute")
 
 		_error := config.OWLLY_RESPONSE{
-			Code: config.ERROR_CODE["DB_OB_FAILURE"],
+			Code:    config.ERROR_CODE["DB_OB_FAILURE"],
 			Message: "account.controller.go: CreateEmailUser failed to execute",
 		}
 
 		return _error
-	} 
-	
+	}
+
 	color.Green(("account.controller.go:DONE: new email user created"))
 
 	_success := config.OWLLY_RESPONSE{
-		Code: config.SUCCESS_CODE["OK"],
+		Code:    config.SUCCESS_CODE["OK"],
 		Message: "account.controller.go:DONE: new email user created",
 	}
 
@@ -71,10 +71,10 @@ func ReadEmailUser(email string) string {
 
 	if rResult.Error != nil {
 		color.Red("account.controller.go: UpdateEmailUser failed to execute")
-	} 
+	}
 
 	color.Green("account.controller.go:DONE: email user record fetched")
-	
+
 	if emailUser.Username != "" {
 		return emailUser.Username
 	}
