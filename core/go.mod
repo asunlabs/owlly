@@ -6,6 +6,8 @@ require (
 	github.com/asunlabs/owlly/config v0.0.0-20221219001242-a6c593fbab61
 	github.com/fatih/color v1.13.0
 	github.com/fsnotify/fsnotify v1.6.0
+	github.com/gofrs/uuid v4.4.0+incompatible
+	github.com/golang-jwt/jwt/v4 v4.4.3
 	github.com/joho/godotenv v1.4.0
 	github.com/slack-go/slack v0.12.0
 	github.com/wailsapp/wails/v2 v2.2.0
@@ -13,7 +15,6 @@ require (
 )
 
 require (
-	github.com/golang-jwt/jwt/v4 v4.4.3 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/imdario/mergo v0.3.12 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
