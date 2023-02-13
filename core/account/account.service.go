@@ -72,7 +72,7 @@ func CreateEmailUser(emailUser config.ModelEmailUser) config.OWLLY_RESPONSE {
 
 func ReadEmailUser(email string) config.OWLLY_RESPONSE {
 	defer config.Logger.Sync()
-	
+
 	var emailUser config.ModelEmailUser
 	rResult := config.DB_HANDLE.Where("email = ?", email).First(&emailUser)
 
@@ -81,7 +81,7 @@ func ReadEmailUser(email string) config.OWLLY_RESPONSE {
 		config.Logger.Error("UpdateEmailUser: gorm First failed")
 
 		_error := config.OWLLY_RESPONSE{
-			Code: config.ERROR_CODE["DB_OP_FAILURE"],
+			Code:    config.ERROR_CODE["DB_OP_FAILURE"],
 			Message: "UpdateEmailUser failure",
 		}
 
@@ -92,18 +92,18 @@ func ReadEmailUser(email string) config.OWLLY_RESPONSE {
 	config.Logger.Info("ReadEmailUser: record fetched")
 
 	if emailUser.Username != "" {
-		_resWithUsername := config.OWLLY_RESPONSE {
-			Code: config.SUCCESS_CODE["OK"],
+		_resWithUsername := config.OWLLY_RESPONSE{
+			Code:    config.SUCCESS_CODE["OK"],
 			Message: "ReadEmailUser success",
-			Data: emailUser.Username,
+			Data:    emailUser.Username,
 		}
 		return _resWithUsername
 	}
 
-	_resWithEmail := config.OWLLY_RESPONSE {
-		Code: config.SUCCESS_CODE["OK"],
+	_resWithEmail := config.OWLLY_RESPONSE{
+		Code:    config.SUCCESS_CODE["OK"],
 		Message: "ReadEmailUser success",
-		Data: emailUser.Email,
+		Data:    emailUser.Email,
 	}
 
 	return _resWithEmail
@@ -118,22 +118,24 @@ func UpdateEmailUserPassword(email string, newPassword string) config.OWLLY_RESP
 	if rResult.Error != nil {
 		color.Red("account.controller.go: UpdateEmailUserPassword failed")
 		config.Logger.Error("UpdateEmailUserPassword: gorm First failed")
-		
-		_error := config.OWLLY_RESPONSE {
-			Code: config.ERROR_CODE["DB_OP_FAILURE"],
+
+		_error := config.OWLLY_RESPONSE{
+			Code:    config.ERROR_CODE["DB_OP_FAILURE"],
 			Message: "UpdateEmailUserPassword failure",
 		}
 		return _error
-	} 
+	}
 
 	_password := HashCredential(newPassword)
-	config.DB_HANDLE.Model(&emailUser).Where("email = ?", email).Update("Password", string(_password))
+	config.DB_HANDLE.Model(&emailUser).
+		Where("email = ?", email).
+		Update("Password", string(_password))
 
 	color.Green("account.controller.go: UpdateEmailUserPassword success")
 	config.Logger.Info("UpdateEmailUserPassword: record updated")
-	
-	_success := config.OWLLY_RESPONSE {
-		Code: config.SUCCESS_CODE["OK"],
+
+	_success := config.OWLLY_RESPONSE{
+		Code:    config.SUCCESS_CODE["OK"],
 		Message: "UpdateEmailUserPassword success",
 	}
 
@@ -142,7 +144,7 @@ func UpdateEmailUserPassword(email string, newPassword string) config.OWLLY_RESP
 
 func DeleteEmailUser(email string) config.OWLLY_RESPONSE {
 	defer config.Logger.Sync()
-	
+
 	var emailUser config.ModelEmailUser
 	rResult := config.DB_HANDLE.Where("email = ?", email).First(&emailUser)
 
@@ -150,13 +152,13 @@ func DeleteEmailUser(email string) config.OWLLY_RESPONSE {
 		color.Red("account.controller.go: DeleteEmailUser failed")
 		config.Logger.Error("DeleteEmailUser: gorm First failed")
 
-		_error := config.OWLLY_RESPONSE { 
-			Code: config.ERROR_CODE["DB_OP_FAILURE"],
+		_error := config.OWLLY_RESPONSE{
+			Code:    config.ERROR_CODE["DB_OP_FAILURE"],
 			Message: "DeleteEmailUser failure",
 		}
 
 		return _error
-	} 
+	}
 
 	dResult := config.DB_HANDLE.Where("email = ?", email).Delete(&emailUser)
 
@@ -164,8 +166,8 @@ func DeleteEmailUser(email string) config.OWLLY_RESPONSE {
 		color.Red("account.controller.go: DeleteEmailUser failed")
 		config.Logger.Error("DeleteEmailUser: gorm Delete failed")
 
-		_error := config.OWLLY_RESPONSE { 
-			Code: config.ERROR_CODE["DB_OP_FAILURE"],
+		_error := config.OWLLY_RESPONSE{
+			Code:    config.ERROR_CODE["DB_OP_FAILURE"],
 			Message: "DeleteEmailUser failure",
 		}
 
@@ -175,8 +177,8 @@ func DeleteEmailUser(email string) config.OWLLY_RESPONSE {
 	color.Green("account.controller.go: DeleteEmailUser success")
 	config.Logger.Info("DeleteEmailUser: record soft deleted")
 
-	_success := config.OWLLY_RESPONSE {
-		Code: config.SUCCESS_CODE["OK"],
+	_success := config.OWLLY_RESPONSE{
+		Code:    config.SUCCESS_CODE["OK"],
 		Message: "DeleteEmailUser success",
 	}
 
