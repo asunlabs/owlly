@@ -23,22 +23,21 @@ func NewApp() *App {
 
 // @dev startup is called when the app starts. The context is saved so we can call the runtime methods
 func (a *App) startup(ctx context.Context) {
-	// @dev enable logger globally 
 	config.InitLogger()
 	defer config.Logger.Sync()
 	a.ctx = ctx
 
 	// connect DB
 	if ok, _ := config.ConnectDB(); ok {
-		color.Green("Setup.go: DB connected")
-		config.Logger.Info("DB connected")
-	} else {
-		color.Red("Setup.go: DB connection failure")
-		config.Logger.Error("Setup.go: DB connection failure")
-	}
+		color.Green("App.go: App successfully started")
+		config.Logger.Info("Wails startup success")
 
-	// init listener for Go <=> JS
-	EventListener(ctx)
+		// init listener for Go <=> JS
+		EventListener(ctx)
+	} else {
+		color.Red("App.go: App launch failed")
+		config.Logger.Error("Wails startup failure")
+	}
 }
 
 // ==================================================================== //
@@ -51,7 +50,7 @@ func NewOwlly() *Owlly {
 }
 
 /*
-	Front end JS modules will call these Go methods
+Front end JS modules will call these Go methods
 */
 func (o *Owlly) InitEnvBot() bool {
 	if ok := core.InitEnvBot_(); ok {
