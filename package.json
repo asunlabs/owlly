@@ -19,6 +19,9 @@
     "format:js": "prettier -w ./frontend/src/**/*",
     "format:go": "golines -w ./config & golines -w ./core",
     "format": "pnpm format:js & pnpm format:go",
-    "format:check": "prettier -c ./src/**/*"
+    "format:check": "prettier -c ./src/**/*",
+    "lint:go": "cd core & golangci-lint run",
+    "lint:js": "echo will be added",
+    "lint": "pnpm lint:js & pnpm lint:go"
   }
 }
