@@ -52,7 +52,7 @@ func CreateEmailUser(emailUser config.ModelEmailUser) config.OWLLY_RESPONSE {
 		config.Logger.Error("CreateEmailUser: gorm Create failed")
 
 		_error := config.OWLLY_RESPONSE{
-			Code:    config.ERROR_CODE["DB_OB_FAILURE"],
+			Code:    config.ERROR_CODE["DB_OP_FAILURE"],
 			Message: "CreateEmailUser failure",
 		}
 
@@ -81,7 +81,7 @@ func ReadEmailUser(email string) config.OWLLY_RESPONSE {
 		config.Logger.Error("UpdateEmailUser: gorm First failed")
 
 		_error := config.OWLLY_RESPONSE{
-			Code: config.ERROR_CODE["DB_OB_FAILURE"],
+			Code: config.ERROR_CODE["DB_OP_FAILURE"],
 			Message: "UpdateEmailUser failure",
 		}
 
@@ -94,46 +94,99 @@ func ReadEmailUser(email string) config.OWLLY_RESPONSE {
 	if emailUser.Username != "" {
 		_resWithUsername := config.OWLLY_RESPONSE {
 			Code: config.SUCCESS_CODE["OK"],
-			Message: emailUser.Username,
+			Message: "ReadEmailUser success",
+			Data: emailUser.Username,
 		}
 		return _resWithUsername
 	}
 
 	_resWithEmail := config.OWLLY_RESPONSE {
 		Code: config.SUCCESS_CODE["OK"],
-		Message: emailUser.Email,
+		Message: "ReadEmailUser success",
+		Data: emailUser.Email,
 	}
+
 	return _resWithEmail
 }
 
-// update password
-// TODO add password hashing mechanism with https://github.com/golang/crypto/tree/master/bcrypt
-func UpdateEmailUserById(id uint, newPassword string) {
-	rResult := config.DB_HANDLE.Where("id = ?", id).First(&config.ModelEmailUser{})
+func UpdateEmailUserPassword(email string, newPassword string) config.OWLLY_RESPONSE {
+	defer config.Logger.Sync()
+
+	var emailUser config.ModelEmailUser
+	rResult := config.DB_HANDLE.Where("email = ?", email).First(&emailUser)
 
 	if rResult.Error != nil {
-		color.Red("account.controller.go: UpdateEmailUser failed to execute")
-	} else {
-		// only update a record with the specified id
-		config.DB_HANDLE.Model(&config.ModelEmailUser{}).Where("id = ?", id).Update("Password", newPassword)
-		message := fmt.Sprintf("account.controller.go:DONE: email user with id %v is updated", id)
-		color.Green(message)
+		color.Red("account.controller.go: UpdateEmailUserPassword failed")
+		config.Logger.Error("UpdateEmailUserPassword: gorm First failed")
+		
+		_error := config.OWLLY_RESPONSE {
+			Code: config.ERROR_CODE["DB_OP_FAILURE"],
+			Message: "UpdateEmailUserPassword failure",
+		}
+		return _error
+	} 
+
+	_password := HashCredential(newPassword)
+	config.DB_HANDLE.Model(&emailUser).Where("email = ?", email).Update("Password", string(_password))
+
+	color.Green("account.controller.go: UpdateEmailUserPassword success")
+	config.Logger.Info("UpdateEmailUserPassword: record updated")
+	
+	_success := config.OWLLY_RESPONSE {
+		Code: config.SUCCESS_CODE["OK"],
+		Message: "UpdateEmailUserPassword success",
 	}
+
+	return _success
 }
 
-func DeleteEmailUserById(id uint) {
-	rResult := config.DB_HANDLE.Where("id = ?", id).First(&config.ModelEmailUser{})
+func DeleteEmailUser(email string) config.OWLLY_RESPONSE {
+	defer config.Logger.Sync()
+	
+	var emailUser config.ModelEmailUser
+	rResult := config.DB_HANDLE.Where("email = ?", email).First(&emailUser)
 
 	if rResult.Error != nil {
-		color.Red("account.controller.go: DeleteEmailUser failed to execute")
-	} else {
-		config.DB_HANDLE.Where("id = ?", id).Delete(&config.ModelEmailUser{})
+		color.Red("account.controller.go: DeleteEmailUser failed")
+		config.Logger.Error("DeleteEmailUser: gorm First failed")
+
+		_error := config.OWLLY_RESPONSE { 
+			Code: config.ERROR_CODE["DB_OP_FAILURE"],
+			Message: "DeleteEmailUser failure",
+		}
+
+		return _error
+	} 
+
+	dResult := config.DB_HANDLE.Where("email = ?", email).Delete(&emailUser)
+
+	if dResult.Error != nil {
+		color.Red("account.controller.go: DeleteEmailUser failed")
+		config.Logger.Error("DeleteEmailUser: gorm Delete failed")
+
+		_error := config.OWLLY_RESPONSE { 
+			Code: config.ERROR_CODE["DB_OP_FAILURE"],
+			Message: "DeleteEmailUser failure",
+		}
+
+		return _error
 	}
+
+	color.Green("account.controller.go: DeleteEmailUser success")
+	config.Logger.Info("DeleteEmailUser: record soft deleted")
+
+	_success := config.OWLLY_RESPONSE {
+		Code: config.SUCCESS_CODE["OK"],
+		Message: "DeleteEmailUser success",
+	}
+
+	return _success
 }
 
 // ==================================================================== //
 // ====================== Wallet user API  ======================== //
 // ==================================================================== //
+// TODO add log, db error handling for wallet api
 func CreateWalletUser(user config.ModelWalletUser) {
 	hashedApiKey := HashCredential(user.AlchemyKey)
 	hashedPrivateKey := HashCredential(user.PrivateKey)
