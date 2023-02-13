@@ -17,7 +17,7 @@
   "scripts": {
     "prepare": "husky install",
     "format:js": "prettier -w ./frontend/src/**/*",
-    "format:go": "golines -w ./config & golines -w ./core",
+    "format:go": "golines -w . & golines -w ./config & golines -w ./core",
     "format": "pnpm format:js & pnpm format:go",
     "format:check": "prettier -c ./src/**/*",
     "lint:go": "cd core & golangci-lint run",
