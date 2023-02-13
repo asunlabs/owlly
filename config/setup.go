@@ -47,7 +47,7 @@ const (
 type OWLLY_RESPONSE struct {
 	Code    uint
 	Message string
-	Data string
+	Data    string
 }
 
 // ==================================================================== //
@@ -57,16 +57,22 @@ func ConnectDB() (bool, string) {
 	_db, oErr := gorm.Open(sqlite.Open(DATABASE_NAME), &gorm.Config{})
 
 	if oErr != nil {
+		color.Red("Setup.go: DB connection failed")
+		Logger.Error("ConnectDB failure")
 		return false, oErr.Error()
 	}
 
 	_db.AutoMigrate(&ModelEmailUser{}, &ModelWalletUser{}, &ModelEnvBot{})
 	DB_HANDLE = _db
 
+	color.Green("Setup.go: DB connected")
+	Logger.Info("ConnectDB success")
+
 	return true, ""
 }
 
 // @dev get event values from front end and update config
+// TODO move this implementation to wails event listener
 func New(
 	triggerName string,
 	slackBotOauthToken string,
@@ -74,6 +80,9 @@ func New(
 	slackUserID string,
 	slackUserName string,
 ) {
+	InitLogger()
+	defer Logger.Sync()
+
 	var _EnvBot ModelEnvBot
 
 	_EnvBot.TriggerName = triggerName
@@ -83,7 +92,9 @@ func New(
 	_EnvBot.SlackUserName = slackUserName
 
 	EnvBot = &_EnvBot
+
 	color.Cyan("Setup.go: Envbot properly configured")
+	Logger.Infof("New success %v", EnvBot)
 }
 
 /*
