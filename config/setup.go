@@ -29,7 +29,7 @@ var (
 		"logout":  "AUTH_LOGOUT_EVENT",
 	}
 	ERROR_CODE = map[string]uint{
-		"DB_OB_FAILURE":    777,
+		"DB_OP_FAILURE":    777,
 		"UUID_GEN_FAILURE": 778,
 		"ZAP_FAILURE":      779,
 	}
@@ -43,9 +43,11 @@ const (
 	LOG_DIR_NAME  = "logs"
 )
 
+// @dev return response with data for getter: e.g account.service.go:ReadEmailUser
 type OWLLY_RESPONSE struct {
 	Code    uint
 	Message string
+	Data string
 }
 
 // ==================================================================== //
