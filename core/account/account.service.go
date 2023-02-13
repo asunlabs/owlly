@@ -24,7 +24,8 @@ func CreateEmailUser(emailUser config.ModelEmailUser) config.OWLLY_RESPONSE {
 	label, err := uuid.NewV4()
 
 	if err != nil {
-		config.Logger.Error("account.controller.go: UUID failed")
+		color.Red("account.controller.go: CreateEmailUser failed")
+		config.Logger.Error("CreateEmailUser: UUID failed")
 
 		return config.OWLLY_RESPONSE{
 			Code:    config.ERROR_CODE["UUID_GEN_FAILURE"],
@@ -47,7 +48,8 @@ func CreateEmailUser(emailUser config.ModelEmailUser) config.OWLLY_RESPONSE {
 	})
 
 	if cResult.Error != nil {
-		config.Logger.Error("account.controller.go: CreateEmailUser failed")
+		color.Red("account.controller.go: CreateEmailUser failed")
+		config.Logger.Error("CreateEmailUser: gorm Create failed")
 
 		_error := config.OWLLY_RESPONSE{
 			Code:    config.ERROR_CODE["DB_OB_FAILURE"],
@@ -57,7 +59,8 @@ func CreateEmailUser(emailUser config.ModelEmailUser) config.OWLLY_RESPONSE {
 		return _error
 	}
 
-	config.Logger.Info("account.controller.go: new email user created")
+	color.Green("account.controller.go: CreateEmailUser success")
+	config.Logger.Info("CreateEmailUser: new email user created")
 
 	_success := config.OWLLY_RESPONSE{
 		Code:    config.SUCCESS_CODE["OK"],
@@ -67,22 +70,40 @@ func CreateEmailUser(emailUser config.ModelEmailUser) config.OWLLY_RESPONSE {
 	return _success
 }
 
-// TODO change terminal logging to logger service
-func ReadEmailUser(email string) string {
+func ReadEmailUser(email string) config.OWLLY_RESPONSE {
+	defer config.Logger.Sync()
+	
 	var emailUser config.ModelEmailUser
 	rResult := config.DB_HANDLE.Where("email = ?", email).First(&emailUser)
 
 	if rResult.Error != nil {
-		color.Red("account.controller.go: UpdateEmailUser failed to execute")
+		color.Red("account.controller.go: UpdateEmailUser failed")
+		config.Logger.Error("UpdateEmailUser: gorm First failed")
+
+		_error := config.OWLLY_RESPONSE{
+			Code: config.ERROR_CODE["DB_OB_FAILURE"],
+			Message: "UpdateEmailUser failure",
+		}
+
+		return _error
 	}
 
-	color.Green("account.controller.go:DONE: email user record fetched")
+	color.Green("account.controller.go: ReadEmailUser success")
+	config.Logger.Info("ReadEmailUser: record fetched")
 
 	if emailUser.Username != "" {
-		return emailUser.Username
+		_resWithUsername := config.OWLLY_RESPONSE {
+			Code: config.SUCCESS_CODE["OK"],
+			Message: emailUser.Username,
+		}
+		return _resWithUsername
 	}
 
-	return emailUser.Email
+	_resWithEmail := config.OWLLY_RESPONSE {
+		Code: config.SUCCESS_CODE["OK"],
+		Message: emailUser.Email,
+	}
+	return _resWithEmail
 }
 
 // update password
