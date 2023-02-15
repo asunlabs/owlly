@@ -61,8 +61,12 @@ func (o *Owlly) InitEnvBot() bool {
 	return false
 }
 
-func (o *Owlly) HandleEmailSignUp() config.OWLLY_RESPONSE {
+func (o *Owlly) ReceiveWailsResponseForEmailSignUp() config.OWLLY_RESPONSE {
 	return account.CreateEmailUser()
+}
+
+func (o *Owlly) ReceiveWailsResponseForEmailSignIn(email string, password string) config.OWLLY_RESPONSE  {
+	return account.ReadEmailUser(email, password)
 }
 
 // ==================================================================== //
