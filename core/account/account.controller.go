@@ -7,11 +7,11 @@ import (
 )
 
 var (
-	NewEmailUser *config.ModelEmailUser
+	NewEmailUser  *config.ModelEmailUser
 	NewWalletUser *config.ModelWalletUser
 )
 
-func InitAccountModuleListener(ctx context.Context)  {
+func InitAccountModuleListener(ctx context.Context) {
 	ListenEmailSignUp(ctx)
 	ListenWalletSignUp(ctx)
 }

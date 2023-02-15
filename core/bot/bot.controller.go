@@ -8,7 +8,7 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
-func InitBotModuleListener(ctx context.Context)  {
+func InitBotModuleListener(ctx context.Context) {
 	ListenSlackUpdate(ctx)
 }
 

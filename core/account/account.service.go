@@ -76,7 +76,7 @@ func CreateEmailUser() config.OWLLY_RESPONSE {
 func ReadEmailUser(email string, password string) config.OWLLY_RESPONSE {
 	defer config.Logger.Sync()
 
-	// @dev DB read 
+	// @dev DB read
 	var emailUser config.ModelEmailUser
 	rResult := config.DB_HANDLE.Where("email = ?", email).First(&emailUser)
 
@@ -94,8 +94,8 @@ func ReadEmailUser(email string, password string) config.OWLLY_RESPONSE {
 
 	// @dev password validation
 	if ok := ValidatePassword(password); !ok {
-		_invalidPasswordError := config.OWLLY_RESPONSE {
-			Code: config.ERROR_CODE["INVALID_AUTH"],
+		_invalidPasswordError := config.OWLLY_RESPONSE{
+			Code:    config.ERROR_CODE["INVALID_AUTH"],
 			Message: "ReadEmailUser failure",
 		}
 
@@ -104,7 +104,6 @@ func ReadEmailUser(email string, password string) config.OWLLY_RESPONSE {
 
 		return _invalidPasswordError
 	}
-
 
 	if emailUser.Username != "" {
 		_resWithUsername := config.OWLLY_RESPONSE{
@@ -133,8 +132,8 @@ func FetchEmailUser(email string) config.OWLLY_RESPONSE {
 	rErr := config.DB_HANDLE.Where("email = ?", email).First(&user)
 
 	if rErr.Error != nil {
-		_error := config.OWLLY_RESPONSE {
-			Code: config.ERROR_CODE["DB_OP_FAILURE"],
+		_error := config.OWLLY_RESPONSE{
+			Code:    config.ERROR_CODE["DB_OP_FAILURE"],
 			Message: "FetchEmailUser failure",
 		}
 
@@ -144,17 +143,17 @@ func FetchEmailUser(email string) config.OWLLY_RESPONSE {
 	out, mErr := json.Marshal(user)
 
 	if mErr != nil {
-		_error := config.OWLLY_RESPONSE {
-			Code: config.ERROR_CODE["ENCODING_FAILURE"],
+		_error := config.OWLLY_RESPONSE{
+			Code:    config.ERROR_CODE["ENCODING_FAILURE"],
 			Message: "FetchEmailUser failure",
 		}
 		return _error
 	}
 
-	_res := config.OWLLY_RESPONSE {
-		Code: config.SUCCESS_CODE["OK"],
+	_res := config.OWLLY_RESPONSE{
+		Code:    config.SUCCESS_CODE["OK"],
 		Message: "FetchEmailUser success",
-		Data: string(out),
+		Data:    string(out),
 	}
 
 	return _res
