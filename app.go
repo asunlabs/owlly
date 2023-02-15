@@ -3,7 +3,9 @@ package main
 import (
 	"context"
 	core "owlly/v2/core"
-	account "owlly/v2/core/account"
+
+	// account "owlly/v2/core/account"
+	"owlly/v2/core/account"
 	bot "owlly/v2/core/bot"
 
 	config "github.com/asunlabs/owlly/config"
@@ -43,6 +45,7 @@ func (a *App) startup(ctx context.Context) {
 // ==================================================================== //
 // ========================== Init Owlly app ========================== //
 // ==================================================================== //
+// @dev bind go method to js to get owlly response, only binded method
 type Owlly struct{}
 
 func NewOwlly() *Owlly {
@@ -60,6 +63,10 @@ func (o *Owlly) InitEnvBot() bool {
 	return false
 }
 
+func (o *Owlly) HandleEmailSignUp() config.OWLLY_RESPONSE {
+	return account.CreateEmailUser()
+}
+
 // ==================================================================== //
 // ======================= Wails event listener ======================= //
 // ==================================================================== //
@@ -67,5 +74,5 @@ func (o *Owlly) InitEnvBot() bool {
 // @dev call controller and deliver wails context
 func EventListener(ctx context.Context) {
 	bot.HandleSlackUpdate(ctx)
-	account.HandleEmailSignUp(ctx)
+	account.ListenEmailSignUp(ctx)
 }
