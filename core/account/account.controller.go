@@ -8,7 +8,13 @@ import (
 
 var (
 	NewEmailUser *config.ModelEmailUser
+	NewWalletUser *config.ModelWalletUser
 )
+
+func InitAccountModuleListener(ctx context.Context)  {
+	ListenEmailSignUp(ctx)
+	ListenWalletSignUp(ctx)
+}
 
 // @dev optional data returns as a string array
 func ListenEmailSignUp(ctx context.Context) {
@@ -28,19 +34,18 @@ func ListenEmailSignUp(ctx context.Context) {
 	NewEmailUser = &_newEmailUser
 }
 
-// TODO fix callback return
 func ListenWalletSignUp(ctx context.Context) {
+	var _newWalletUser config.ModelWalletUser
 	runtime.EventsOn(ctx, config.AUTH_WALLET["sign-up"], func(optionalData ...interface{}) {
-		var newWalletUser config.ModelWalletUser
 
 		if _privateKey, ok := optionalData[0].(string); ok {
-			newWalletUser.PrivateKey = _privateKey
+			_newWalletUser.PrivateKey = _privateKey
 		}
 
 		if _alchemyKey, ok := optionalData[1].(string); ok {
-			newWalletUser.AlchemyKey = _alchemyKey
+			_newWalletUser.AlchemyKey = _alchemyKey
 		}
-
-		CreateWalletUser(newWalletUser)
 	})
+
+	NewWalletUser = &_newWalletUser
 }
