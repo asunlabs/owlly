@@ -12,7 +12,7 @@ import { WrapperDivForCenter, WrapperTab } from '@owlly/components/Wrapper';
 import { Modal, ModalIconWrapper } from '@owlly/components/Modal';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { EventsEmit as SendWailsRequest } from '@wailsjs/runtime/runtime';
-import { HandleEmailSignUp } from '@wailsjs/go/main/Owlly';
+import { ReceiveWailsResponseForEmailSignIn, ReceiveWailsResponseForEmailSignUp } from '@wailsjs/go/main/Owlly';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { signInWithEthereum } from './SIWE';
@@ -20,6 +20,32 @@ import mascot from '@owlly/assets/images/mascot.jpg';
 
 function EmailLogin() {
   const [isModal, setIsModal] = React.useState(false);
+
+  async function handleEmailSignIn(e: any) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const email = formData.get('signin-email');
+    const password = formData.get('signin-password');
+
+    if (email !== null && password !== null) {
+      SendWailsRequest(EVENT_AUTH.signIn, email, password);
+      const _response = await ReceiveWailsResponseForEmailSignIn(JSON.stringify(email), JSON.stringify(password));
+
+      if (_response.Code == '200') {
+        GetToastByStatus('success', 'Email login success');
+
+        setTimeout(() => {
+          setIsModal(false);
+        }, 1800);
+      } else {
+        GetToastByStatus('failure', 'Email login failure');
+
+        setTimeout(() => {
+          setIsModal(false);
+        }, 1800);
+      }
+    }
+  }
 
   async function handleEmailSignUp(e: any) {
     e.preventDefault();
@@ -29,7 +55,7 @@ function EmailLogin() {
     const password = formData.get('signup-password');
 
     SendWailsRequest(EVENT_AUTH.signUp, email, password);
-    const _response = await HandleEmailSignUp();
+    const _response = await ReceiveWailsResponseForEmailSignUp();
 
     if (_response.Code == '200') {
       GetToastByStatus('success', 'Email sign up success');
@@ -50,19 +76,19 @@ function EmailLogin() {
     <>
       <FormTitle>Owlly: Sign in with Email</FormTitle>
 
-      <Form>
+      <Form onSubmit={handleEmailSignIn}>
         <Label htmlFor="email">
           <AiOutlineMail />
-          <Input id="email" type={'email'} placeholder={'Email'} />
+          <Input name="signin-email" id="email" type={'email'} placeholder={'Email'} />
         </Label>
         <Label htmlFor="password">
           <MdOutlinePassword />
-          <Input id="password" type={'password'} placeholder={'Password'} />
+          <Input name="signin-password" id="password" type={'password'} placeholder={'Password'} />
         </Label>
         <Button isDynamic={true} type={'button'} id={'sign-up'} onClick={() => handleSignUpModal('email', setIsModal)}>
           Don't have an account?
         </Button>
-        <Button transparent={true} type={'button'} id={'sign-in'}>
+        <Button transparent={true} type={'submit'} id={'sign-in'}>
           Sign in
         </Button>
       </Form>
