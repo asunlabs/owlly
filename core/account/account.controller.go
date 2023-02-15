@@ -6,25 +6,30 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
-// @dev optional data returns as a string array
-func HandleEmailSignUp(ctx context.Context) {
-	runtime.EventsOn(ctx, config.AUTH_EMAIL["sign-up"], func(optionalData ...interface{}) {
-		var newEmailUser config.ModelEmailUser
+var (
+	NewEmailUser *config.ModelEmailUser
+)
 
+// @dev optional data returns as a string array
+func ListenEmailSignUp(ctx context.Context) {
+	var _newEmailUser config.ModelEmailUser
+
+	runtime.EventsOn(ctx, config.AUTH_EMAIL["sign-up"], func(optionalData ...interface{}) {
 		// @dev return value after type casting
 		if _email, ok := optionalData[0].(string); ok {
-			newEmailUser.Email = _email
+			_newEmailUser.Email = _email
 		}
 
 		if _password, ok := optionalData[1].(string); ok {
-			newEmailUser.Password = _password
+			_newEmailUser.Password = _password
 		}
-
-		CreateEmailUser(newEmailUser)
 	})
+
+	NewEmailUser = &_newEmailUser
 }
 
-func HandleWalletSignUp(ctx context.Context) {
+// TODO fix callback return 
+func ListenWalletSignUp(ctx context.Context) {
 	runtime.EventsOn(ctx, config.AUTH_WALLET["sign-up"], func(optionalData ...interface{}) {
 		var newWalletUser config.ModelWalletUser
 
