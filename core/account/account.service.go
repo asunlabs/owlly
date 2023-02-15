@@ -16,7 +16,7 @@ import (
 // ==================================================================== //
 // ========================= Email user API  ========================== //
 // ==================================================================== //
-func CreateEmailUser() config.OWLLY_RESPONSE{
+func CreateEmailUser() config.OWLLY_RESPONSE {
 	// ! sync should be called
 	defer config.Logger.Sync()
 

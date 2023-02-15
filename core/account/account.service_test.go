@@ -2,7 +2,6 @@ package account
 
 import (
 	"testing"
-
 	// "github.com/asunlabs/owlly/config"
 )
 

@@ -28,7 +28,7 @@ func ListenEmailSignUp(ctx context.Context) {
 	NewEmailUser = &_newEmailUser
 }
 
-// TODO fix callback return 
+// TODO fix callback return
 func ListenWalletSignUp(ctx context.Context) {
 	runtime.EventsOn(ctx, config.AUTH_WALLET["sign-up"], func(optionalData ...interface{}) {
 		var newWalletUser config.ModelWalletUser
