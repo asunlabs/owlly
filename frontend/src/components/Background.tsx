@@ -14,17 +14,6 @@ export const Background = styled.div`
     font-weight: bold;
     color: black;
   }
-  /* &::before {
-    content: '';
-    background-image: url(${defaultImage});
-    background-size: cover;
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    bottom: 0px;
-    left: 0px;
-    opacity: 0.75;
-  } */
 
   @media screen and (min-width: ${breakpoints.device.tablet}) {
     display: flex;

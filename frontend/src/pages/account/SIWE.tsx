@@ -10,7 +10,7 @@ export interface ISIWEProps {}
  * @dev domain: SIWE's domain. e.g. window.location.host => 'localhost:5173'
  * @dev origin: SIWE's URI. e.g.window.location.origin =>'http://localhost:5173'
  */
-function getSiweSetup() {
+export function getSiweSetup() {
   const domain = 'Owlly ver 0.3.1';
   const origin = 'developerasun laptop';
 
@@ -46,7 +46,7 @@ function getSiweSetup() {
     \nNonce: D40vyrk2K1M6DrHSX
     \nIssued At: 2022-12-18T08:43:49.191Z"
  */
-function createSiweMessage(address: string, statement: string) {
+export function createSiweMessage(address: string, statement: string) {
   const { domain, origin } = getSiweSetup();
   const _message = new SiweMessage({
     domain,
@@ -62,7 +62,7 @@ function createSiweMessage(address: string, statement: string) {
   return { message };
 }
 
-async function connectWallet(callback: React.Dispatch<React.SetStateAction<ISignerInfoProps>>) {
+export async function connectWallet(callback: React.Dispatch<React.SetStateAction<ISignerInfoProps>>) {
   try {
     const { provider, signer } = getSiweSetup();
     const accountArray = await provider.send('eth_requestAccounts', []);
@@ -82,7 +82,7 @@ async function connectWallet(callback: React.Dispatch<React.SetStateAction<ISign
   }
 }
 
-async function signInWithEthereum(callback: React.Dispatch<React.SetStateAction<ISignerInfoProps>>) {
+export async function signInWithEthereum(callback: React.Dispatch<React.SetStateAction<ISignerInfoProps>>) {
   // get user consent for metamask connection
   const { signer } = getSiweSetup();
   const ok = await connectWallet(callback);
