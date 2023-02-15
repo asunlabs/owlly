@@ -1,9 +1,6 @@
 import { breakpoints } from '@owlly/context/DefaultState';
-import styled, { css } from 'styled-components';
-
-export interface IModalProps {
-  modalType: string;
-}
+import { IModalProps } from '@owlly/context/types';
+import styled from 'styled-components';
 
 export const Modal = styled.div<IModalProps>`
   display: flex;
