@@ -29,13 +29,11 @@ func (a *App) startup(ctx context.Context) {
 	defer config.Logger.Sync()
 	a.ctx = ctx
 
-	// connect DB
 	if ok, _ := config.ConnectDB(); ok {
 		color.Green("App.go: App successfully started")
 		config.Logger.Info("Wails startup success")
 
-		// init listener for Go <=> JS
-		EventListener(ctx)
+		InitEventListeners(ctx)
 	} else {
 		color.Red("App.go: App launch failed")
 		config.Logger.Error("Wails startup failure")
@@ -72,7 +70,7 @@ func (o *Owlly) HandleEmailSignUp() config.OWLLY_RESPONSE {
 // ==================================================================== //
 // @dev runtime context should be obtained from the OnStartup or OnDomReady hooks.
 // @dev call controller and deliver wails context
-func EventListener(ctx context.Context) {
-	bot.HandleSlackUpdate(ctx)
-	account.ListenEmailSignUp(ctx)
+func InitEventListeners(ctx context.Context) {
+	bot.InitBotModuleListener(ctx)
+	account.InitAccountModuleListener(ctx)
 }
