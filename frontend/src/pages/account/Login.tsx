@@ -1,6 +1,6 @@
 import { Button, GetToastByStatus } from '@owlly/components/Button';
 import * as React from 'react';
-import { Form, FormTitle, Input, Label } from '@owlly/components/Form';
+import { Form, FormTitle, Input, Label, SolidBanner } from '@owlly/components/Form';
 import { MdOutlinePassword } from 'react-icons/md';
 import { AiOutlineMail } from 'react-icons/ai';
 import { EVENT_AUTH } from '@owlly/context/DefaultState';
@@ -8,13 +8,15 @@ import { ISignerInfoProps, TypeSignUp } from '@owlly/context/types';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { BsKey } from 'react-icons/bs';
 import 'react-tabs/style/react-tabs.css';
-import { WrapperTab, WrapperTabPanel } from '@owlly/components/Wrapper';
+import { WrapperDivForCenter, WrapperTab } from '@owlly/components/Wrapper';
 import { Modal, ModalIconWrapper } from '@owlly/components/Modal';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { EventsEmit as SendWailsRequest } from '@wailsjs/runtime/runtime';
 import { HandleEmailSignUp } from '@wailsjs/go/main/Owlly';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { signInWithEthereum } from './SIWE';
+import mascot from '@owlly/assets/images/mascot.jpg';
 
 function EmailLogin() {
   const [isModal, setIsModal] = React.useState(false);
@@ -180,18 +182,30 @@ function WalletLogin() {
 export function Login() {
   return (
     <WrapperTab id="login">
+      <SolidBanner>
+        <span id="title">Welcome</span>
+        <p id="description">
+          to the demo application made by developerasun - a collection of automation bots for blockchain developers,
+          based on Wails. Mascot credit to @HaidiYJ.
+        </p>
+        <WrapperDivForCenter id="mascot">
+          <img id="mascot" src={mascot} alt="mascot" loading="lazy" width="60%" />
+        </WrapperDivForCenter>
+      </SolidBanner>
       <Tabs id="login-tab">
-        <TabList>
+        <TabList className="tab-item">
           <Tab>Quick start</Tab>
           <Tab>Experimental</Tab>
         </TabList>
 
-        <TabPanel className={'tab-panel'}>
-          <EmailLogin />
-        </TabPanel>
-        <TabPanel className={'tab-panel'}>
-          <WalletLogin />
-        </TabPanel>
+        <div id="panel-wrapper">
+          <TabPanel className={'tab-panel'}>
+            <EmailLogin />
+          </TabPanel>
+          <TabPanel className={'tab-panel'}>
+            <WalletLogin />
+          </TabPanel>
+        </div>
       </Tabs>
     </WrapperTab>
   );
