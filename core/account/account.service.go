@@ -16,33 +16,34 @@ import (
 // ==================================================================== //
 // ========================= Email user API  ========================== //
 // ==================================================================== //
-func CreateEmailUser(emailUser config.ModelEmailUser) config.OWLLY_RESPONSE {
+func CreateEmailUser() config.OWLLY_RESPONSE{
 	// ! sync should be called
 	defer config.Logger.Sync()
 
-	hashedPassword := HashCredential(emailUser.Password)
+	hashedPassword := HashCredential(NewEmailUser.Password)
 	label, err := uuid.NewV4()
 
 	if err != nil {
 		color.Red("account.controller.go: CreateEmailUser failed")
 		config.Logger.Error("CreateEmailUser: UUID failed")
 
-		return config.OWLLY_RESPONSE{
+		_error := config.OWLLY_RESPONSE{
 			Code:    config.ERROR_CODE["UUID_GEN_FAILURE"],
 			Message: "UUID failure",
 		}
+		return _error
 	}
 
 	_username := ""
 
-	if emailUser.Username == "" {
+	if NewEmailUser.Username == "" {
 		_username = string(label.Bytes())
 	} else {
-		_username = emailUser.Username
+		_username = NewEmailUser.Username
 	}
 
 	cResult := config.DB_HANDLE.Create(&config.ModelEmailUser{
-		Email:    emailUser.Email,
+		Email:    NewEmailUser.Email,
 		Password: string(hashedPassword),
 		Username: _username,
 	})
