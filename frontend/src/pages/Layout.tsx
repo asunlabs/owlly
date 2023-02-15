@@ -2,7 +2,7 @@ import { Background } from '@owlly/components/Background';
 import { Body, Dropdown, List, Navbar, Title } from '@owlly/components/Navbar';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { IDropdownProps, ILayoutProps } from './../context/types.d';
+import { IDropdownProps, ILayoutProps } from '@owlly/context/types.d';
 import {
   AiOutlineLogin,
   AiOutlineHome,

@@ -37,3 +37,17 @@ export interface IDropdownProps {
   bot: boolean;
   help: boolean;
 }
+
+export type TypeSignUp = 'email' | 'wallet';
+
+export interface IWailsResponse {
+  code: number;
+  message: string;
+  data?: string;
+}
+
+export type TypeToastStatus = 'success' | 'failure';
+
+export interface IModalProps {
+  modalType: string;
+}
