@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { EVENT_SLACK, SlackContext } from '@owlly/context/DefaultState';
-import { ToastNotification } from '@owlly/components/Button';
-import { EventsEmit } from '@wailsjs/runtime/runtime';
+import { GetToastByStatus, ToastNotification } from '@owlly/components/Button';
+import { EventsEmit as SendWailsRequest } from '@wailsjs/runtime/runtime';
 import { InitEnvBot } from '@wailsjs/go/main/Owlly';
 
 function EnvNotifier() {
@@ -23,8 +23,7 @@ function EnvNotifier() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    // update slack config
-    EventsEmit(
+    SendWailsRequest(
       EVENT_SLACK.update,
       slackContext.triggerName,
       slackContext.botOauthToken,
@@ -33,27 +32,15 @@ function EnvNotifier() {
       slackContext.userName
     );
 
-    // TODO fix multiple toasts
-    // execute owlly core
-    const ok = await InitEnvBot();
+    const isSuccess = await InitEnvBot();
 
-    if (ok) {
+    if (isSuccess) {
       setTimeout(() => {
-        toast.success('DM sent!', {
-          position: toast.POSITION.TOP_LEFT,
-          autoClose: 800,
-          icon: '🗨️🦉',
-          theme: 'dark',
-        });
+        GetToastByStatus('success', 'DM sent!');
       }, 1000);
     } else {
       setTimeout(() => {
-        toast.success('Owlly failed!', {
-          position: toast.POSITION.TOP_LEFT,
-          autoClose: 800,
-          icon: '🗨️💀',
-          theme: 'dark',
-        });
+        GetToastByStatus('failure', 'EnvBot failed!');
       }, 1000);
     }
   }
