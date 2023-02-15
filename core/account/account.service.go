@@ -1,6 +1,7 @@
 package account
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 
@@ -71,26 +72,39 @@ func CreateEmailUser() config.OWLLY_RESPONSE {
 	return _success
 }
 
-func ReadEmailUser(email string) config.OWLLY_RESPONSE {
+// @dev email user sign-in
+func ReadEmailUser(email string, password string) config.OWLLY_RESPONSE {
 	defer config.Logger.Sync()
 
+	// @dev DB read 
 	var emailUser config.ModelEmailUser
 	rResult := config.DB_HANDLE.Where("email = ?", email).First(&emailUser)
 
 	if rResult.Error != nil {
-		color.Red("account.controller.go: UpdateEmailUser failed")
-		config.Logger.Error("UpdateEmailUser: gorm First failed")
+		color.Red("account.controller.go: ReadEmailUser failed")
+		config.Logger.Error("ReadEmailUser: gorm First failed")
 
 		_error := config.OWLLY_RESPONSE{
 			Code:    config.ERROR_CODE["DB_OP_FAILURE"],
-			Message: "UpdateEmailUser failure",
+			Message: "ReadEmailUser failure",
 		}
 
 		return _error
 	}
 
-	color.Green("account.controller.go: ReadEmailUser success")
-	config.Logger.Info("ReadEmailUser: record fetched")
+	// @dev password validation
+	if ok := ValidatePassword(password); !ok {
+		_invalidPasswordError := config.OWLLY_RESPONSE {
+			Code: config.ERROR_CODE["INVALID_AUTH"],
+			Message: "ReadEmailUser failure",
+		}
+
+		color.Red("account.controller.go: ReadEmailUser failed")
+		config.Logger.Error("ReadEmailUser: incorrect password")
+
+		return _invalidPasswordError
+	}
+
 
 	if emailUser.Username != "" {
 		_resWithUsername := config.OWLLY_RESPONSE{
@@ -107,7 +121,43 @@ func ReadEmailUser(email string) config.OWLLY_RESPONSE {
 		Data:    emailUser.Email,
 	}
 
+	color.Green("account.controller.go: ReadEmailUser success")
+	config.Logger.Info("ReadEmailUser: record fetched")
+
 	return _resWithEmail
+}
+
+func FetchEmailUser(email string) config.OWLLY_RESPONSE {
+	var user config.ModelEmailUser
+
+	rErr := config.DB_HANDLE.Where("email = ?", email).First(&user)
+
+	if rErr.Error != nil {
+		_error := config.OWLLY_RESPONSE {
+			Code: config.ERROR_CODE["DB_OP_FAILURE"],
+			Message: "FetchEmailUser failure",
+		}
+
+		return _error
+	}
+
+	out, mErr := json.Marshal(user)
+
+	if mErr != nil {
+		_error := config.OWLLY_RESPONSE {
+			Code: config.ERROR_CODE["ENCODING_FAILURE"],
+			Message: "FetchEmailUser failure",
+		}
+		return _error
+	}
+
+	_res := config.OWLLY_RESPONSE {
+		Code: config.SUCCESS_CODE["OK"],
+		Message: "FetchEmailUser success",
+		Data: string(out),
+	}
+
+	return _res
 }
 
 func UpdateEmailUserPassword(email string, newPassword string) config.OWLLY_RESPONSE {
@@ -242,12 +292,13 @@ func DeleteWalletUserById(id uint) {
 // =========================== Bcrypt service  ======================== //
 // ==================================================================== //
 func HashCredential(password string) []byte {
-	// key := []byte(os.Getenv("secret"))
-
+	defer config.Logger.Sync()
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 
 	if err != nil {
 		color.Red("account.service.go: Unable to hash with secret")
+		config.Logger.Error("HashCredential: password comparison failed")
+		return []byte{}
 	}
 
 	return hashedPassword
@@ -258,7 +309,6 @@ func ValidatePassword(password string) bool {
 	cErr := bcrypt.CompareHashAndPassword(hashedPassword, []byte(password))
 
 	if cErr != nil {
-		color.Red("account.service.go: Invalid password")
 		return false
 	}
 
