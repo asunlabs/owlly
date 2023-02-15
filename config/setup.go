@@ -32,6 +32,8 @@ var (
 		"DB_OP_FAILURE":    777,
 		"UUID_GEN_FAILURE": 778,
 		"ZAP_FAILURE":      779,
+		"INVALID_AUTH":     780,
+		"ENCODING_FAILURE": 781,
 	}
 	SUCCESS_CODE = map[string]uint{
 		"OK": 200,
