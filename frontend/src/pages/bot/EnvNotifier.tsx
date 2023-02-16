@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { useState } from 'react';
-import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { EVENT_SLACK, SlackContext } from '@owlly/context/DefaultState';
+import { EVENT_SLACK } from '@owlly/context/DefaultState';
 import { GetToastByStatus, ToastNotification } from '@owlly/components/Button';
 import { EventsEmit as SendWailsRequest } from '@wailsjs/runtime/runtime';
 import { InitEnvBot } from '@wailsjs/go/main/Owlly';
+import { SlackContext } from '@owlly/context/Context';
 
 function EnvNotifier() {
   const { slackContext, setSlackContext } = React.useContext(SlackContext);

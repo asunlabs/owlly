@@ -1,4 +1,4 @@
-import { SlackContext } from '@owlly/context/DefaultState';
+import { SlackContext } from '@owlly/context/Context';
 import * as React from 'react';
 
 export interface ISlackConfigProps {}
