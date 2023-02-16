@@ -2,7 +2,6 @@ export interface ISlackContextProvider {
   children?: React.ReactNode;
 }
 
-// TODO fix slack context type error
 export interface ISlackConfigProps {
   triggerName: string;
   botOauthToken: string;
@@ -41,13 +40,29 @@ export interface IDropdownProps {
 export type TypeSignUp = 'email' | 'wallet';
 
 export interface IWailsResponse {
-  code: number;
-  message: string;
-  data?: string;
+  Code: string;
+  Message: string;
+  Data?: string;
 }
 
 export type TypeToastStatus = 'success' | 'failure';
 
 export interface IModalProps {
   modalType: string;
+}
+
+export type TypeData = string | undefined;
+export type TypeResponse = {
+  Code: string;
+  Message: string;
+  Data: TypeData;
+};
+
+export interface IWailsResponseContextProps {
+  response: TypeResponse;
+  setResponse: (prev: React.SetStateAction<TypeResponse>) => void;
+}
+
+export interface IWailsResponseContextProviderProps {
+  children: React.ReactNode;
 }
