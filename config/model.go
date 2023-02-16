@@ -30,3 +30,28 @@ type ModelEnvBot struct {
 	SlackUserID        string `gorm:"not null"        json:"slackUserID"`
 	SlackUserName      string `gorm:"not null"        json:"slackUserName"`
 }
+
+// ==================================================================== //
+// ========================= Table models v2 ========================== //
+// ==================================================================== //
+type ModelUser struct { 
+	gorm.Model
+	Email    string `gorm:"unique;not null" json:"email"`
+	Password string `gorm:"not null"        json:"password"`
+	Username string `gorm:"unique"          json:"username"`
+	EmbedSIWE EmbedSIWE `gorm:"embedded"`
+	EmbedSlackBot EmbedSlackBot `gorm:"embedded"`
+}
+
+type EmbedSIWE struct {
+	PrivateKey string `gorm:"unique;not null" json:"privateKey"`
+	AlchemyKey string `gorm:"unique;not null" json:"alchemyKey"`
+}
+
+type EmbedSlackBot struct {
+	TriggerName   string `gorm:"not null"        json:"triggerName"`
+	BotToken 	  string `gorm:"unique;not null" json:"botToken"`
+	ChannelID     string `gorm:"not null"        json:"channelID"`
+	UserID        string `gorm:"not null"        json:"userID"`
+	Username      string `gorm:"not null"        json:"username"`
+}
