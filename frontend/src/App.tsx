@@ -1,4 +1,4 @@
-import { SlackContextProvider } from './context/DefaultState';
+import { SlackContextProvider, WailsResponseContextProvider } from './context/Context';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import EnvNotifier from './pages/bot/EnvNotifier';
 import { Layout } from './pages/Layout';
@@ -13,18 +13,20 @@ function App() {
   return (
     <div id="app">
       <HashRouter>
-        <SlackContextProvider>
-          <Layout>
-            <Routes>
-              <Route path="/" element={<App_ />} />
-              <Route path="account/login" element={<Login />} />
-              <Route path="account/slack" element={<SlackConfig />} />
-              <Route path="bot/faucet-getter" element={<FaucetGetter />} />
-              <Route path="bot/env-notifier" element={<EnvNotifier />} />
-              <Route path="help/contact" element={<Contact />} />
-            </Routes>
-          </Layout>
-        </SlackContextProvider>
+        <WailsResponseContextProvider>
+          <SlackContextProvider>
+            <Layout>
+              <Routes>
+                <Route path="/" element={<App_ />} />
+                <Route path="account/login" element={<Login />} />
+                <Route path="account/slack" element={<SlackConfig />} />
+                <Route path="bot/faucet-getter" element={<FaucetGetter />} />
+                <Route path="bot/env-notifier" element={<EnvNotifier />} />
+                <Route path="help/contact" element={<Contact />} />
+              </Routes>
+            </Layout>
+          </SlackContextProvider>
+        </WailsResponseContextProvider>
       </HashRouter>
     </div>
   );

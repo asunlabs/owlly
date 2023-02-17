@@ -4,7 +4,7 @@ import { Form, FormTitle, Input, Label, SolidBanner } from '@owlly/components/Fo
 import { MdOutlinePassword } from 'react-icons/md';
 import { AiOutlineMail } from 'react-icons/ai';
 import { EVENT_AUTH } from '@owlly/context/DefaultState';
-import { ISignerInfoProps, TypeSignUp } from '@owlly/context/types';
+import { ISignerInfoProps, TypeSignUp, IWailsResponse } from '@owlly/context/types';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { BsKey } from 'react-icons/bs';
 import 'react-tabs/style/react-tabs.css';
@@ -20,6 +20,11 @@ import mascot from '@owlly/assets/images/mascot.jpg';
 
 function EmailLogin() {
   const [isModal, setIsModal] = React.useState(false);
+  const [isLogin, setIsLogin] = React.useState(false);
+  const [wailsResponse, setWailsResponse] = React.useState<IWailsResponse>({
+    Code: '',
+    Message: '',
+  });
 
   async function handleEmailSignIn(e: any) {
     e.preventDefault();
@@ -28,14 +33,18 @@ function EmailLogin() {
     const password = formData.get('signin-password');
 
     if (email !== null && password !== null) {
-      SendWailsRequest(EVENT_AUTH.signIn, email, password);
-      const _response = await ReceiveWailsResponseForEmailSignIn(JSON.stringify(email), JSON.stringify(password));
+      SendWailsRequest(EVENT_AUTH.signIn, JSON.stringify(email), JSON.stringify(password));
+      const _response = (await ReceiveWailsResponseForEmailSignIn(
+        JSON.stringify(email),
+        JSON.stringify(password)
+      )) as IWailsResponse;
 
       if (_response.Code == '200') {
         GetToastByStatus('success', 'Email login success');
 
         setTimeout(() => {
-          setIsModal(false);
+          setIsLogin(true);
+          setWailsResponse(_response);
         }, 1800);
       } else {
         GetToastByStatus('failure', 'Email login failure');
@@ -91,7 +100,10 @@ function EmailLogin() {
         <Button transparent={true} type={'submit'} id={'sign-in'}>
           Sign in
         </Button>
+        <ToastContainer />
       </Form>
+
+      {/* Invoke sign up modal */}
       {isModal && (
         <>
           <Modal modalType="email">
@@ -116,6 +128,10 @@ function EmailLogin() {
           </Modal>
         </>
       )}
+
+      {/* Render profile if login successful */}
+      {/* TODO db read test */}
+      {isLogin && <div>{JSON.stringify(wailsResponse)}</div>}
     </>
   );
 }
@@ -203,6 +219,10 @@ function WalletLogin() {
       )}
     </>
   );
+}
+
+export function Profile() {
+  return <div>user profile here</div>;
 }
 
 export function Login() {
