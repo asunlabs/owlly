@@ -1,6 +1,5 @@
 import { breakpoints } from '@owlly/context/DefaultState';
 import styled from 'styled-components';
-import defaultImage from '@owlly/assets/images/pokemon/164.jpg';
 
 export const Navbar = styled.nav`
   display: flex;
@@ -13,26 +12,7 @@ export const Navbar = styled.nav`
   }
 `;
 
-export const Body = styled.div`
-  /* padding: 2rem; */
-  /* z-index: 10000; */
-  /* background-image: url(${defaultImage});
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover; */
-  /* &::before {
-    content: '';
-    z-index: 100000;
-    background-image: url(${defaultImage});
-    background-size: cover;
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    bottom: 0px;
-    left: 0px;
-    opacity: 0.75;
-  } */
-`;
+export const Body = styled.div``;
 
 export interface IListProps {
   toggle?: boolean;
