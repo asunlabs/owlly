@@ -13,7 +13,7 @@ type ModelEmailUser struct {
 	gorm.Model
 	Email    string `gorm:"unique;not null" json:"email"`
 	Password string `gorm:"not null"        json:"password"`
-	Username string `gorm:"unique"          json:"username"`
+	Username string `gorm:"unique;default:noname"          json:"username"`
 }
 
 type ModelWalletUser struct {
@@ -38,7 +38,7 @@ type ModelUser struct {
 	gorm.Model
 	Email    string `gorm:"unique;not null" json:"email"`
 	Password string `gorm:"not null"        json:"password"`
-	Username string `gorm:"unique"          json:"username"`
+	Username string `gorm:"unique;default:noname"          json:"username"`
 	EmbedSIWE EmbedSIWE `gorm:"embedded"`
 	EmbedSlackBot EmbedSlackBot `gorm:"embedded"`
 }
@@ -53,5 +53,5 @@ type EmbedSlackBot struct {
 	BotToken 	  string `gorm:"unique;not null" json:"botToken"`
 	ChannelID     string `gorm:"not null"        json:"channelID"`
 	UserID        string `gorm:"not null"        json:"userID"`
-	Username      string `gorm:"not null"        json:"username"`
+	Username      string `gorm:"not null;default:noname"        json:"username"`
 }
