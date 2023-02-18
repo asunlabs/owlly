@@ -4,7 +4,6 @@ import (
 	"context"
 	core "owlly/v2/core"
 
-	// account "owlly/v2/core/account"
 	"owlly/v2/core/account"
 	bot "owlly/v2/core/bot"
 
@@ -61,11 +60,11 @@ func (o *Owlly) InitEnvBot() bool {
 	return false
 }
 
-func (o *Owlly) ReceiveWailsResponseForEmailSignUp() config.OWLLY_RESPONSE {
-	return account.CreateEmailUser()
+func (o *Owlly) CreateEmailUser_(email string, password string) config.OWLLY_RESPONSE {
+	return account.CreateEmailUser(email, password)
 }
 
-func (o *Owlly) ReceiveWailsResponseForEmailSignIn(
+func (o *Owlly) ReadEmailUser_(
 	email string,
 	password string,
 ) config.OWLLY_RESPONSE {
@@ -79,5 +78,4 @@ func (o *Owlly) ReceiveWailsResponseForEmailSignIn(
 // @dev call controller and deliver wails context
 func InitEventListeners(ctx context.Context) {
 	bot.InitBotModuleListener(ctx)
-	account.InitAccountModuleListener(ctx)
 }
