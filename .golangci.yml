@@ -1,4 +1,9 @@
 # see here for more details: https://golangci-lint.run/usage/configuration/
+
+run:
+  skip-files:
+    - ".*\\.service\\.go$" # avoid zap logger error check
+
 # linters and linters-settings is applied to core directory
 linters:
   disable:

@@ -8,11 +8,12 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
-/*
-*
-@dev http request/response <=> wails event listener
-*/
-func HandleSlackUpdate(ctx context.Context) {
+// TODO remove this part
+func InitBotModuleListener(ctx context.Context) {
+	ListenSlackUpdate(ctx)
+}
+
+func ListenSlackUpdate(ctx context.Context) {
 	runtime.EventsOn(ctx, config.SLACK_EVENT["update"], func(optionalData ...interface{}) {
 		_newConfig := make(map[int]string)
 

@@ -1,3 +1,4 @@
+import { TypeToastStatus } from '@owlly/context/types';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styled, { css } from 'styled-components';
@@ -66,4 +67,24 @@ export function ToastNotification() {
       <ToastContainer />
     </div>
   );
+}
+
+export function GetToastByStatus(status: TypeToastStatus, message: string) {
+  if (status === 'success') {
+    toast.success(message, {
+      position: toast.POSITION.TOP_LEFT,
+      autoClose: 800,
+      icon: '🗨️🦉',
+      theme: 'dark',
+    });
+  }
+
+  if (status === 'failure') {
+    toast.error(message, {
+      position: toast.POSITION.TOP_LEFT,
+      autoClose: 800,
+      icon: '🗨️💀',
+      theme: 'dark',
+    });
+  }
 }

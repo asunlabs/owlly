@@ -2,11 +2,13 @@ package main
 
 import (
 	"context"
-	"github.com/fatih/color"
-	config "github.com/asunlabs/owlly/config"
 	core "owlly/v2/core"
-	account "owlly/v2/core/account"
+
+	"owlly/v2/core/account"
 	bot "owlly/v2/core/bot"
+
+	config "github.com/asunlabs/owlly/config"
+	"github.com/fatih/color"
 )
 
 // ==================================================================== //
@@ -22,22 +24,25 @@ func NewApp() *App {
 
 // @dev startup is called when the app starts. The context is saved so we can call the runtime methods
 func (a *App) startup(ctx context.Context) {
+	config.InitLogger()
+	defer config.Logger.Sync()
 	a.ctx = ctx
 
-	// connect DB
 	if ok, _ := config.ConnectDB(); ok {
-		color.Green("Setup.go: DB connected")
-	} else {
-		color.Red("Setup.go: DB connection failed")
-	}
+		color.Green("App.go: App successfully started")
+		config.Logger.Info("Wails startup success")
 
-	// init listener for Go <=> JS
-	EventListener(ctx)
+		InitEventListeners(ctx)
+	} else {
+		color.Red("App.go: App launch failed")
+		config.Logger.Error("Wails startup failure")
+	}
 }
 
 // ==================================================================== //
 // ========================== Init Owlly app ========================== //
 // ==================================================================== //
+// @dev bind go method to js to get owlly response, only binded method
 type Owlly struct{}
 
 func NewOwlly() *Owlly {
@@ -45,7 +50,7 @@ func NewOwlly() *Owlly {
 }
 
 /*
-	Front end JS modules will call these Go methods
+Front end JS modules will call these Go methods
 */
 func (o *Owlly) InitEnvBot() bool {
 	if ok := core.InitEnvBot_(); ok {
@@ -55,12 +60,22 @@ func (o *Owlly) InitEnvBot() bool {
 	return false
 }
 
+func (o *Owlly) CreateEmailUser_(email string, password string) config.OWLLY_RESPONSE {
+	return account.CreateEmailUser(email, password)
+}
+
+func (o *Owlly) ReadEmailUser_(
+	email string,
+	password string,
+) config.OWLLY_RESPONSE {
+	return account.ReadEmailUser(email, password)
+}
+
 // ==================================================================== //
 // ======================= Wails event listener ======================= //
 // ==================================================================== //
 // @dev runtime context should be obtained from the OnStartup or OnDomReady hooks.
 // @dev call controller and deliver wails context
-func EventListener(ctx context.Context) {
-	bot.HandleSlackUpdate(ctx)
-	account.HandleEmailSignUp(ctx)
+func InitEventListeners(ctx context.Context) {
+	bot.InitBotModuleListener(ctx)
 }

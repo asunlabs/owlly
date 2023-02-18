@@ -2,7 +2,10 @@ package main
 
 import (
 	"embed"
+	"os"
 
+	"github.com/asunlabs/owlly/config"
+	"github.com/fatih/color"
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
@@ -12,6 +15,9 @@ import (
 var assets embed.FS
 
 func main() {
+	config.InitLogger()
+	defer config.Logger.Sync()
+
 	// Create an instance of the app structure
 	app := NewApp()
 	owlly := NewOwlly()
@@ -31,7 +37,10 @@ func main() {
 			owlly,
 		},
 	})
+
 	if err != nil {
-		println("Error:", err.Error())
+		color.Red("Main.go: Wails running up failed")
+		config.Logger.Error("main function failure")
+		os.Exit(1)
 	}
 }

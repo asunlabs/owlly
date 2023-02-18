@@ -3,7 +3,6 @@ import defaultImage from '@owlly/assets/images/pokemon/164.jpg';
 import { breakpoints } from '@owlly/context/DefaultState';
 
 export const Background = styled.div`
-  color: white;
   background-image: url(${defaultImage});
   background-repeat: no-repeat;
   background-position: center;
@@ -11,7 +10,6 @@ export const Background = styled.div`
   height: 100%;
   display: flex;
   flex-flow: column nowrap;
-
   li:hover {
     font-weight: bold;
     color: black;
@@ -20,5 +18,9 @@ export const Background = styled.div`
   @media screen and (min-width: ${breakpoints.device.tablet}) {
     display: flex;
     flex-flow: row nowrap;
+
+    #body {
+      width: 100%;
+    }
   }
 `;

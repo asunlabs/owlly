@@ -1,149 +1,112 @@
-import { Button } from '@owlly/components/Button';
+import { Button, GetToastByStatus } from '@owlly/components/Button';
 import * as React from 'react';
-import { ethers } from 'ethers';
-import { SiweMessage } from 'siwe';
-import { Form, FormTitle, Input, Label } from '@owlly/components/Form';
+import { Form, FormTitle, Input, Label, SolidBanner } from '@owlly/components/Form';
 import { MdOutlinePassword } from 'react-icons/md';
 import { AiOutlineMail } from 'react-icons/ai';
-import { EVENT_AUTH, NETWORK_ID } from '@owlly/context/DefaultState';
-import { ISignerInfoProps } from '@owlly/context/types';
+import { EVENT_AUTH } from '@owlly/context/DefaultState';
+import { ISignerInfoProps, TypeSignUp, IWailsResponse } from '@owlly/context/types';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { BsKey } from 'react-icons/bs';
 import 'react-tabs/style/react-tabs.css';
-import { WrapperTab, WrapperTabPanel } from './../../components/Wrapper';
+import { WrapperDivForCenter, WrapperTab } from '@owlly/components/Wrapper';
 import { Modal, ModalIconWrapper } from '@owlly/components/Modal';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { EventsEmit as SendWailsRequest } from '@wailsjs/runtime/runtime';
-
-/**
- * @dev domain: SIWE's domain. e.g. window.location.host => 'localhost:5173'
- * @dev origin: SIWE's URI. e.g.window.location.origin =>'http://localhost:5173'
- */
-function getSiweSetup() {
-  const domain = 'Owlly ver 0.3.1';
-  const origin = 'developerasun laptop';
-
-  const _window = window as any;
-  const ethereum = _window.ethereum;
-
-  // Web3 provider(metamask) already has a EOA signer in it, requiring Chrome extension to be installed
-  const provider = new ethers.providers.Web3Provider(ethereum);
-  const signer = provider.getSigner();
-
-  return {
-    domain,
-    origin,
-    ethereum,
-    provider,
-    signer,
-  };
-}
-
-/**
- *
- * @param address a signer's Ethereum address
- * @param statement a message that user will see when signing with SIWE
- * @dev version: current message version
- * @returns message returns a string message in a below format
- * 
-    "Owlly ver 0.3.1 wants you to sign in with your Ethereum account:
-    \n0xEcAB21327B6EbA1FB0631Dc9bBc5863B6B2be3E4\n
-    \nOwlly: Sign in with Ethereum\n
-    \nURI: developerasun laptop
-    \nVersion: 1
-    \nChain ID: 5
-    \nNonce: D40vyrk2K1M6DrHSX
-    \nIssued At: 2022-12-18T08:43:49.191Z"
- */
-function createSiweMessage(address: string, statement: string) {
-  const { domain, origin } = getSiweSetup();
-  const _message = new SiweMessage({
-    domain,
-    address,
-    statement,
-    uri: origin,
-    version: '1',
-    chainId: NETWORK_ID.goerli,
-  });
-
-  // @dev Returns a message ready to be signed according with the type defined in the object.
-  const message = _message.prepareMessage();
-  return { message };
-}
-
-async function connectWallet(callback: React.Dispatch<React.SetStateAction<ISignerInfoProps>>) {
-  try {
-    const { provider, signer } = getSiweSetup();
-    const accountArray = await provider.send('eth_requestAccounts', []);
-
-    if (accountArray[0] === (await signer.getAddress()).toLowerCase()) {
-      callback({
-        address: await signer.getAddress(),
-        balance: (await signer.getBalance()).toString(),
-        network: provider.network.name,
-        isActive: true,
-        isLogin: false,
-      });
-      return true;
-    }
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-async function signInWithEthereum(callback: React.Dispatch<React.SetStateAction<ISignerInfoProps>>) {
-  // get user consent for metamask connection
-  const { signer } = getSiweSetup();
-  const ok = await connectWallet(callback);
-
-  if (ok) {
-    const { message } = createSiweMessage(await signer.getAddress(), 'Owlly: Sign in with Ethereum');
-
-    // get user consent for login
-    await signer.signMessage(message);
-
-    // make signer login status true
-    callback((prev) => ({
-      ...prev,
-      isLogin: true,
-    }));
-  }
-}
+import { ReadEmailUser_, CreateEmailUser_ } from '@wailsjs/go/main/Owlly';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { signInWithEthereum } from './SIWE';
+import mascot from '@owlly/assets/images/mascot.jpg';
 
 function EmailLogin() {
   const [isModal, setIsModal] = React.useState(false);
+  const [isLogin, setIsLogin] = React.useState(false);
+  const [wailsResponse, setWailsResponse] = React.useState<IWailsResponse>({
+    Code: '',
+    Message: '',
+  });
 
-  function handleEmailSignUp(e: any) {
+  async function handleEmailSignIn(e: any) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const email = formData.get('signin-email')?.toString();
+    const password = formData.get('signin-password')?.toString();
+
+    // @dev careful string input format, which affect bcrypt hashing
+    console.log('email type: ', typeof email); // string
+    console.log('email to string: ', email?.toString()); // hash@gmail.com
+    console.log('email stringify: ', JSON.stringify(email)); // "hash@gmail.com"
+
+    if (email !== undefined && password !== undefined) {
+      const _response = (await ReadEmailUser_(email, password)) as IWailsResponse;
+
+      if (_response.Code == '200') {
+        GetToastByStatus('success', 'Email login success');
+
+        setTimeout(() => {
+          setIsLogin(true);
+          setWailsResponse(_response);
+        }, 1800);
+      } else {
+        GetToastByStatus('failure', 'Email login failure');
+
+        setTimeout(() => {
+          setIsLogin(true);
+          setWailsResponse(_response);
+        }, 1800);
+      }
+    }
+  }
+
+  async function handleEmailSignUp(e: any) {
     e.preventDefault();
 
     const formData = new FormData(e.target);
-    const email = formData.get('signup-email');
-    const password = formData.get('signup-password');
+    const email = formData.get('signup-email')?.toString();
+    const password = formData.get('signup-password')?.toString();
 
-    SendWailsRequest(EVENT_AUTH.signUp, email, password);
+    if (email !== undefined && password !== undefined) {
+      const _response = await CreateEmailUser_(email, password);
+
+      if (_response.Code == '200') {
+        GetToastByStatus('success', 'Email sign up success');
+        setWailsResponse(_response);
+        setTimeout(() => {
+          setIsModal(false);
+        }, 1800);
+      } else {
+        GetToastByStatus('failure', 'Email sign up failure');
+
+        setTimeout(() => {
+          setIsModal(false);
+        }, 1800);
+      }
+    }
   }
 
   return (
     <>
       <FormTitle>Owlly: Sign in with Email</FormTitle>
 
-      <Form>
+      <Form onSubmit={handleEmailSignIn}>
         <Label htmlFor="email">
           <AiOutlineMail />
-          <Input id="email" type={'email'} placeholder={'Email'} />
+          <Input name="signin-email" id="email" type={'email'} placeholder={'Email'} />
         </Label>
         <Label htmlFor="password">
           <MdOutlinePassword />
-          <Input id="password" type={'password'} placeholder={'Password'} />
+          <Input name="signin-password" id="password" type={'password'} placeholder={'Password'} />
         </Label>
         <Button isDynamic={true} type={'button'} id={'sign-up'} onClick={() => handleSignUpModal('email', setIsModal)}>
           Don't have an account?
         </Button>
-        <Button transparent={true} type={'button'} id={'sign-in'}>
+        <Button transparent={true} type={'submit'} id={'sign-in'}>
           Sign in
         </Button>
+        <ToastContainer />
       </Form>
 
+      {/* Invoke sign up modal */}
       {isModal && (
         <>
           <Modal modalType="email">
@@ -163,15 +126,18 @@ function EmailLogin() {
               <Button transparent={true} type={'submit'} id={'sign-up'}>
                 Sign up
               </Button>
+              <ToastContainer />
             </Form>
           </Modal>
         </>
       )}
+
+      {/* Render profile if login successful */}
+      {/* TODO db read test */}
+      <div>{JSON.stringify(wailsResponse)}</div>
     </>
   );
 }
-
-export type TypeSignUp = 'email' | 'wallet';
 
 function handleSignUpModal(signUpType: TypeSignUp, callback: React.Dispatch<React.SetStateAction<boolean>>) {
   switch (signUpType) {
@@ -258,26 +224,38 @@ function WalletLogin() {
   );
 }
 
+export function Profile() {
+  return <div>user profile here</div>;
+}
+
 export function Login() {
   return (
-    <>
-      <WrapperTab>
-        <Tabs id="login-tab">
-          <TabList>
-            <Tab>Quick start</Tab>
-            <Tab>Experimental</Tab>
-          </TabList>
+    <WrapperTab id="login">
+      <SolidBanner>
+        <span id="title">Welcome</span>
+        <p id="description">
+          to the demo application made by developerasun - a collection of automation bots for blockchain developers,
+          based on Wails. Mascot credit to @HaidiYJ.
+        </p>
+        <WrapperDivForCenter id="mascot">
+          <img id="mascot" src={mascot} alt="mascot" loading="lazy" width="60%" />
+        </WrapperDivForCenter>
+      </SolidBanner>
+      <Tabs id="login-tab">
+        <TabList className="tab-item">
+          <Tab>Quick start</Tab>
+          <Tab>Experimental</Tab>
+        </TabList>
 
-          <WrapperTabPanel>
-            <TabPanel className={'tab-panel'}>
-              <EmailLogin />
-            </TabPanel>
-            <TabPanel className={'tab-panel'}>
-              <WalletLogin />
-            </TabPanel>
-          </WrapperTabPanel>
-        </Tabs>
-      </WrapperTab>
-    </>
+        <div id="panel-wrapper">
+          <TabPanel className={'tab-panel'}>
+            <EmailLogin />
+          </TabPanel>
+          <TabPanel className={'tab-panel'}>
+            <WalletLogin />
+          </TabPanel>
+        </div>
+      </Tabs>
+    </WrapperTab>
   );
 }
