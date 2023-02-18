@@ -4,12 +4,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-
 	"time"
 
 	"github.com/asunlabs/owlly/config"
 	"github.com/fatih/color"
-	"github.com/gofrs/uuid"
 	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -17,40 +15,19 @@ import (
 // ==================================================================== //
 // ========================= Email user API  ========================== //
 // ==================================================================== //
-func CreateEmailUser() config.OWLLY_RESPONSE {
+func CreateEmailUser(email string, password string) config.OWLLY_RESPONSE {
 	// ! sync should be called
 	defer config.Logger.Sync()
 
-	hashedPassword := HashCredential(NewEmailUser.Password)
-	label, err := uuid.NewV4()
-
-	if err != nil {
-		color.Red("account.controller.go: CreateEmailUser failed")
-		config.Logger.Error("CreateEmailUser: UUID failed")
-
-		_error := config.OWLLY_RESPONSE{
-			Code:    config.ERROR_CODE["UUID_GEN_FAILURE"],
-			Message: "UUID failure",
-		}
-		return _error
-	}
-
-	_username := ""
-
-	if NewEmailUser.Username == "" {
-		_username = string(label.Bytes())
-	} else {
-		_username = NewEmailUser.Username
-	}
+	hashedPassword := HashCredential(password)
 
 	cResult := config.DB_HANDLE.Create(&config.ModelEmailUser{
-		Email:    NewEmailUser.Email,
+		Email:    email,
 		Password: string(hashedPassword),
-		Username: _username,
 	})
 
 	if cResult.Error != nil {
-		color.Red("account.controller.go: CreateEmailUser failed")
+		color.Red("account.service.go: CreateEmailUser failed")
 		config.Logger.Error("CreateEmailUser: gorm Create failed")
 
 		_error := config.OWLLY_RESPONSE{
@@ -61,7 +38,7 @@ func CreateEmailUser() config.OWLLY_RESPONSE {
 		return _error
 	}
 
-	color.Green("account.controller.go: CreateEmailUser success")
+	color.Green("account.service.go: CreateEmailUser success")
 	config.Logger.Info("CreateEmailUser: new email user created")
 
 	_success := config.OWLLY_RESPONSE{
@@ -72,16 +49,14 @@ func CreateEmailUser() config.OWLLY_RESPONSE {
 	return _success
 }
 
-// @dev email user sign-in
 func ReadEmailUser(email string, password string) config.OWLLY_RESPONSE {
 	defer config.Logger.Sync()
-
-	// @dev DB read
+	
 	var emailUser config.ModelEmailUser
-	rResult := config.DB_HANDLE.Where("email = ?", email).First(&emailUser)
+	rResult := config.DB_HANDLE.Limit(1).Find(&emailUser, "email = ?", email).Scan(&emailUser)
 
 	if rResult.Error != nil {
-		color.Red("account.controller.go: ReadEmailUser failed")
+		color.Red("account.service.go: ReadEmailUser failed")
 		config.Logger.Error("ReadEmailUser: gorm First failed")
 
 		_error := config.OWLLY_RESPONSE{
@@ -93,43 +68,33 @@ func ReadEmailUser(email string, password string) config.OWLLY_RESPONSE {
 	}
 
 	// @dev password validation
-	if ok := ValidatePassword(password); !ok {
+	if ok := ValidatePassword(email, password); !ok {
 		_invalidPasswordError := config.OWLLY_RESPONSE{
 			Code:    config.ERROR_CODE["INVALID_AUTH"],
 			Message: "ReadEmailUser failure",
 		}
 
-		color.Red("account.controller.go: ReadEmailUser failed")
+		color.Red("account.service.go: ReadEmailUser failed")
 		config.Logger.Error("ReadEmailUser: incorrect password")
 
 		return _invalidPasswordError
 	}
 
-	if emailUser.Username != "" {
-		_resWithUsername := config.OWLLY_RESPONSE{
-			Code:    config.SUCCESS_CODE["OK"],
-			Message: "ReadEmailUser success",
-			Data:    emailUser.Username,
-		}
-		return _resWithUsername
-	}
-
-	_resWithEmail := config.OWLLY_RESPONSE{
+	response := config.OWLLY_RESPONSE{
 		Code:    config.SUCCESS_CODE["OK"],
 		Message: "ReadEmailUser success",
 		Data:    emailUser.Email,
 	}
 
-	color.Green("account.controller.go: ReadEmailUser success")
+	color.Green("account.service.go: ReadEmailUser success")
 	config.Logger.Info("ReadEmailUser: record fetched")
 
-	return _resWithEmail
+	return response
 }
 
 func FetchEmailUser(email string) config.OWLLY_RESPONSE {
 	var user config.ModelEmailUser
-
-	rErr := config.DB_HANDLE.Where("email = ?", email).First(&user)
+	rErr := config.DB_HANDLE.Where("email = ?", email).Find(&user)
 
 	if rErr.Error != nil {
 		_error := config.OWLLY_RESPONSE{
@@ -163,10 +128,10 @@ func UpdateEmailUserPassword(email string, newPassword string) config.OWLLY_RESP
 	defer config.Logger.Sync()
 
 	var emailUser config.ModelEmailUser
-	rResult := config.DB_HANDLE.Where("email = ?", email).First(&emailUser)
+	rResult := config.DB_HANDLE.Where("email = ?", email).Find(&emailUser)
 
 	if rResult.Error != nil {
-		color.Red("account.controller.go: UpdateEmailUserPassword failed")
+		color.Red("account.service.go: UpdateEmailUserPassword failed")
 		config.Logger.Error("UpdateEmailUserPassword: gorm First failed")
 
 		_error := config.OWLLY_RESPONSE{
@@ -181,7 +146,7 @@ func UpdateEmailUserPassword(email string, newPassword string) config.OWLLY_RESP
 		Where("email = ?", email).
 		Update("Password", string(_password))
 
-	color.Green("account.controller.go: UpdateEmailUserPassword success")
+	color.Green("account.service.go: UpdateEmailUserPassword success")
 	config.Logger.Info("UpdateEmailUserPassword: record updated")
 
 	_success := config.OWLLY_RESPONSE{
@@ -199,7 +164,7 @@ func DeleteEmailUser(email string) config.OWLLY_RESPONSE {
 	rResult := config.DB_HANDLE.Where("email = ?", email).First(&emailUser)
 
 	if rResult.Error != nil {
-		color.Red("account.controller.go: DeleteEmailUser failed")
+		color.Red("account.service.go: DeleteEmailUser failed")
 		config.Logger.Error("DeleteEmailUser: gorm First failed")
 
 		_error := config.OWLLY_RESPONSE{
@@ -213,7 +178,7 @@ func DeleteEmailUser(email string) config.OWLLY_RESPONSE {
 	dResult := config.DB_HANDLE.Where("email = ?", email).Delete(&emailUser)
 
 	if dResult.Error != nil {
-		color.Red("account.controller.go: DeleteEmailUser failed")
+		color.Red("account.service.go: DeleteEmailUser failed")
 		config.Logger.Error("DeleteEmailUser: gorm Delete failed")
 
 		_error := config.OWLLY_RESPONSE{
@@ -224,7 +189,7 @@ func DeleteEmailUser(email string) config.OWLLY_RESPONSE {
 		return _error
 	}
 
-	color.Green("account.controller.go: DeleteEmailUser success")
+	color.Green("account.service.go: DeleteEmailUser success")
 	config.Logger.Info("DeleteEmailUser: record soft deleted")
 
 	_success := config.OWLLY_RESPONSE{
@@ -249,9 +214,9 @@ func CreateWalletUser(user config.ModelWalletUser) {
 	})
 
 	if cResult.Error != nil {
-		color.Red("account.controller.go: CreateWalletUser failed to execute")
+		color.Red("account.service.go: CreateWalletUser failed to execute")
 	} else {
-		color.Green(("account.controller.go:DONE: new wallet user created"))
+		color.Green(("account.service.go:DONE: new wallet user created"))
 	}
 }
 
@@ -259,9 +224,9 @@ func ReadWalletUserById(id uint) {
 	rResult := config.DB_HANDLE.Where("id = ?", id).First(&config.ModelWalletUser{})
 
 	if rResult.Error != nil {
-		color.Red("account.controller.go: ReadWalletUserById failed to execute")
+		color.Red("account.service.go: ReadWalletUserById failed to execute")
 	} else {
-		color.Green(("account.controller.go:DONE: wallet user record fetched"))
+		color.Green(("account.service.go:DONE: wallet user record fetched"))
 	}
 }
 
@@ -269,9 +234,9 @@ func UpdateWalletUser(user config.ModelWalletUser) {
 	uResult := config.DB_HANDLE.Where("id = ?", user.ID).Updates(&user)
 
 	if uResult.Error != nil {
-		color.Red("account.controller.go: UpdateWalletUserById failed to execute")
+		color.Red("account.service.go: UpdateWalletUserById failed to execute")
 	} else {
-		message := fmt.Sprintf("account.controller.go:DONE: wallet user with id %v is updated", user.ID)
+		message := fmt.Sprintf("account.service.go:DONE: wallet user with id %v is updated", user.ID)
 		color.Green(message)
 	}
 }
@@ -280,9 +245,9 @@ func DeleteWalletUserById(id uint) {
 	dResult := config.DB_HANDLE.Where("id = ?", id).First(&config.ModelWalletUser{})
 
 	if dResult.Error != nil {
-		color.Red("account.controller.go: DeleteWalletUserById failed to execute")
+		color.Red("account.service.go: DeleteWalletUserById failed to execute")
 	} else {
-		message := fmt.Sprintf("account.controller.go:DONE: wallet user with id %v is delete", id)
+		message := fmt.Sprintf("account.service.go:DONE: wallet user with id %v is delete", id)
 		color.Green(message)
 	}
 }
@@ -303,15 +268,24 @@ func HashCredential(password string) []byte {
 	return hashedPassword
 }
 
-func ValidatePassword(password string) bool {
-	hashedPassword := HashCredential(password)
-	cErr := bcrypt.CompareHashAndPassword(hashedPassword, []byte(password))
+func ValidatePassword(email string, password string) bool {
+	defer config.Logger.Sync() 
+	
+	var checkValue config.ModelEmailUser 
+	rResult := config.DB_HANDLE.Limit(1).Find(&checkValue, "email = ?", email).Scan(&checkValue)
 
-	if cErr != nil {
+	if rResult.Error != nil {
+		color.Red("account.service.go: Unable to scan record with the email")
+		config.Logger.Error("ValidatePassword: gorm find failed")
 		return false
 	}
 
-	return true
+	hashedPasswordFromDB := checkValue.Password
+	
+	// @dev bcrypt compares a hashed password saved in database and user input password.
+	cErr := bcrypt.CompareHashAndPassword([]byte(hashedPasswordFromDB),[]byte(password))
+
+	return cErr == nil
 }
 
 // ==================================================================== //
