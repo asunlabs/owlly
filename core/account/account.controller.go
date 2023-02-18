@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	WalletUser	  *config.ModelWalletUser
+	WalletUser    *config.ModelWalletUser
 	NewWalletUser *config.ModelWalletUser
 )
 

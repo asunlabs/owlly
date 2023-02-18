@@ -11,9 +11,9 @@ import (
 
 type MockUser struct {
 	gorm.Model
-	Email string
-	Password string
-	Username string 
+	Email          string
+	Password       string
+	Username       string
 	HashedPassword string
 }
 
@@ -22,10 +22,10 @@ func TestPasswordValidation(t *testing.T) {
 		t.Skip()
 	}
 
-	user := MockUser {
-		Email: "user@gmail.com",
-		Password: "test",
-		Username: "user",
+	user := MockUser{
+		Email:          "user@gmail.com",
+		Password:       "test",
+		Username:       "user",
 		HashedPassword: "",
 	}
 
@@ -52,7 +52,7 @@ func TestPasswordValidation(t *testing.T) {
 	invalidPassword := []byte("test1")
 
 	cErrForInvalidPassword := bcrypt.CompareHashAndPassword(passwordFromDB, invalidPassword)
-	
+
 	if cErrForInvalidPassword != nil {
 		t.Log("Invalid password checked by bcrypt")
 
@@ -64,8 +64,8 @@ func TestPasswordValidation(t *testing.T) {
 }
 
 func TestHashingByInput(t *testing.T) {
-	target := MockUser { 
-		Email: "hash@gmail.com",
+	target := MockUser{
+		Email:    "hash@gmail.com",
 		Password: "hash",
 		// default cost is 10
 		HashedPassword: "",
@@ -117,7 +117,7 @@ func TestFetchRecordByEmailQuery(t *testing.T) {
 	if oErr != nil {
 		t.Fatalf("Sqlite3 open failure")
 	}
-	
+
 	mErr := db.AutoMigrate(&MockUser{})
 	if mErr != nil {
 		t.Fatalf("Table migration failure")
@@ -133,7 +133,7 @@ func TestFetchRecordByEmailQuery(t *testing.T) {
 			Password: "2",
 			Username: "mock test",
 		})
-	
+
 		if cResult.Error != nil {
 			t.FailNow()
 		}
@@ -143,9 +143,9 @@ func TestFetchRecordByEmailQuery(t *testing.T) {
 		var emailUser MockUser
 		emailInput := "mock1@gmail.com"
 		passwordInput := "2"
-	
+
 		rResult := db.Limit(1).Find(&emailUser, "email = ?", emailInput)
-		
+
 		if rResult.Error != nil {
 			t.Fail()
 			t.Log("Gorm Find query failure")
@@ -154,4 +154,4 @@ func TestFetchRecordByEmailQuery(t *testing.T) {
 		assert.EqualValues(t, emailInput, emailUser.Email)
 		assert.EqualValues(t, passwordInput, emailUser.Password)
 	})
-} 
+}

@@ -11,9 +11,9 @@ import (
 
 type ModelEmailUser struct {
 	gorm.Model
-	Email    string `gorm:"unique;not null" json:"email"`
-	Password string `gorm:"not null"        json:"password"`
-	Username string `gorm:"unique;default:noname"          json:"username"`
+	Email    string `gorm:"unique;not null"       json:"email"`
+	Password string `gorm:"not null"              json:"password"`
+	Username string `gorm:"unique;default:noname" json:"username"`
 }
 
 type ModelWalletUser struct {
@@ -34,12 +34,12 @@ type ModelEnvBot struct {
 // ==================================================================== //
 // ========================= Table models v2 ========================== //
 // ==================================================================== //
-type ModelUser struct { 
+type ModelUser struct {
 	gorm.Model
-	Email    string `gorm:"unique;not null" json:"email"`
-	Password string `gorm:"not null"        json:"password"`
-	Username string `gorm:"unique;default:noname"          json:"username"`
-	EmbedSIWE EmbedSIWE `gorm:"embedded"`
+	Email         string        `gorm:"unique;not null"       json:"email"`
+	Password      string        `gorm:"not null"              json:"password"`
+	Username      string        `gorm:"unique;default:noname" json:"username"`
+	EmbedSIWE     EmbedSIWE     `gorm:"embedded"`
 	EmbedSlackBot EmbedSlackBot `gorm:"embedded"`
 }
 
@@ -49,9 +49,9 @@ type EmbedSIWE struct {
 }
 
 type EmbedSlackBot struct {
-	TriggerName   string `gorm:"not null"        json:"triggerName"`
-	BotToken 	  string `gorm:"unique;not null" json:"botToken"`
-	ChannelID     string `gorm:"not null"        json:"channelID"`
-	UserID        string `gorm:"not null"        json:"userID"`
-	Username      string `gorm:"not null;default:noname"        json:"username"`
+	TriggerName string `gorm:"not null"                json:"triggerName"`
+	BotToken    string `gorm:"unique;not null"         json:"botToken"`
+	ChannelID   string `gorm:"not null"                json:"channelID"`
+	UserID      string `gorm:"not null"                json:"userID"`
+	Username    string `gorm:"not null;default:noname" json:"username"`
 }

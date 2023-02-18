@@ -51,7 +51,7 @@ func CreateEmailUser(email string, password string) config.OWLLY_RESPONSE {
 
 func ReadEmailUser(email string, password string) config.OWLLY_RESPONSE {
 	defer config.Logger.Sync()
-	
+
 	var emailUser config.ModelEmailUser
 	rResult := config.DB_HANDLE.Limit(1).Find(&emailUser, "email = ?", email).Scan(&emailUser)
 
@@ -269,9 +269,9 @@ func HashCredential(password string) []byte {
 }
 
 func ValidatePassword(email string, password string) bool {
-	defer config.Logger.Sync() 
-	
-	var checkValue config.ModelEmailUser 
+	defer config.Logger.Sync()
+
+	var checkValue config.ModelEmailUser
 	rResult := config.DB_HANDLE.Limit(1).Find(&checkValue, "email = ?", email).Scan(&checkValue)
 
 	if rResult.Error != nil {
@@ -281,9 +281,9 @@ func ValidatePassword(email string, password string) bool {
 	}
 
 	hashedPasswordFromDB := checkValue.Password
-	
+
 	// @dev bcrypt compares a hashed password saved in database and user input password.
-	cErr := bcrypt.CompareHashAndPassword([]byte(hashedPasswordFromDB),[]byte(password))
+	cErr := bcrypt.CompareHashAndPassword([]byte(hashedPasswordFromDB), []byte(password))
 
 	return cErr == nil
 }
