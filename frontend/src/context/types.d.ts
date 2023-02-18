@@ -1,3 +1,8 @@
+export type TypeSignUp = 'email' | 'wallet';
+export type TypeToastStatus = 'success' | 'failure';
+export type TypeModalType = 'email' | 'wallet';
+export type TypeData = string | undefined;
+
 export interface ISlackContextProvider {
   children?: React.ReactNode;
 }
@@ -37,21 +42,16 @@ export interface IDropdownProps {
   help: boolean;
 }
 
-export type TypeSignUp = 'email' | 'wallet';
-
 export interface IWailsResponse {
   Code: string;
   Message: string;
   Data?: string;
 }
 
-export type TypeToastStatus = 'success' | 'failure';
-
 export interface IModalProps {
-  modalType: string;
+  modalType: TypeModalType;
 }
 
-export type TypeData = string | undefined;
 export type TypeResponse = {
   Code: string;
   Message: string;
