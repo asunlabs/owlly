@@ -1,12 +1,34 @@
 version: 2
 updates:
-  - package-ecosystem: "gomod"
-    directory: "/"
+  - package-ecosystem: 'gomod'
+    directory: '/core'
     schedule:
-      interval: "weekly"
-      time: "09:00"
+      interval: 'weekly'
+      time: '09:00'
     open-pull-requests-limit: 3
     reviewers:
-      - "developerasun"
+      - 'developerasun'
     labels:
-      - "dependencies"
+      - 'dependencies'
+
+  - package-ecosystem: 'gomod'
+    directory: '/config'
+    schedule:
+      interval: 'weekly'
+      time: '09:00'
+    open-pull-requests-limit: 3
+    reviewers:
+      - 'developerasun'
+    labels:
+      - 'dependencies'
+
+  - package-ecosystem: 'npm'
+    directory: '/frontend'
+    schedule:
+      interval: 'weekly'
+      time: '09:00'
+    open-pull-requests-limit: 3
+    reviewers:
+      - 'developerasun'
+    labels:
+      - 'dependencies'

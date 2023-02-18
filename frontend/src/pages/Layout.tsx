@@ -13,6 +13,7 @@ import {
 } from 'react-icons/ai';
 import { MdAccountCircle, MdOutlineContactSupport } from 'react-icons/md';
 import { FaSlack } from 'react-icons/fa';
+import { ToastContainer } from 'react-toastify';
 
 export function Layout({ children }: ILayoutProps) {
   const [toggle, setToggle] = React.useState<IDropdownProps>({
@@ -111,6 +112,7 @@ export function Layout({ children }: ILayoutProps) {
         </Dropdown>
       </Navbar>
       <Body id="body">{children}</Body>
+      <ToastContainer />
     </Background>
   );
 }

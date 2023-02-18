@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Form, FormTitle, Input, Label, SolidBanner } from '@owlly/components/Form';
 import { MdOutlinePassword } from 'react-icons/md';
 import { AiOutlineMail } from 'react-icons/ai';
-import { EVENT_AUTH } from '@owlly/context/DefaultState';
 import { ISignerInfoProps, TypeSignUp, IWailsResponse } from '@owlly/context/types';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { BsKey } from 'react-icons/bs';
@@ -11,9 +10,7 @@ import 'react-tabs/style/react-tabs.css';
 import { WrapperDivForCenter, WrapperTab } from '@owlly/components/Wrapper';
 import { Modal, ModalIconWrapper } from '@owlly/components/Modal';
 import { AiFillCloseCircle } from 'react-icons/ai';
-import { EventsEmit as SendWailsRequest } from '@wailsjs/runtime/runtime';
 import { ReadEmailUser_, CreateEmailUser_ } from '@wailsjs/go/main/Owlly';
-import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { signInWithEthereum } from './SIWE';
 import mascot from '@owlly/assets/images/mascot.jpg';
@@ -103,7 +100,6 @@ function EmailLogin() {
         <Button transparent={true} type={'submit'} id={'sign-in'}>
           Sign in
         </Button>
-        <ToastContainer />
       </Form>
 
       {/* Invoke sign up modal */}
@@ -126,15 +122,10 @@ function EmailLogin() {
               <Button transparent={true} type={'submit'} id={'sign-up'}>
                 Sign up
               </Button>
-              <ToastContainer />
             </Form>
           </Modal>
         </>
       )}
-
-      {/* Render profile if login successful */}
-      {/* TODO db read test */}
-      <div>{JSON.stringify(wailsResponse)}</div>
     </>
   );
 }

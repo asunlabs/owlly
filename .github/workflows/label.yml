@@ -10,21 +10,41 @@ jobs:
       - uses: actions/checkout@v3
 
       - uses: actions-ecosystem/action-add-labels@v1
-        if: startsWith(github.head_ref, 'docs/')
+        if: startsWith(github.head_ref, 'breaking/')
         with:
-          labels: documentation
+          labels: |
+            enhancement
+            major
 
       - uses: actions-ecosystem/action-add-labels@v1
         if: startsWith(github.head_ref, 'feature/')
         with:
-          labels: enhancement
+          labels: |
+            enhancement
+            minor
 
       - uses: actions-ecosystem/action-add-labels@v1
         if: startsWith(github.head_ref, 'test/')
         with:
-          labels: test
+          labels: |
+            test
+            patch
 
       - uses: actions-ecosystem/action-add-labels@v1
         if: startsWith(github.head_ref, 'bugfix/')
         with:
-          labels: bug
+          labels: |
+            bug
+            patch
+
+      - uses: actions-ecosystem/action-add-labels@v1
+        if: startsWith(github.head_ref, 'refactor/')
+        with:
+          labels: |
+            refactor
+            patch
+
+      - uses: actions-ecosystem/action-add-labels@v1
+        if: startsWith(github.head_ref, 'docs/')
+        with:
+          labels: documentation
