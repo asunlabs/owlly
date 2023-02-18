@@ -12,7 +12,7 @@ import { WrapperDivForCenter, WrapperTab } from '@owlly/components/Wrapper';
 import { Modal, ModalIconWrapper } from '@owlly/components/Modal';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { EventsEmit as SendWailsRequest } from '@wailsjs/runtime/runtime';
-import { ReceiveWailsResponseForEmailSignIn, ReceiveWailsResponseForEmailSignUp } from '@wailsjs/go/main/Owlly';
+import { ReadEmailUser_, CreateEmailUser_ } from '@wailsjs/go/main/Owlly';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { signInWithEthereum } from './SIWE';
@@ -29,15 +29,16 @@ function EmailLogin() {
   async function handleEmailSignIn(e: any) {
     e.preventDefault();
     const formData = new FormData(e.target);
-    const email = formData.get('signin-email');
-    const password = formData.get('signin-password');
+    const email = formData.get('signin-email')?.toString();
+    const password = formData.get('signin-password')?.toString();
 
-    if (email !== null && password !== null) {
-      SendWailsRequest(EVENT_AUTH.signIn, JSON.stringify(email), JSON.stringify(password));
-      const _response = (await ReceiveWailsResponseForEmailSignIn(
-        JSON.stringify(email),
-        JSON.stringify(password)
-      )) as IWailsResponse;
+    // @dev careful string input format, which affect bcrypt hashing
+    console.log('email type: ', typeof email); // string
+    console.log('email to string: ', email?.toString()); // hash@gmail.com
+    console.log('email stringify: ', JSON.stringify(email)); // "hash@gmail.com"
+
+    if (email !== undefined && password !== undefined) {
+      const _response = (await ReadEmailUser_(email, password)) as IWailsResponse;
 
       if (_response.Code == '200') {
         GetToastByStatus('success', 'Email login success');
@@ -50,7 +51,8 @@ function EmailLogin() {
         GetToastByStatus('failure', 'Email login failure');
 
         setTimeout(() => {
-          setIsModal(false);
+          setIsLogin(true);
+          setWailsResponse(_response);
         }, 1800);
       }
     }
@@ -60,24 +62,25 @@ function EmailLogin() {
     e.preventDefault();
 
     const formData = new FormData(e.target);
-    const email = formData.get('signup-email');
-    const password = formData.get('signup-password');
+    const email = formData.get('signup-email')?.toString();
+    const password = formData.get('signup-password')?.toString();
 
-    SendWailsRequest(EVENT_AUTH.signUp, email, password);
-    const _response = await ReceiveWailsResponseForEmailSignUp();
+    if (email !== undefined && password !== undefined) {
+      const _response = await CreateEmailUser_(email, password);
 
-    if (_response.Code == '200') {
-      GetToastByStatus('success', 'Email sign up success');
+      if (_response.Code == '200') {
+        GetToastByStatus('success', 'Email sign up success');
+        setWailsResponse(_response);
+        setTimeout(() => {
+          setIsModal(false);
+        }, 1800);
+      } else {
+        GetToastByStatus('failure', 'Email sign up failure');
 
-      setTimeout(() => {
-        setIsModal(false);
-      }, 1800);
-    } else {
-      GetToastByStatus('failure', 'Email sign up failure');
-
-      setTimeout(() => {
-        setIsModal(false);
-      }, 1800);
+        setTimeout(() => {
+          setIsModal(false);
+        }, 1800);
+      }
     }
   }
 
@@ -131,7 +134,7 @@ function EmailLogin() {
 
       {/* Render profile if login successful */}
       {/* TODO db read test */}
-      {isLogin && <div>{JSON.stringify(wailsResponse)}</div>}
+      <div>{JSON.stringify(wailsResponse)}</div>
     </>
   );
 }
