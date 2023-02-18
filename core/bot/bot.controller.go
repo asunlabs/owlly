@@ -8,6 +8,7 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
+// TODO remove this part
 func InitBotModuleListener(ctx context.Context) {
 	ListenSlackUpdate(ctx)
 }

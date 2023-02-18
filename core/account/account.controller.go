@@ -7,33 +7,16 @@ import (
 )
 
 var (
-	NewEmailUser  *config.ModelEmailUser
+	WalletUser	  *config.ModelWalletUser
 	NewWalletUser *config.ModelWalletUser
 )
 
 func InitAccountModuleListener(ctx context.Context) {
-	ListenEmailSignUp(ctx)
+	ListenWalletSignIn(ctx)
 	ListenWalletSignUp(ctx)
 }
 
-// @dev optional data returns as a string array
-func ListenEmailSignUp(ctx context.Context) {
-	var _newEmailUser config.ModelEmailUser
-
-	runtime.EventsOn(ctx, config.AUTH_EMAIL["sign-up"], func(optionalData ...interface{}) {
-		// @dev return value after type casting
-		if _email, ok := optionalData[0].(string); ok {
-			_newEmailUser.Email = _email
-		}
-
-		if _password, ok := optionalData[1].(string); ok {
-			_newEmailUser.Password = _password
-		}
-	})
-
-	NewEmailUser = &_newEmailUser
-}
-
+// TODO remove this part
 func ListenWalletSignUp(ctx context.Context) {
 	var _newWalletUser config.ModelWalletUser
 	runtime.EventsOn(ctx, config.AUTH_WALLET["sign-up"], func(optionalData ...interface{}) {
@@ -48,4 +31,16 @@ func ListenWalletSignUp(ctx context.Context) {
 	})
 
 	NewWalletUser = &_newWalletUser
+}
+
+func ListenWalletSignIn(ctx context.Context) {
+	var _walletUser config.ModelWalletUser
+	runtime.EventsOn(ctx, config.AUTH_WALLET["sign-in"], func(optionalData ...interface{}) {
+
+		if _privateKey, ok := optionalData[0].(string); ok {
+			_walletUser.PrivateKey = _privateKey
+		}
+	})
+
+	NewWalletUser = &_walletUser
 }
