@@ -5,7 +5,7 @@ import { Layout } from './pages/Layout';
 import { SlackConfig } from './pages/account/SlackConfig';
 import { FaucetGetter } from './pages/bot/FaucetGetter';
 import { Login } from './pages/account/Login';
-import { App_ } from './_App';
+import { App_ } from './App_';
 import './App.css';
 import { Contact } from './pages/help/Contact';
 
