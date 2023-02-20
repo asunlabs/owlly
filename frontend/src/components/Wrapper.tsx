@@ -11,7 +11,7 @@ export const WrapperTab = styled.div`
 
   @media screen and (min-width: ${breakpoints.device.tablet}) {
     height: 80vh;
-    padding: 10vh;
+    padding: 5vh;
     display: grid;
     grid-template-columns: 0.4fr 0.6fr;
 
@@ -27,7 +27,7 @@ export const WrapperTab = styled.div`
     }
 
     .tab-panel {
-      transform: scale(1.5) translateY(-2rem);
+      transform: scale(1.1) translateY(-3rem);
     }
   }
 `;
