@@ -26,7 +26,6 @@ export const List = styled.li<IListProps>`
   list-style: none;
   padding: 1rem;
   cursor: pointer;
-  border-radius: 20%;
 
   // icon
   svg {
@@ -50,7 +49,8 @@ export interface ITitleProps {
 
 export const Title = styled.div<ITitleProps>`
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: ${({ isHome }) => (isHome ? '1fr 2fr 1fr' : '1fr 2fr')};
+  justify-content: center;
   align-items: center;
   list-style: none;
   padding: 1.5rem;

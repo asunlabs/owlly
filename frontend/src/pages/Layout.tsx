@@ -11,14 +11,18 @@ import {
   AiOutlineMoneyCollect,
   AiOutlineLock,
   AiOutlineRobot,
+  AiFillCloseCircle,
+  AiOutlineMenu,
 } from 'react-icons/ai';
 import { MdAccountCircle, MdOutlineContactSupport } from 'react-icons/md';
 import { FaSlack } from 'react-icons/fa';
 import { ToastContainer } from 'react-toastify';
 import loading from '@owlly/assets/images/loading.gif';
+import { ModalIconWrapper } from '@owlly/components/Modal';
 
 export function Layout({ children }: ILayoutProps) {
-  const [toggle, setToggle] = React.useState<IDropdownProps>({
+  const [toggle, setToggle] = React.useState(false);
+  const [dropdown, setDropdown] = React.useState<IDropdownProps>({
     account: false,
     bot: false,
     help: false,
@@ -33,6 +37,10 @@ export function Layout({ children }: ILayoutProps) {
     }, 1800);
   }
 
+  function handleToggle() {
+    setToggle(!toggle);
+  }
+
   function handleDropdown(e: React.MouseEvent) {
     e.preventDefault();
 
@@ -44,7 +52,7 @@ export function Layout({ children }: ILayoutProps) {
     };
 
     // only render a clicked component
-    setToggle({
+    setDropdown({
       ...defaultState,
       [id]: true,
     });
@@ -53,7 +61,7 @@ export function Layout({ children }: ILayoutProps) {
   function handleOutsideDropdown(e: any) {
     if (ref.current && !ref.current.contains(e.target)) {
       // prettier-ignore
-      setToggle({ 
+      setDropdown({ 
         account: false, 
         bot: false, 
         help: false 
@@ -79,15 +87,7 @@ export function Layout({ children }: ILayoutProps) {
           <LoadingView>
             <div id="description">
               <img src={loading} alt="greeting banner" />
-              <p>"We want developers with 5 years of C programming experience" is a ridiculous statement.</p>
-              <br />
-              <p>
-                If a developer didn't continue to learn C language, the next three years wouldn't make much of a
-                difference.
-              </p>
-              <br />
-              <span>- Code Complete -</span>
-              <br />
+              <h1>Welcome to Owlly</h1>
               <Button id="launch-button" isDynamic={true} onClick={handleAppLaunch}>
                 Launch App
               </Button>
@@ -99,49 +99,57 @@ export function Layout({ children }: ILayoutProps) {
         <Navbar ref={ref}>
           <Title isHome={true}>
             <AiOutlineHome />
-            <Link to={'/'}>Home</Link>
+            <Link to={'/'}>Owlly</Link>
+            {/* TODO fix media query */}
+            <ModalIconWrapper onClick={handleToggle}>
+              {toggle ? <AiFillCloseCircle /> : <AiOutlineMenu />}
+            </ModalIconWrapper>
           </Title>
 
-          <Dropdown id="account" onClick={handleDropdown}>
-            <Title>
-              <MdAccountCircle />
-              Account
-            </Title>
-            <List toggle={toggle.account ? true : false}>
-              <AiOutlineLogin />
-              <Link to={'account/login'}>Sign in</Link>
-            </List>
-            <List toggle={toggle.account ? true : false}>
-              <FaSlack />
-              <Link to={'account/slack'}>Slack</Link>
-            </List>
-          </Dropdown>
+          {toggle && (
+            <div id="dropdowns">
+              <Dropdown id="account" onClick={handleDropdown}>
+                <Title>
+                  <MdAccountCircle />
+                  Account
+                </Title>
+                <List toggle={dropdown.account ? true : false}>
+                  <AiOutlineLogin />
+                  <Link to={'account/login'}>Sign in</Link>
+                </List>
+                <List toggle={dropdown.account ? true : false}>
+                  <FaSlack />
+                  <Link to={'account/slack'}>Slack</Link>
+                </List>
+              </Dropdown>
 
-          <Dropdown id="bot" onClick={handleDropdown}>
-            <Title>
-              <AiOutlineRobot />
-              Bot
-            </Title>
-            <List toggle={toggle.bot ? true : false}>
-              <AiOutlineMoneyCollect />
-              <Link to={'bot/faucet-getter'}>Faucet</Link>
-            </List>
-            <List toggle={toggle.bot ? true : false}>
-              <AiOutlineLock />
-              <Link to={'bot/env-notifier'}>Dotenv</Link>
-            </List>
-          </Dropdown>
+              <Dropdown id="bot" onClick={handleDropdown}>
+                <Title>
+                  <AiOutlineRobot />
+                  Bot
+                </Title>
+                <List toggle={dropdown.bot ? true : false}>
+                  <AiOutlineMoneyCollect />
+                  <Link to={'bot/faucet-getter'}>Faucet</Link>
+                </List>
+                <List toggle={dropdown.bot ? true : false}>
+                  <AiOutlineLock />
+                  <Link to={'bot/env-notifier'}>Dotenv</Link>
+                </List>
+              </Dropdown>
 
-          <Dropdown id="help" onClick={handleDropdown}>
-            <Title>
-              <MdOutlineContactSupport />
-              Help
-            </Title>
-            <List toggle={toggle.help ? true : false}>
-              <AiOutlineMail />
-              <Link to={'help/contact'}>Contact</Link>
-            </List>
-          </Dropdown>
+              <Dropdown id="help" onClick={handleDropdown}>
+                <Title>
+                  <MdOutlineContactSupport />
+                  Help
+                </Title>
+                <List toggle={dropdown.help ? true : false}>
+                  <AiOutlineMail />
+                  <Link to={'help/contact'}>Contact</Link>
+                </List>
+              </Dropdown>
+            </div>
+          )}
         </Navbar>
         <Body id="body">{children}</Body>
 

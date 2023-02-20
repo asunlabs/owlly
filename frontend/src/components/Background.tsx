@@ -28,11 +28,11 @@ export const Background = styled.div`
 
 const FadeIn = keyframes`
   0% {
-    opacity: 0;
+    opacity: 1;
     background-color: black;
   }
   50% {
-    opacity: 0.5;
+    background-color: white;
   }
   100% {
     opacity: 1;
@@ -46,7 +46,8 @@ export const LoadingView = styled.div`
   width: 100%;
   height: 100vh;
   text-align: center;
-  animation: ${FadeIn} 2s 1 ease-in;
+  z-index: 100000;
+  animation: ${FadeIn} 3s 1 ease-in;
 
   display: flex;
   flex-flow: column nowrap;
