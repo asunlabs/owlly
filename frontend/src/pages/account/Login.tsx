@@ -14,6 +14,8 @@ import { ReadEmailUser_, CreateEmailUser_ } from '@wailsjs/go/main/Owlly';
 import 'react-toastify/dist/ReactToastify.css';
 import { signInWithEthereum } from './SIWE';
 import mascot from '@owlly/assets/images/mascot.jpg';
+import TextField from '@mui/material/TextField';
+import { DefaultProfile } from './Profile';
 
 function EmailLogin() {
   const [isModal, setIsModal] = React.useState(false);
@@ -88,11 +90,11 @@ function EmailLogin() {
       <Form onSubmit={handleEmailSignIn}>
         <Label htmlFor="email">
           <AiOutlineMail />
-          <Input name="signin-email" id="email" type={'email'} placeholder={'Email'} />
+          <TextField name="signin-email" id="email" label="Email" type={'email'} variant="filled" />
         </Label>
         <Label htmlFor="password">
           <MdOutlinePassword />
-          <Input name="signin-password" id="password" type={'password'} placeholder={'Password'} />
+          <TextField name="signin-password" id="password" label="Password" type={'password'} variant="filled" />
         </Label>
         <Button isDynamic={true} type={'button'} id={'sign-up'} onClick={() => handleSignUpModal('email', setIsModal)}>
           Don't have an account?
@@ -113,11 +115,11 @@ function EmailLogin() {
             <Form onSubmit={handleEmailSignUp}>
               <Label htmlFor="email">
                 <AiOutlineMail />
-                <Input name="signup-email" id="email" type={'email'} placeholder={'Email'} />
+                <TextField name="signup-email" id="email" label="Email" type={'email'} variant="filled" />
               </Label>
               <Label htmlFor="password">
                 <MdOutlinePassword />
-                <Input name="signup-password" id="password" type={'password'} placeholder={'Password'} />
+                <TextField name="signup-password" id="password" label="Password" type={'password'} variant="filled" />
               </Label>
               <Button transparent={true} type={'submit'} id={'sign-up'}>
                 Sign up
@@ -160,7 +162,7 @@ function WalletLogin() {
       <Form>
         <Label htmlFor="privateKey">
           <BsKey />
-          <Input id="privateKey" type={'password'} placeholder={'Private key'} />
+          <TextField name="privateKey" id="privateKey" label="Private key" type={'password'} variant="filled" />
         </Label>
 
         <Button
@@ -215,10 +217,6 @@ function WalletLogin() {
   );
 }
 
-export function Profile() {
-  return <div>user profile here</div>;
-}
-
 export function Login() {
   return (
     <WrapperTab id="login">
@@ -232,6 +230,7 @@ export function Login() {
           <img id="mascot" src={mascot} alt="mascot" loading="lazy" width="60%" />
         </WrapperDivForCenter>
       </SolidBanner>
+
       <Tabs id="login-tab">
         <TabList className="tab-item">
           <Tab>Quick start</Tab>
