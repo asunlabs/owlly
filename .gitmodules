@@ -1,0 +1,12 @@
+[submodule "submodule/pawcon-monorepo"]
+	path = submodule/pawcon-monorepo
+	url = https://github.com/asunlabs/pawcon-monorepo.git
+[submodule "submodule/projects-monorepo"]
+	path = submodule/projects-monorepo
+	url = https://github.com/asunlabs/projects-monorepo.git
+[submodule "submodule/mycodebox-monorepo"]
+	path = submodule/mycodebox-monorepo
+	url = https://github.com/asunlabs/mycodebox-monorepo.git
+[submodule "submodule/learn-blockchain"]
+	path = submodule/learn-blockchain
+	url = https://github.com/asunlabs/learn-blockchain.git
