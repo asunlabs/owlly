@@ -10,3 +10,9 @@
 [submodule "submodule/learn-blockchain"]
 	path = submodule/learn-blockchain
 	url = https://github.com/asunlabs/learn-blockchain.git
+[submodule "submodule/pawcon-assets"]
+	path = submodule/pawcon-assets
+	url = https://github.com/developerasun/pawcon-assets.git
+[submodule "submodule/pawcon"]
+	path = submodule/pawcon
+	url = https://github.com/developerasun/pawcon.git
