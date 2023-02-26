@@ -1,12 +1,7 @@
-import { TypeToastStatus } from '@owlly/context/types';
+import { TypeToastStatus, IButtonProps } from '@owlly/context/types';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styled, { css } from 'styled-components';
-
-export interface IButtonProps {
-  isDynamic?: boolean;
-  transparent?: boolean;
-}
 
 export const Button = styled.button<IButtonProps>`
   // default
@@ -33,6 +28,7 @@ export const Button = styled.button<IButtonProps>`
     transform: translateY(-0px);
     background-color: rgb(159, 72, 193);
     border: none;
+    transform: scale(1.2);
   `}
 
   ${(props) =>

@@ -1,5 +1,5 @@
-import { breakpoints } from '@owlly/context/DefaultState';
-import styled from 'styled-components';
+import { breakpoints } from '@owlly/context/constants';
+import styled, { keyframes } from 'styled-components';
 
 export const WrapperTab = styled.div`
   .tab-panel {
@@ -35,4 +35,34 @@ export const WrapperTab = styled.div`
 export const WrapperDivForCenter = styled.div`
   display: block;
   text-align: center;
+`;
+
+export const Blink = keyframes`
+  0% { 
+    color: black;
+  }
+  100% { 
+    font-weight: bold;
+    color: white;
+  }
+`;
+
+export const WrapperModalIcon = styled.div`
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 2rem;
+  /* z-index: 100000; */
+
+  &:hover {
+    animation: ${Blink} infinite 1.5s linear;
+    cursor: pointer;
+  }
+
+  @media screen and (min-width: ${breakpoints.device.tablet}) {
+    /* display: none; */
+    .trigger {
+      display: none;
+    }
+  }
 `;

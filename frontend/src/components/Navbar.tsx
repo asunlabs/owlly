@@ -1,22 +1,27 @@
-import { breakpoints } from '@owlly/context/DefaultState';
+import { breakpoints } from '@owlly/context/constants';
+import { IListProps, ITitleProps } from '@owlly/context/types';
 import styled from 'styled-components';
 
 export const Navbar = styled.nav`
   display: flex;
   flex-flow: column nowrap;
   background-color: RGB(94 67 60);
-  width: 100%;
 
+  #fragment {
+    display: none;
+  }
   @media screen and (min-width: ${breakpoints.device.tablet}) {
-    width: fit-content;
+    /* make navbar have a fixed size */
+    min-width: fit-content;
+    min-height: 100vh;
+
+    #fragment {
+      display: block;
+      position: absolute;
+      background-color: black;
+    }
   }
 `;
-
-export const Body = styled.div``;
-
-export interface IListProps {
-  toggle?: boolean;
-}
 
 // @dev define props for styled-component
 export const List = styled.li<IListProps>`
@@ -42,10 +47,6 @@ export const Dropdown = styled.div`
   display: flex;
   flex-flow: column nowrap;
 `;
-
-export interface ITitleProps {
-  isHome?: boolean;
-}
 
 export const Title = styled.div<ITitleProps>`
   display: grid;

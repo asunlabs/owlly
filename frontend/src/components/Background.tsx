@@ -1,14 +1,9 @@
 import styled, { keyframes } from 'styled-components';
-import defaultImage from '@owlly/assets/images/pokemon/164.jpg';
-import { breakpoints } from '@owlly/context/DefaultState';
+import { breakpoints } from '@owlly/context/constants';
 
 export const Background = styled.div`
-  background-image: url(${defaultImage});
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  height: 100%;
   display: flex;
+  background-color: red;
   flex-flow: column nowrap;
 
   li:hover {
@@ -17,12 +12,7 @@ export const Background = styled.div`
   }
 
   @media screen and (min-width: ${breakpoints.device.tablet}) {
-    display: flex;
     flex-flow: row nowrap;
-
-    #body {
-      width: 100%;
-    }
   }
 `;
 
@@ -46,7 +36,7 @@ export const LoadingView = styled.div`
   width: 100%;
   height: 100vh;
   text-align: center;
-  z-index: 100000;
+  z-index: 10;
   animation: ${FadeIn} 3s 1 ease-in;
 
   display: flex;

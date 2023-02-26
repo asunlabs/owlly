@@ -1,6 +1,6 @@
-import { breakpoints } from '@owlly/context/DefaultState';
+import { breakpoints } from '@owlly/context/constants';
 import { IModalProps } from '@owlly/context/types';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 export const Modal = styled.div<IModalProps>`
   display: flex;
@@ -17,18 +17,5 @@ export const Modal = styled.div<IModalProps>`
   @media screen and (min-width: ${breakpoints.device.tablet}) {
     width: 50%;
     height: 50%;
-  }
-`;
-
-export const ModalIconWrapper = styled.div`
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  font-size: 2rem;
-
-  &:hover {
-    color: black;
-    cursor: pointer;
-    transition-duration: 1s;
   }
 `;
