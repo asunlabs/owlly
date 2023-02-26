@@ -1,6 +1,6 @@
 import * as React from 'react';
 import 'react-toastify/dist/ReactToastify.css';
-import { EVENT_SLACK } from '@owlly/context/DefaultState';
+import { EVENT_SLACK } from '@owlly/context/constants';
 import { GetToastByStatus, ToastNotification } from '@owlly/components/Button';
 import { EventsEmit as SendWailsRequest } from '@wailsjs/runtime/runtime';
 import { InitEnvBot } from '@wailsjs/go/main/Owlly';

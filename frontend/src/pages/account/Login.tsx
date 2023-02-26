@@ -7,8 +7,8 @@ import { ISignerInfoProps, TypeSignUp, IWailsResponse } from '@owlly/context/typ
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { BsKey } from 'react-icons/bs';
 import 'react-tabs/style/react-tabs.css';
-import { WrapperDivForCenter, WrapperTab } from '@owlly/components/Wrapper';
-import { Modal, ModalIconWrapper } from '@owlly/components/Modal';
+import { WrapperDivForCenter, WrapperModalIcon, WrapperTab } from '@owlly/components/Wrapper';
+import { Modal } from '@owlly/components/Modal';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { ReadEmailUser_, CreateEmailUser_ } from '@wailsjs/go/main/Owlly';
 import 'react-toastify/dist/ReactToastify.css';
@@ -109,9 +109,9 @@ function EmailLogin() {
         <>
           <Modal modalType="email">
             <FormTitle>Owlly: Create an email account</FormTitle>
-            <ModalIconWrapper onClick={() => setIsModal(false)}>
+            <WrapperModalIcon onClick={() => setIsModal(false)}>
               <AiFillCloseCircle />
-            </ModalIconWrapper>
+            </WrapperModalIcon>
             <Form onSubmit={handleEmailSignUp}>
               <Label htmlFor="email">
                 <AiOutlineMail />
@@ -189,9 +189,9 @@ function WalletLogin() {
         <>
           <Modal modalType="wallet">
             <FormTitle>Owlly: Create a wallet account</FormTitle>
-            <ModalIconWrapper onClick={() => setIsModal(false)}>
+            <WrapperModalIcon onClick={() => setIsModal(false)}>
               <AiFillCloseCircle />
-            </ModalIconWrapper>
+            </WrapperModalIcon>
             <Form>
               <Label htmlFor="privateKey">
                 <BsKey />
@@ -219,33 +219,35 @@ function WalletLogin() {
 
 export function Login() {
   return (
-    <WrapperTab id="login">
-      <SolidBanner>
-        <span id="title">Welcome</span>
-        <p id="description">
-          to the demo application made by developerasun - a collection of automation bots for blockchain developers,
-          based on Wails. Mascot credit to @HaidiYJ.
-        </p>
-        <WrapperDivForCenter id="mascot">
-          <img id="mascot" src={mascot} alt="mascot" loading="lazy" width="60%" />
-        </WrapperDivForCenter>
-      </SolidBanner>
+    <div>
+      <WrapperTab id="login">
+        <SolidBanner>
+          <span id="title">Welcome</span>
+          <p id="description">
+            to the demo application made by developerasun - a collection of automation bots for blockchain developers,
+            based on Wails. Mascot credit to @HaidiYJ.
+          </p>
+          <WrapperDivForCenter id="mascot">
+            <img id="mascot" src={mascot} alt="mascot" loading="lazy" width="60%" />
+          </WrapperDivForCenter>
+        </SolidBanner>
 
-      <Tabs id="login-tab">
-        <TabList className="tab-item">
-          <Tab>Quick start</Tab>
-          <Tab>Experimental</Tab>
-        </TabList>
+        <Tabs id="login-tab">
+          <TabList className="tab-item">
+            <Tab>Quick start</Tab>
+            <Tab>Experimental</Tab>
+          </TabList>
 
-        <div id="panel-wrapper">
-          <TabPanel className={'tab-panel'}>
-            <EmailLogin />
-          </TabPanel>
-          <TabPanel className={'tab-panel'}>
-            <WalletLogin />
-          </TabPanel>
-        </div>
-      </Tabs>
-    </WrapperTab>
+          <div id="panel-wrapper">
+            <TabPanel className={'tab-panel'}>
+              <EmailLogin />
+            </TabPanel>
+            <TabPanel className={'tab-panel'}>
+              <WalletLogin />
+            </TabPanel>
+          </div>
+        </Tabs>
+      </WrapperTab>
+    </div>
   );
 }
