@@ -8,6 +8,7 @@ import { Login } from './pages/account/Login';
 import { App_ } from './App_';
 import './App.css';
 import { Contact } from './pages/help/Contact';
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   return (
@@ -25,6 +26,8 @@ function App() {
                 <Route path="help/contact" element={<Contact />} />
               </Routes>
             </Layout>
+            {/* render toast only once */}
+            <ToastContainer />
           </SlackContextProvider>
         </WailsResponseContextProvider>
       </HashRouter>

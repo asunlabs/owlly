@@ -86,3 +86,7 @@ export interface IIsLaunchProps {
   disable: boolean;
   launch: boolean;
 }
+
+export interface ITitleProps {
+  isHome?: boolean;
+}
