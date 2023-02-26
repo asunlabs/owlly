@@ -66,3 +66,23 @@ export interface IWailsResponseContextProps {
 export interface IWailsResponseContextProviderProps {
   children: React.ReactNode;
 }
+
+export interface IListProps {
+  toggle?: boolean;
+}
+
+export interface IButtonProps {
+  isDynamic?: boolean;
+  transparent?: boolean;
+}
+
+export interface IActionAreaCardProps {
+  src?: string;
+  title?: string;
+  description?: string;
+}
+
+export interface IIsLaunchProps {
+  disable: boolean;
+  launch: boolean;
+}
