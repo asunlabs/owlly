@@ -9,7 +9,11 @@ import { IActionAreaCardProps } from '@owlly/context/types';
 export function ActionAreaCard({ src, title, description }: IActionAreaCardProps) {
   return (
     <Card>
-      <CardActionArea>
+      <CardActionArea
+        sx={{
+          maxWidth: '345px',
+        }}
+      >
         <CardMedia component="img" height="140" image={src} alt="MUI card" />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
