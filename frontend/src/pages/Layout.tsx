@@ -169,7 +169,10 @@ export function Layout({ children }: ILayoutProps) {
 
         <div id='children-with-footer'>
         <div style={{
-          minHeight: '100vh'
+          minWidth: '100%',
+          minHeight: '100vh', 
+          backgroundColor: '#E7E7E7', 
+          position: 'absolute'
         }} onClick={handleOutsideDropdown}>
           {children}
         </div>

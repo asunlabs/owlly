@@ -9,6 +9,7 @@ import { App_ } from './App_';
 import './App.css';
 import { Contact } from './pages/help/Contact';
 import { ToastContainer } from 'react-toastify';
+import { PageNotFound } from './pages/Page404';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
                 <Route path="bot/faucet-getter" element={<FaucetGetter />} />
                 <Route path="bot/env-notifier" element={<EnvNotifier />} />
                 <Route path="help/contact" element={<Contact />} />
+                <Route path="*" element={<PageNotFound />} />
               </Routes>
             </Layout>
             {/* render toast only once */}

@@ -1,5 +1,11 @@
 import { ISiweProps } from './types';
 
+export const BRAND_COLOR = {
+  heavyBrown: '#48312c',
+  middleBrown: '#DED29E',
+  lightBrown: '#5e433c',
+} as const;
+
 export const breakpoints = {
   device: {
     mobile: {

@@ -9,7 +9,7 @@ export const WrapperTab = styled.div`
     gap: 1rem;
   }
 
-  @media screen and (min-width: ${breakpoints.device.tablet}) {
+  @media screen and (min-width: ${MUI_BREAKPOINTS.sm}) {
     height: 80vh;
     padding: 5vh;
     display: grid;
