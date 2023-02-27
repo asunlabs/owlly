@@ -1,4 +1,4 @@
-import { breakpoints } from '@owlly/context/constants';
+import { BRAND_COLOR, breakpoints } from '@owlly/context/constants';
 import { IListProps, ITitleProps } from '@owlly/context/types';
 import styled from 'styled-components';
 
@@ -30,6 +30,7 @@ export const List = styled.li<IListProps>`
   align-items: center;
   list-style: none;
   padding: 1rem;
+  background-color: ${() => BRAND_COLOR.heavyBrown};
   cursor: pointer;
 
   // icon
@@ -57,7 +58,8 @@ export const Title = styled.div<ITitleProps>`
   padding: 1.5rem;
   font-size: 1.4rem;
   cursor: pointer;
-  background-color: ${({ isHome }) => (isHome ? 'RGB(222 210 158)' : 'none')};
+  color: rgb;
+  background-color: ${({ isHome }) => (isHome ? 'RGB(222 210 158)' : BRAND_COLOR.lightBrown)};
   color: ${({ isHome }) => (isHome ? 'black' : '')};
   font-weight: ${({ isHome }) => (isHome ? 'bold' : 'none')};
 

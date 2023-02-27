@@ -1,5 +1,5 @@
-import { breakpoints } from '@owlly/context/constants';
-import styled, { keyframes } from 'styled-components';
+import { breakpoints, MUI_BREAKPOINTS } from '@owlly/context/constants';
+import styled, { keyframes, css } from 'styled-components';
 
 export const WrapperTab = styled.div`
   .tab-panel {
@@ -65,4 +65,24 @@ export const WrapperModalIcon = styled.div`
       display: none;
     }
   }
+`;
+
+export const WrapperActionAreaCard = styled.div`
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+
+  @media screen and (min-width: ${breakpoints.device.tablet}) {
+    flex-flow: row;
+  }
+`;
+
+export interface IMediaQueryProps {
+  isMobile: boolean;
+}
+
+export const WrapperFooter = styled.footer`
+  background-color: green;
 `;

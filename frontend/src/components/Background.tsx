@@ -1,5 +1,5 @@
 import styled, { keyframes } from 'styled-components';
-import { breakpoints } from '@owlly/context/constants';
+import { breakpoints, MUI_BREAKPOINTS } from '@owlly/context/constants';
 
 export const Background = styled.div`
   display: flex;
@@ -11,8 +11,11 @@ export const Background = styled.div`
     color: black;
   }
 
-  @media screen and (min-width: ${breakpoints.device.tablet}) {
+  @media screen and (min-width: ${MUI_BREAKPOINTS.sm}) {
     flex-flow: row nowrap;
+    #children-with-footer > footer {
+      display: none;
+    }
   }
 `;
 
