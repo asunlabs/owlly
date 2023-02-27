@@ -1,19 +1,6 @@
 import devPromo from '@owlly/assets/video/dev.promo.v0.3.0.mp4';
 import { ActionAreaCard } from '@owlly/components/Card';
-import styled from 'styled-components';
-import { breakpoints } from '../../context/constants';
-
-export const WrapperActionAreaCard = styled.div`
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-  align-items: center;
-  gap: 2rem;
-
-  @media screen and (min-width: ${breakpoints.device.tablet}) {
-    flex-flow: row;
-  }
-`;
+import { WrapperActionAreaCard } from './../../components/Wrapper';
 
 export function Contact() {
   return (

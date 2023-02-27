@@ -19,6 +19,7 @@ import { FaSlack } from 'react-icons/fa';
 import loading from '@owlly/assets/images/loading.gif';
 import { WrapperDivForCenter, WrapperModalIcon } from '@owlly/components/Wrapper';
 import { breakpoints } from '../context/constants';
+import { Footer } from '@owlly/components/Footer';
 
 export function Layout({ children }: ILayoutProps) {
   const [toggle, setToggle] = React.useState(false);
@@ -165,8 +166,14 @@ export function Layout({ children }: ILayoutProps) {
           </div>
         </Navbar>
         {/* prettier-ignore */}
-        <div onClick={handleOutsideDropdown}>
+
+        <div id='children-with-footer'>
+        <div style={{
+          minHeight: '100vh'
+        }} onClick={handleOutsideDropdown}>
           {children}
+        </div>
+        <Footer />
         </div>
       </Background>
     </>
