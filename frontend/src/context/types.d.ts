@@ -90,3 +90,14 @@ export interface IIsLaunchProps {
 export interface ITitleProps {
   isHome?: boolean;
 }
+
+export interface ISkeletonModalProps {
+  title?: string;
+  description?: string;
+  button?: boolean;
+}
+
+export interface IBasicModalProps {
+  children?: React.ReactNode;
+  isModal: boolean;
+}

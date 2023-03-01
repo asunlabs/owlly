@@ -36,12 +36,8 @@ export const Button = styled.button<IButtonProps>`
     css`
       background-color: transparent;
       border: 1px solid skyblue;
-
-      &:hover {
-        width: fit-contents;
-        color: white;
-        font-weight: bold;
-      }
+      color: #898989;
+      font-weight: bold;
     `}
 `;
 

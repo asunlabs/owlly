@@ -8,14 +8,14 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { BsKey } from 'react-icons/bs';
 import 'react-tabs/style/react-tabs.css';
 import { WrapperDivForCenter, WrapperModalIcon, WrapperTab } from '@owlly/components/Wrapper';
-import { Modal } from '@owlly/components/Modal';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { ReadEmailUser_, CreateEmailUser_ } from '@wailsjs/go/main/Owlly';
 import 'react-toastify/dist/ReactToastify.css';
 import { signInWithEthereum } from './SIWE';
 import mascot from '@owlly/assets/images/mascot.jpg';
 import TextField from '@mui/material/TextField';
-import { DefaultProfile } from './Profile';
+import { BasicModal, SkeletonModal } from '@owlly/components/Modal';
+import { title } from 'process';
 
 function EmailLogin() {
   const [isModal, setIsModal] = React.useState(false);
@@ -107,7 +107,7 @@ function EmailLogin() {
       {/* Invoke sign up modal */}
       {isModal && (
         <>
-          <Modal modalType="email">
+          {/* <Modal modalType="email">
             <FormTitle>Owlly: Create an email account</FormTitle>
             <WrapperModalIcon onClick={() => setIsModal(false)}>
               <AiFillCloseCircle />
@@ -125,7 +125,7 @@ function EmailLogin() {
                 Sign up
               </Button>
             </Form>
-          </Modal>
+          </Modal> */}
         </>
       )}
     </>
@@ -187,7 +187,7 @@ function WalletLogin() {
 
       {isModal && (
         <>
-          <Modal modalType="wallet">
+          <BasicModal isModal>
             <FormTitle>Owlly: Create a wallet account</FormTitle>
             <WrapperModalIcon onClick={() => setIsModal(false)}>
               <AiFillCloseCircle />
@@ -210,7 +210,7 @@ function WalletLogin() {
                 Sign up
               </Button>
             </Form>
-          </Modal>
+          </BasicModal>
         </>
       )}
     </>
