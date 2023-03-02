@@ -3,7 +3,6 @@ import { breakpoints, MUI_BREAKPOINTS } from '@owlly/context/constants';
 
 export const Background = styled.div`
   display: flex;
-  background-color: red;
   flex-flow: column nowrap;
 
   li:hover {
@@ -52,13 +51,11 @@ export const LoadingView = styled.div`
   }
 
   p {
-    /* display: table; */
     max-width: 70%;
     line-height: 1.5rem;
     margin: 0 auto;
     text-align: left;
     font-size: 1.2rem;
-    /* background-color: #efefef; */
   }
 
   #launch-button {
@@ -70,6 +67,4 @@ export const LoadingView = styled.div`
       text-align: center;
     }
   }
-  /* img {
-  } */
 `;
