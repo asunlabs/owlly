@@ -13,14 +13,17 @@
     "@mui/material": "^5.11.10",
     "@mui/styled-engine-sc": "^5.11.9",
     "@tanstack/query-core": "^4.24.10",
+    "@types/react-helmet": "^6.1.6",
     "ethers": "^5.7.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-helmet": "^6.1.0",
     "siwe": "^1.1.6"
   },
   "devDependencies": {
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
+    "@mui/joy": "5.0.0-alpha.69",
     "@types/node": "^18.14.2",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
