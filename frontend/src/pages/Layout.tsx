@@ -128,20 +128,12 @@ export function Layout({ children }: ILayoutProps) {
                     <AiOutlineLogin />
                     <Link to={'account/login'}>Sign in</Link>
                   </List>
-                  <List toggle={dropdown.account ? true : false}>
-                    <FaSlack />
-                    <Link to={'account/slack'}>Slack</Link>
-                  </List>
                 </Dropdown>
                 <Dropdown id="bot" onClick={handleDropdown}>
                   <Title>
                     <AiOutlineRobot />
                     Bot
                   </Title>
-                  <List toggle={dropdown.bot ? true : false}>
-                    <AiOutlineMoneyCollect />
-                    <Link to={'bot/faucet-getter'}>Faucet</Link>
-                  </List>
                   <List toggle={dropdown.bot ? true : false}>
                     <AiOutlineLock />
                     <Link to={'bot/env-notifier'}>Dotenv</Link>
@@ -171,7 +163,7 @@ export function Layout({ children }: ILayoutProps) {
         <div style={{
           minWidth: '100%',
           minHeight: '100vh', 
-          backgroundColor: '#E7E7E7', 
+          backgroundColor: 'black', 
           position: 'absolute'
         }} onClick={handleOutsideDropdown}>
           {children}

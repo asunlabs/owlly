@@ -1,12 +1,10 @@
-import * as React from 'react';
-import { Layout } from './pages/Layout';
-import { Login } from './pages/account/Login';
-import { Contact } from './pages/help/Contact';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import { ActionAreaCard } from './components/Card';
+import { Helmet } from 'react-helmet';
+import { SendEmail } from './components/Email';
 
 export interface IApp_Props {}
 
@@ -26,6 +24,7 @@ export function App_(props: IApp_Props) {
     // add welcome on board message
     // {/* render login */}
     <div>
+      <SendEmail />
       <section>banner here</section>
       if has an account: welcome message if not: redirect to sign in
       <Box sx={{ flexGrow: 1 }}>
