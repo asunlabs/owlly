@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ethers } from 'ethers';
 import { SiweMessage } from 'siwe';
-import { NETWORK_ID } from '@owlly/context/DefaultState';
+import { NETWORK_ID } from '@owlly/context/constants';
 import { ISignerInfoProps } from '@owlly/context/types';
 
 export interface ISIWEProps {}

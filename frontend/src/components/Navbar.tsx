@@ -1,22 +1,27 @@
-import { breakpoints } from '@owlly/context/DefaultState';
+import { BRAND_COLOR, breakpoints } from '@owlly/context/constants';
+import { IListProps, ITitleProps } from '@owlly/context/types';
 import styled from 'styled-components';
 
 export const Navbar = styled.nav`
   display: flex;
   flex-flow: column nowrap;
   background-color: RGB(94 67 60);
-  width: 100%;
 
+  #fragment {
+    display: none;
+  }
   @media screen and (min-width: ${breakpoints.device.tablet}) {
-    width: fit-content;
+    /* make navbar have a fixed size */
+    min-width: fit-content;
+    min-height: 100vh;
+
+    #fragment {
+      display: block;
+      position: absolute;
+      background-color: black;
+    }
   }
 `;
-
-export const Body = styled.div``;
-
-export interface IListProps {
-  toggle?: boolean;
-}
 
 // @dev define props for styled-component
 export const List = styled.li<IListProps>`
@@ -25,8 +30,8 @@ export const List = styled.li<IListProps>`
   align-items: center;
   list-style: none;
   padding: 1rem;
+  background-color: ${() => BRAND_COLOR.heavyBrown};
   cursor: pointer;
-  border-radius: 20%;
 
   // icon
   svg {
@@ -44,19 +49,17 @@ export const Dropdown = styled.div`
   flex-flow: column nowrap;
 `;
 
-export interface ITitleProps {
-  isHome?: boolean;
-}
-
 export const Title = styled.div<ITitleProps>`
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: ${({ isHome }) => (isHome ? '1fr 2fr 1fr' : '1fr 2fr')};
+  justify-content: center;
   align-items: center;
   list-style: none;
   padding: 1.5rem;
   font-size: 1.4rem;
   cursor: pointer;
-  background-color: ${({ isHome }) => (isHome ? 'RGB(222 210 158)' : 'none')};
+  color: rgb;
+  background-color: ${({ isHome }) => (isHome ? 'RGB(222 210 158)' : BRAND_COLOR.lightBrown)};
   color: ${({ isHome }) => (isHome ? 'black' : '')};
   font-weight: ${({ isHome }) => (isHome ? 'bold' : 'none')};
 

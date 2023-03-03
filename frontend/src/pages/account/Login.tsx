@@ -7,13 +7,15 @@ import { ISignerInfoProps, TypeSignUp, IWailsResponse } from '@owlly/context/typ
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { BsKey } from 'react-icons/bs';
 import 'react-tabs/style/react-tabs.css';
-import { WrapperDivForCenter, WrapperTab } from '@owlly/components/Wrapper';
-import { Modal, ModalIconWrapper } from '@owlly/components/Modal';
+import { WrapperDivForCenter, WrapperModalIcon, WrapperTab } from '@owlly/components/Wrapper';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { ReadEmailUser_, CreateEmailUser_ } from '@wailsjs/go/main/Owlly';
 import 'react-toastify/dist/ReactToastify.css';
 import { signInWithEthereum } from './SIWE';
 import mascot from '@owlly/assets/images/mascot.jpg';
+import TextField from '@mui/material/TextField';
+import { BasicModal, SkeletonModal } from '@owlly/components/Modal';
+import { title } from 'process';
 
 function EmailLogin() {
   const [isModal, setIsModal] = React.useState(false);
@@ -88,11 +90,11 @@ function EmailLogin() {
       <Form onSubmit={handleEmailSignIn}>
         <Label htmlFor="email">
           <AiOutlineMail />
-          <Input name="signin-email" id="email" type={'email'} placeholder={'Email'} />
+          <TextField name="signin-email" id="email" label="Email" type={'email'} variant="filled" />
         </Label>
         <Label htmlFor="password">
           <MdOutlinePassword />
-          <Input name="signin-password" id="password" type={'password'} placeholder={'Password'} />
+          <TextField name="signin-password" id="password" label="Password" type={'password'} variant="filled" />
         </Label>
         <Button isDynamic={true} type={'button'} id={'sign-up'} onClick={() => handleSignUpModal('email', setIsModal)}>
           Don't have an account?
@@ -105,25 +107,25 @@ function EmailLogin() {
       {/* Invoke sign up modal */}
       {isModal && (
         <>
-          <Modal modalType="email">
+          {/* <Modal modalType="email">
             <FormTitle>Owlly: Create an email account</FormTitle>
-            <ModalIconWrapper onClick={() => setIsModal(false)}>
+            <WrapperModalIcon onClick={() => setIsModal(false)}>
               <AiFillCloseCircle />
-            </ModalIconWrapper>
+            </WrapperModalIcon>
             <Form onSubmit={handleEmailSignUp}>
               <Label htmlFor="email">
                 <AiOutlineMail />
-                <Input name="signup-email" id="email" type={'email'} placeholder={'Email'} />
+                <TextField name="signup-email" id="email" label="Email" type={'email'} variant="filled" />
               </Label>
               <Label htmlFor="password">
                 <MdOutlinePassword />
-                <Input name="signup-password" id="password" type={'password'} placeholder={'Password'} />
+                <TextField name="signup-password" id="password" label="Password" type={'password'} variant="filled" />
               </Label>
               <Button transparent={true} type={'submit'} id={'sign-up'}>
                 Sign up
               </Button>
             </Form>
-          </Modal>
+          </Modal> */}
         </>
       )}
     </>
@@ -160,7 +162,7 @@ function WalletLogin() {
       <Form>
         <Label htmlFor="privateKey">
           <BsKey />
-          <Input id="privateKey" type={'password'} placeholder={'Private key'} />
+          <TextField name="privateKey" id="privateKey" label="Private key" type={'password'} variant="filled" />
         </Label>
 
         <Button
@@ -185,11 +187,11 @@ function WalletLogin() {
 
       {isModal && (
         <>
-          <Modal modalType="wallet">
+          <BasicModal isModal>
             <FormTitle>Owlly: Create a wallet account</FormTitle>
-            <ModalIconWrapper onClick={() => setIsModal(false)}>
+            <WrapperModalIcon onClick={() => setIsModal(false)}>
               <AiFillCloseCircle />
-            </ModalIconWrapper>
+            </WrapperModalIcon>
             <Form>
               <Label htmlFor="privateKey">
                 <BsKey />
@@ -208,45 +210,44 @@ function WalletLogin() {
                 Sign up
               </Button>
             </Form>
-          </Modal>
+          </BasicModal>
         </>
       )}
     </>
   );
 }
 
-export function Profile() {
-  return <div>user profile here</div>;
-}
-
 export function Login() {
   return (
-    <WrapperTab id="login">
-      <SolidBanner>
-        <span id="title">Welcome</span>
-        <p id="description">
-          to the demo application made by developerasun - a collection of automation bots for blockchain developers,
-          based on Wails. Mascot credit to @HaidiYJ.
-        </p>
-        <WrapperDivForCenter id="mascot">
-          <img id="mascot" src={mascot} alt="mascot" loading="lazy" width="60%" />
-        </WrapperDivForCenter>
-      </SolidBanner>
-      <Tabs id="login-tab">
-        <TabList className="tab-item">
-          <Tab>Quick start</Tab>
-          <Tab>Experimental</Tab>
-        </TabList>
+    <div>
+      <WrapperTab id="login">
+        <SolidBanner>
+          <span id="title">Welcome</span>
+          <p id="description">
+            to the demo application made by developerasun - a collection of automation bots for blockchain developers,
+            based on Wails. Mascot credit to @HaidiYJ.
+          </p>
+          <WrapperDivForCenter id="mascot">
+            <img id="mascot" src={mascot} alt="mascot" loading="lazy" width="60%" />
+          </WrapperDivForCenter>
+        </SolidBanner>
 
-        <div id="panel-wrapper">
-          <TabPanel className={'tab-panel'}>
-            <EmailLogin />
-          </TabPanel>
-          <TabPanel className={'tab-panel'}>
-            <WalletLogin />
-          </TabPanel>
-        </div>
-      </Tabs>
-    </WrapperTab>
+        <Tabs id="login-tab">
+          <TabList className="tab-item">
+            <Tab>Quick start</Tab>
+            <Tab>Experimental</Tab>
+          </TabList>
+
+          <div id="panel-wrapper">
+            <TabPanel className={'tab-panel'}>
+              <EmailLogin />
+            </TabPanel>
+            <TabPanel className={'tab-panel'}>
+              <WalletLogin />
+            </TabPanel>
+          </div>
+        </Tabs>
+      </WrapperTab>
+    </div>
   );
 }

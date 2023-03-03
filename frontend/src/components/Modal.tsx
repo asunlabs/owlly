@@ -1,34 +1,64 @@
-import { breakpoints } from '@owlly/context/DefaultState';
-import { IModalProps } from '@owlly/context/types';
-import styled from 'styled-components';
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+import { IBasicModalProps, ISkeletonModalProps } from './../context/types.d';
 
-export const Modal = styled.div<IModalProps>`
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 0;
-  transform: translateY(50%);
-  width: 100%;
-  height: 50vh;
-  background-color: ${(props) => (props.modalType === 'email' ? '#709d22' : '#1d8078')};
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'black',
+  color: 'white',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 
-  @media screen and (min-width: ${breakpoints.device.tablet}) {
-    width: 50%;
-    height: 50%;
-  }
-`;
+export function SkeletonModal({ title, description, button }: ISkeletonModalProps) {
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
-export const ModalIconWrapper = styled.div`
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  font-size: 2rem;
+  return (
+    <div>
+      <Button onClick={handleOpen}>Open modal</Button>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            {title}
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            {description}
+          </Typography>
 
-  &:hover {
-    color: black;
-    cursor: pointer;
-    transition-duration: 1s;
-  }
-`;
+          {button && <button>check</button>}
+        </Box>
+      </Modal>
+    </div>
+  );
+}
+
+export function BasicModal({ children, isModal }: IBasicModalProps) {
+  const [isActive, setIsActive] = React.useState(isModal);
+  const handleClose = () => setIsActive(false);
+
+  return (
+    <Modal
+      open={isModal}
+      onClose={handleClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={style}>{children}</Box>
+    </Modal>
+  );
+}

@@ -1,5 +1,5 @@
-import { breakpoints } from '@owlly/context/DefaultState';
-import styled from 'styled-components';
+import { breakpoints, MUI_BREAKPOINTS } from '@owlly/context/constants';
+import styled, { keyframes, css } from 'styled-components';
 
 export const WrapperTab = styled.div`
   .tab-panel {
@@ -9,9 +9,9 @@ export const WrapperTab = styled.div`
     gap: 1rem;
   }
 
-  @media screen and (min-width: ${breakpoints.device.tablet}) {
+  @media screen and (min-width: ${MUI_BREAKPOINTS.sm}) {
     height: 80vh;
-    padding: 10vh;
+    padding: 5vh;
     display: grid;
     grid-template-columns: 0.4fr 0.6fr;
 
@@ -27,7 +27,7 @@ export const WrapperTab = styled.div`
     }
 
     .tab-panel {
-      transform: scale(1.5) translateY(-2rem);
+      transform: scale(1.1) translateY(-3rem);
     }
   }
 `;
@@ -35,4 +35,54 @@ export const WrapperTab = styled.div`
 export const WrapperDivForCenter = styled.div`
   display: block;
   text-align: center;
+`;
+
+export const Blink = keyframes`
+  0% { 
+    color: black;
+  }
+  100% { 
+    font-weight: bold;
+    color: white;
+  }
+`;
+
+export const WrapperModalIcon = styled.div`
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 2rem;
+  /* z-index: 100000; */
+
+  &:hover {
+    animation: ${Blink} infinite 1.5s linear;
+    cursor: pointer;
+  }
+
+  @media screen and (min-width: ${breakpoints.device.tablet}) {
+    /* display: none; */
+    .trigger {
+      display: none;
+    }
+  }
+`;
+
+export const WrapperActionAreaCard = styled.div`
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+
+  @media screen and (min-width: ${breakpoints.device.tablet}) {
+    flex-flow: row;
+  }
+`;
+
+export interface IMediaQueryProps {
+  isMobile: boolean;
+}
+
+export const WrapperFooter = styled.footer`
+  background-color: green;
 `;

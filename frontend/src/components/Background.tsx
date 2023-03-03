@@ -1,13 +1,7 @@
 import styled, { keyframes } from 'styled-components';
-import defaultImage from '@owlly/assets/images/pokemon/164.jpg';
-import { breakpoints } from '@owlly/context/DefaultState';
+import { breakpoints, MUI_BREAKPOINTS } from '@owlly/context/constants';
 
 export const Background = styled.div`
-  background-image: url(${defaultImage});
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  height: 100%;
   display: flex;
   flex-flow: column nowrap;
 
@@ -16,23 +10,21 @@ export const Background = styled.div`
     color: black;
   }
 
-  @media screen and (min-width: ${breakpoints.device.tablet}) {
-    display: flex;
+  @media screen and (min-width: ${MUI_BREAKPOINTS.sm}) {
     flex-flow: row nowrap;
-
-    #body {
-      width: 100%;
+    #children-with-footer > footer {
+      display: none;
     }
   }
 `;
 
 const FadeIn = keyframes`
   0% {
-    opacity: 0;
+    opacity: 1;
     background-color: black;
   }
   50% {
-    opacity: 0.5;
+    background-color: white;
   }
   100% {
     opacity: 1;
@@ -46,7 +38,8 @@ export const LoadingView = styled.div`
   width: 100%;
   height: 100vh;
   text-align: center;
-  animation: ${FadeIn} 2s 1 ease-in;
+  z-index: 10;
+  animation: ${FadeIn} 3s 1 ease-in;
 
   display: flex;
   flex-flow: column nowrap;
@@ -58,13 +51,11 @@ export const LoadingView = styled.div`
   }
 
   p {
-    /* display: table; */
     max-width: 70%;
     line-height: 1.5rem;
     margin: 0 auto;
     text-align: left;
     font-size: 1.2rem;
-    /* background-color: #efefef; */
   }
 
   #launch-button {
@@ -76,6 +67,4 @@ export const LoadingView = styled.div`
       text-align: center;
     }
   }
-  /* img {
-  } */
 `;

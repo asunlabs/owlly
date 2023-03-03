@@ -1,4 +1,4 @@
-import { breakpoints } from '@owlly/context/DefaultState';
+import { breakpoints } from '@owlly/context/constants';
 import styled, { css } from 'styled-components';
 
 export const Form = styled.form`
